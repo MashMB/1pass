@@ -41,6 +41,10 @@ func loadProfileJson(vaultPath string) map[string]interface{} {
 	return profileJson
 }
 
+func (repo *fileProfileRepo) getIterations() int {
+	return int(repo.profileJson["iterations"].(float64))
+}
+
 func (repo *fileProfileRepo) getSalt() string {
 	return repo.profileJson["salt"].(string)
 }

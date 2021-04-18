@@ -9,5 +9,7 @@ const (
 )
 
 type ProfileRepo interface {
+	GetIterations() int
+
 	GetSalt() string
 }
