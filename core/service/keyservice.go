@@ -11,16 +11,22 @@ import (
 	"crypto/hmac"
 	"crypto/sha256"
 	"crypto/sha512"
+	"encoding/base64"
 	"encoding/binary"
 	"io"
 	"log"
+
+	"github.com/mashmb/1pass/port/out"
 )
 
 type dfltKeyService struct {
+	profileRepo out.ProfileRepo
 }
 
-func NewDfltKeyService() *dfltKeyService {
-	return &dfltKeyService{}
+func NewDfltKeyService(profileRepo out.ProfileRepo) *dfltKeyService {
+	return &dfltKeyService{
+		profileRepo: profileRepo,
+	}
 }
 
 func (s *dfltKeyService) CheckHmac(msg, key, desiredHmac []byte) {
@@ -77,4 +83,14 @@ func (s *dfltKeyService) DecodeOpdata(cipherText, key, macKey []byte) []byte {
 	binary.Read(reader, binary.LittleEndian, &plainSize)
 
 	return plain[len(plain)-plainSize:]
+}
+
+func (s *dfltKeyService) OverviewKeys(derivedKey, derivedMac []byte) ([]byte, []byte) {
+	encoded, err := base64.StdEncoding.DecodeString(s.profileRepo.GetOverviewKey())
+
+	if err != nil {
+		log.Fatalln(err)
+	}
+
+	return s.DecodeKeys(encoded, derivedKey, derivedMac)
 }
