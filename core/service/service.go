@@ -8,4 +8,6 @@ type KeyService interface {
 	CheckHmac(msg, key, desiredHmac []byte)
 
 	DecodeData(key, initVector, data []byte) []byte
+
+	DecodeOpdata(cipherText, key, macKey []byte) []byte
 }

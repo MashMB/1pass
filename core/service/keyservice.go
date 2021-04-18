@@ -5,10 +5,12 @@
 package service
 
 import (
+	"bytes"
 	"crypto/aes"
 	"crypto/cipher"
 	"crypto/hmac"
 	"crypto/sha256"
+	"encoding/binary"
 	"io"
 	"log"
 )
@@ -50,4 +52,15 @@ func (s *dfltKeyService) DecodeData(key, initVector, data []byte) []byte {
 	mode.CryptBlocks(data, data)
 
 	return data
+}
+
+func (s *dfltKeyService) DecodeOpdata(cipherText, key, macKey []byte) []byte {
+	data, mac := cipherText[:len(cipherText)-32], cipherText[len(cipherText)-32:]
+	s.CheckHmac(data, macKey, mac)
+	plain := s.DecodeData(key, data[16:32], data[32:])
+	var plainSize int
+	reader := bytes.NewReader(plain[8:16])
+	binary.Read(reader, binary.LittleEndian, &plainSize)
+
+	return plain[len(plain)-plainSize:]
 }
