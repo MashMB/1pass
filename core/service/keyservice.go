@@ -5,6 +5,8 @@
 package service
 
 import (
+	"crypto/aes"
+	"crypto/cipher"
 	"crypto/hmac"
 	"crypto/sha256"
 	"io"
@@ -35,4 +37,17 @@ func (s *dfltKeyService) CheckHmac(msg, key, desiredHmac []byte) {
 	if !hmac.Equal(computed, desiredHmac) {
 		log.Fatalln("invalid HMAC")
 	}
+}
+
+func (s *dfltKeyService) DecodeData(key, initVector, data []byte) []byte {
+	block, err := aes.NewCipher(key)
+
+	if err != nil {
+		log.Fatalln(err)
+	}
+
+	mode := cipher.NewCBCDecrypter(block, initVector)
+	mode.CryptBlocks(data, data)
+
+	return data
 }
