@@ -45,6 +45,10 @@ func (repo *fileProfileRepo) getIterations() int {
 	return int(repo.profileJson["iterations"].(float64))
 }
 
+func (repo *fileProfileRepo) GetOverviewKey() string {
+	return repo.profileJson["overviewKey"].(string)
+}
+
 func (repo *fileProfileRepo) getSalt() string {
 	return repo.profileJson["salt"].(string)
 }
