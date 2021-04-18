@@ -10,6 +10,7 @@ import (
 	"crypto/cipher"
 	"crypto/hmac"
 	"crypto/sha256"
+	"crypto/sha512"
 	"encoding/binary"
 	"io"
 	"log"
@@ -52,6 +53,19 @@ func (s *dfltKeyService) DecodeData(key, initVector, data []byte) []byte {
 	mode.CryptBlocks(data, data)
 
 	return data
+}
+
+func (s *dfltKeyService) DecodeKeys(key, derivedKey, derivedMac []byte) ([]byte, []byte) {
+	base := s.DecodeOpdata(key, derivedKey, derivedMac)
+	hash := sha512.New()
+
+	if _, err := hash.Write(base); err != nil {
+		log.Fatalln(err)
+	}
+
+	keys := hash.Sum(nil)
+
+	return keys[:32], keys[32:64]
 }
 
 func (s *dfltKeyService) DecodeOpdata(cipherText, key, macKey []byte) []byte {

@@ -9,5 +9,7 @@ type KeyService interface {
 
 	DecodeData(key, initVector, data []byte) []byte
 
+	DecodeKeys(key, derivedKey, derivedMac []byte) ([]byte, []byte)
+
 	DecodeOpdata(cipherText, key, macKey []byte) []byte
 }
