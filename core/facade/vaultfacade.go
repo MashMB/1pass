@@ -20,6 +20,10 @@ func NewDfltVaultFacade(keyService service.KeyService) *dfltVaultFacade {
 	}
 }
 
+func (f *dfltVaultFacade) Lock() {
+	f.keys = nil
+}
+
 func (f *dfltVaultFacade) Unlock(password string) error {
 	derivedKey, derivedMac, err := f.keyService.DerivedKeys(password)
 

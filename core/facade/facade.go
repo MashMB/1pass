@@ -5,5 +5,7 @@
 package facade
 
 type VaultFacade interface {
+	Lock()
+
 	Unlock(password string) error
 }
