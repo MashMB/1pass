@@ -2,6 +2,8 @@
 //
 // @author TSS
 
+package out
+
 import (
 	"hash"
 )
