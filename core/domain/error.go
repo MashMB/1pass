@@ -10,4 +10,5 @@ import (
 
 var (
 	ErrInvalidHmac = errors.New("invalid HMAC")
+	ErrInvalidPass = errors.New("invalid password")
 )
