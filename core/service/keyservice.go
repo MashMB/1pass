@@ -96,14 +96,14 @@ func (s *dfltKeyService) DecodeOpdata(cipherText, key, macKey []byte) ([]byte, e
 		return nil, err
 	}
 
-	var plainSize int
+	var plainSize int64
 	reader := bytes.NewReader(plain[8:16])
 
 	if err := binary.Read(reader, binary.LittleEndian, &plainSize); err != nil {
 		return nil, err
 	}
 
-	return plain[len(plain)-plainSize:], nil
+	return plain[len(plain)-int(plainSize):], nil
 }
 
 func (s *dfltKeyService) DerivedKeys(password string) ([]byte, []byte, error) {
@@ -114,9 +114,9 @@ func (s *dfltKeyService) DerivedKeys(password string) ([]byte, []byte, error) {
 		return nil, nil, err
 	}
 
-	keys := s.cryptoUtils.DeriveKey([]byte(password), []byte(salt), iterations, 64, sha512.New)
+	keys := s.cryptoUtils.DeriveKey([]byte(password), salt, iterations, 64, sha512.New)
 
-	return keys[:32], keys[:32], nil
+	return keys[:32], keys[32:], nil
 }
 
 func (s *dfltKeyService) MasterKeys(derivedKey, derivedMac []byte) ([]byte, []byte, error) {
