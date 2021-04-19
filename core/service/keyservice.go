@@ -106,10 +106,17 @@ func (s *dfltKeyService) DecodeOpdata(cipherText, key, macKey []byte) ([]byte, e
 	return plain[len(plain)-plainSize:], nil
 }
 
-func (s *dfltKeyService) DerivedKeys(password, salt string, iterations int) ([]byte, []byte) {
+func (s *dfltKeyService) DerivedKeys(password string) ([]byte, []byte, error) {
+	iterations := s.profileRepo.GetIterations()
+	salt, err := base64.StdEncoding.DecodeString(s.profileRepo.GetSalt())
+
+	if err != nil {
+		return nil, nil, err
+	}
+
 	keys := s.cryptoUtils.DeriveKey([]byte(password), []byte(salt), iterations, 64, sha512.New)
 
-	return keys[:32], keys[:32]
+	return keys[:32], keys[:32], nil
 }
 
 func (s *dfltKeyService) MasterKeys(derivedKey, derivedMac []byte) ([]byte, []byte, error) {
