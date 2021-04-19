@@ -85,6 +85,16 @@ func (s *dfltKeyService) DecodeOpdata(cipherText, key, macKey []byte) []byte {
 	return plain[len(plain)-plainSize:]
 }
 
+func (s *dfltKeyService) MasterKeys(derivedKey, derivedMac []byte) ([]byte, []byte) {
+	encoded, err := base64.StdEncoding.DecodeString(s.profileRepo.GetMasterKey())
+
+	if err != nil {
+		log.Fatalln(err)
+	}
+
+	return s.DecodeKeys(encoded, derivedKey, derivedMac)
+}
+
 func (s *dfltKeyService) OverviewKeys(derivedKey, derivedMac []byte) ([]byte, []byte) {
 	encoded, err := base64.StdEncoding.DecodeString(s.profileRepo.GetOverviewKey())
 
