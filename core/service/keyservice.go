@@ -20,11 +20,13 @@ import (
 )
 
 type dfltKeyService struct {
+	cryptoUtils out.CrytpoUtils
 	profileRepo out.ProfileRepo
 }
 
-func NewDfltKeyService(profileRepo out.ProfileRepo) *dfltKeyService {
+func NewDfltKeyService(cryptoUtils out.CrytpoUtils, profileRepo out.ProfileRepo) *dfltKeyService {
 	return &dfltKeyService{
+		cryptoUtils: cryptoUtils,
 		profileRepo: profileRepo,
 	}
 }
@@ -83,6 +85,12 @@ func (s *dfltKeyService) DecodeOpdata(cipherText, key, macKey []byte) []byte {
 	binary.Read(reader, binary.LittleEndian, &plainSize)
 
 	return plain[len(plain)-plainSize:]
+}
+
+func (s *dfltKeyService) DerivedKeys(password, salt string, iterations int) ([]byte, []byte) {
+	keys := s.cryptoUtils.DeriveKey([]byte(password), []byte(salt), iterations, 64, sha512.New)
+
+	return keys[:32], keys[:32]
 }
 
 func (s *dfltKeyService) MasterKeys(derivedKey, derivedMac []byte) ([]byte, []byte) {

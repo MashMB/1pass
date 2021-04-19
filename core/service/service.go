@@ -13,6 +13,8 @@ type KeyService interface {
 
 	DecodeOpdata(cipherText, key, macKey []byte) []byte
 
+	DerivedKeys(password, salt string, iterations int) ([]byte, []byte)
+
 	MasterKeys(derivedKey, derivedMac []byte) ([]byte, []byte)
 
 	OverviewKeys(derivedKey, derivedMac []byte) ([]byte, []byte)
