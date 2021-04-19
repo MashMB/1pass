@@ -11,6 +11,8 @@ const (
 type ProfileRepo interface {
 	GetIterations() int
 
+	GetMasterKey() string
+
 	GetOverviewKey() string
 
 	GetSalt() string
