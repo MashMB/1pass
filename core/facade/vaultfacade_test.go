@@ -23,6 +23,22 @@ func setup() *dfltVaultFacade {
 	return NewDfltVaultFacade(keyService)
 }
 
+func TestLock(t *testing.T) {
+	facade := setup()
+	pass := "freddy"
+	facade.Unlock(pass)
+
+	if facade.keys == nil {
+		t.Errorf("Unlock() should provide keys")
+	}
+
+	facade.Lock()
+
+	if facade.keys != nil {
+		t.Errorf("Lock() should clear keys")
+	}
+}
+
 func TestUnlock(t *testing.T) {
 	facade := setup()
 	goodPass := "freddy"
