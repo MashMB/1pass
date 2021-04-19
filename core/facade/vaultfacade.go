@@ -20,6 +20,16 @@ func NewDfltVaultFacade(keyService service.KeyService) *dfltVaultFacade {
 	}
 }
 
+func (f *dfltVaultFacade) IsUnlocked() bool {
+	unlocked := false
+
+	if f.keys != nil {
+		unlocked = true
+	}
+
+	return unlocked
+}
+
 func (f *dfltVaultFacade) Lock() {
 	f.keys = nil
 }
