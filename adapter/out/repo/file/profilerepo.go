@@ -41,7 +41,7 @@ func loadProfileJson(vaultPath string) map[string]interface{} {
 	return profileJson
 }
 
-func (repo *fileProfileRepo) getIterations() int {
+func (repo *fileProfileRepo) GetIterations() int {
 	return int(repo.profileJson["iterations"].(float64))
 }
 
@@ -53,6 +53,6 @@ func (repo *fileProfileRepo) GetOverviewKey() string {
 	return repo.profileJson["overviewKey"].(string)
 }
 
-func (repo *fileProfileRepo) getSalt() string {
+func (repo *fileProfileRepo) GetSalt() string {
 	return repo.profileJson["salt"].(string)
 }
