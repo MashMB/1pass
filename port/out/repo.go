@@ -5,8 +5,12 @@
 package out
 
 const (
-	ProfileDir string = "default"
+	BandFilePattern string = "band_*.js"
+	ProfileDir      string = "default"
 )
+
+type ItemRepo interface {
+}
 
 type ProfileRepo interface {
 	GetIterations() int
