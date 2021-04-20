@@ -9,6 +9,7 @@ import (
 )
 
 var (
-	ErrInvalidHmac = errors.New("invalid HMAC")
-	ErrInvalidPass = errors.New("invalid password")
+	ErrInvalidHmac    = errors.New("invalid HMAC")
+	ErrUnknownItemCat = errors.New("unknown item category")
+	ErrInvalidPass    = errors.New("invalid password")
 )
