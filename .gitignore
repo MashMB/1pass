@@ -3,6 +3,9 @@
 # @author TSS
 
 ### Go ###
+# Build directory
+/bin/
+
 # Binaries for programs and plugins
 *.exe
 *.exe~
