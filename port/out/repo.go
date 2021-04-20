@@ -4,12 +4,19 @@
 
 package out
 
+import (
+	"container/list"
+
+	"github.com/mashmb/1pass/core/domain/enum"
+)
+
 const (
 	BandFilePattern string = "band_*.js"
 	ProfileDir      string = "default"
 )
 
 type ItemRepo interface {
+	FindByCategoryAndTrashed(category *enum.ItemCategory, trashed bool) *list.List
 }
 
 type ProfileRepo interface {
