@@ -10,21 +10,21 @@ var (
 	ItemCategoryEnum = newItemCategoryRegistry()
 )
 
-type itemCategory struct {
+type ItemCategory struct {
 	Code string
 	Name string
 }
 
-func newItemCategory(code, name string) *itemCategory {
-	return &itemCategory{
+func newItemCategory(code, name string) *ItemCategory {
+	return &ItemCategory{
 		Code: code,
 		Name: name,
 	}
 }
 
 type itemCategoryRegistry struct {
-	Login  *itemCategory
-	Values []*itemCategory
+	Login  *ItemCategory
+	Values []*ItemCategory
 }
 
 func newItemCategoryRegistry() *itemCategoryRegistry {
@@ -32,12 +32,12 @@ func newItemCategoryRegistry() *itemCategoryRegistry {
 
 	return &itemCategoryRegistry{
 		Login:  login,
-		Values: []*itemCategory{login},
+		Values: []*ItemCategory{login},
 	}
 }
 
-func (r *itemCategoryRegistry) fromCode(code string) (*itemCategory, error) {
-	var category *itemCategory
+func (r *itemCategoryRegistry) FromCode(code string) (*ItemCategory, error) {
+	var category *ItemCategory
 
 	for _, value := range r.Values {
 		if value.Code == code {
@@ -53,8 +53,8 @@ func (r *itemCategoryRegistry) fromCode(code string) (*itemCategory, error) {
 	return category, nil
 }
 
-func (r *itemCategoryRegistry) fromName(name string) (*itemCategory, error) {
-	var category *itemCategory
+func (r *itemCategoryRegistry) FromName(name string) (*ItemCategory, error) {
+	var category *ItemCategory
 
 	for _, value := range r.Values {
 		if value.Name == name {
