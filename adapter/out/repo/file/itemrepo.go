@@ -5,22 +5,48 @@
 package file
 
 import (
+	"container/list"
 	"encoding/json"
 	"io/ioutil"
 	"log"
 	"path/filepath"
 
+	"github.com/mashmb/1pass/core/domain"
 	"github.com/mashmb/1pass/port/out"
 )
 
 type fileItemRepo struct {
-	itemsJson map[string]interface{}
+	items *list.List
 }
 
 func NewFileItemRepo(vaultPath string) *fileItemRepo {
 	return &fileItemRepo{
-		itemsJson: loadItemsJson(vaultPath),
+		items: loadItems(vaultPath),
 	}
+}
+
+func loadItems(vaultPath string) *list.List {
+	items := list.New()
+	itemsJson := loadItemsJson(vaultPath)
+
+	for _, value := range itemsJson {
+		v := value.(map[string]interface{})
+		created := int64(v["created"].(float64))
+		updated := int64(v["updated"].(float64))
+		var trashed bool
+
+		if v["trashed"] != nil {
+			trashed = v["trashed"].(bool)
+		} else {
+			trashed = false
+		}
+
+		item := domain.NewRawItem(v["category"].(string), v["d"].(string), v["hmac"].(string), v["k"].(string),
+			v["o"].(string), created, updated, trashed)
+		items.PushBack(item)
+	}
+
+	return items
 }
 
 func loadItemsJson(vaultPath string) map[string]interface{} {
