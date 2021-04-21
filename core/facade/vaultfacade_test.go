@@ -1,3 +1,7 @@
+// Unit tests for vault facade implementation.
+//
+// @author TSS
+
 package facade
 
 import (
@@ -9,7 +13,7 @@ import (
 	"github.com/mashmb/1pass/port/out"
 )
 
-func setup() *dfltVaultFacade {
+func setupVaultFacade() *dfltVaultFacade {
 	var cryptoUtils out.CrytpoUtils
 	var profileRepo out.ProfileRepo
 
@@ -24,7 +28,7 @@ func setup() *dfltVaultFacade {
 }
 
 func TestIsUnlocked(t *testing.T) {
-	facade := setup()
+	facade := setupVaultFacade()
 	pass := "freddy"
 	unlocked := facade.IsUnlocked()
 
@@ -41,7 +45,7 @@ func TestIsUnlocked(t *testing.T) {
 }
 
 func TestLock(t *testing.T) {
-	facade := setup()
+	facade := setupVaultFacade()
 	pass := "freddy"
 	facade.Unlock(pass)
 
@@ -57,7 +61,7 @@ func TestLock(t *testing.T) {
 }
 
 func TestUnlock(t *testing.T) {
-	facade := setup()
+	facade := setupVaultFacade()
 	goodPass := "freddy"
 	badPass := ""
 	err := facade.Unlock(badPass)
