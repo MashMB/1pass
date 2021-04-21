@@ -5,9 +5,9 @@
 package service
 
 import (
-	"container/list"
 	"encoding/base64"
 	"encoding/json"
+	"sort"
 
 	"github.com/mashmb/1pass/core/domain"
 	"github.com/mashmb/1pass/core/domain/enum"
@@ -26,12 +26,11 @@ func NewDfltItemService(keyService KeyService, itemRepo out.ItemRepo) *dfltItemS
 	}
 }
 
-func (s *dfltItemService) GetSimple(keys *domain.Keys) *list.List {
-	items := list.New()
+func (s *dfltItemService) GetSimple(keys *domain.Keys) []*domain.SimpleItem {
+	items := make([]*domain.SimpleItem, 0)
 	rawItems := s.itemRepo.FindByCategoryAndTrashed(enum.ItemCategoryEnum.Login, false)
 
-	for element := rawItems.Front(); element != nil; element = element.Next() {
-		rawItem := element.Value.(*domain.RawItem)
+	for _, rawItem := range rawItems {
 		overviewData, _ := base64.StdEncoding.DecodeString(rawItem.Overview)
 		overview, _ := s.keyService.DecodeOpdata(overviewData, keys.OverviewKey, keys.OverviewMac)
 		var itemData map[string]interface{}
@@ -43,8 +42,12 @@ func (s *dfltItemService) GetSimple(keys *domain.Keys) *list.List {
 		}
 
 		item := domain.NewSimpleItem(title)
-		items.PushBack(item)
+		items = append(items, item)
 	}
+
+	sort.Slice(items, func(i, j int) bool {
+		return items[i].Title < items[j].Title
+	})
 
 	return items
 }

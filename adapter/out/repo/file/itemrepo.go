@@ -5,7 +5,6 @@
 package file
 
 import (
-	"container/list"
 	"encoding/json"
 	"io/ioutil"
 	"log"
@@ -17,7 +16,7 @@ import (
 )
 
 type fileItemRepo struct {
-	items *list.List
+	items []*domain.RawItem
 }
 
 func NewFileItemRepo(vaultPath string) *fileItemRepo {
@@ -26,8 +25,8 @@ func NewFileItemRepo(vaultPath string) *fileItemRepo {
 	}
 }
 
-func loadItems(vaultPath string) *list.List {
-	items := list.New()
+func loadItems(vaultPath string) []*domain.RawItem {
+	items := make([]*domain.RawItem, 0)
 	itemsJson := loadItemsJson(vaultPath)
 
 	for _, value := range itemsJson {
@@ -42,7 +41,7 @@ func loadItems(vaultPath string) *list.List {
 
 		item := domain.NewRawItem(v["category"].(string), v["d"].(string), v["hmac"].(string), v["k"].(string),
 			v["o"].(string), created, updated, trashed)
-		items.PushBack(item)
+		items = append(items, item)
 	}
 
 	return items
@@ -77,15 +76,14 @@ func loadItemsJson(vaultPath string) map[string]interface{} {
 	return itemsJson
 }
 
-func (repo *fileItemRepo) FindByCategoryAndTrashed(category *enum.ItemCategory, trashed bool) *list.List {
-	resultSet := list.New()
+func (repo *fileItemRepo) FindByCategoryAndTrashed(category *enum.ItemCategory, trashed bool) []*domain.RawItem {
+	resultSet := make([]*domain.RawItem, 0)
 
-	for element := repo.items.Front(); element != nil; element = element.Next() {
-		item := element.Value.(*domain.RawItem)
+	for _, item := range repo.items {
 		cat, err := enum.ItemCategoryEnum.FromCode(item.Category)
 
 		if err == nil && cat == category && item.Trashed == trashed {
-			resultSet.PushBack(item)
+			resultSet = append(resultSet, item)
 		}
 	}
 
