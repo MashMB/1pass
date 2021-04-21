@@ -2,9 +2,7 @@
 //
 // @author TSS
 
-package enum
-
-import "github.com/mashmb/1pass/core/domain"
+package domain
 
 var (
 	ItemCategoryEnum = newItemCategoryRegistry()
@@ -59,7 +57,7 @@ func (r *itemCategoryRegistry) FromCode(code string) (*ItemCategory, error) {
 	}
 
 	if category == nil {
-		return nil, domain.ErrUnknownItemCat
+		return nil, ErrUnknownItemCat
 	}
 
 	return category, nil
@@ -76,7 +74,7 @@ func (r *itemCategoryRegistry) FromName(name string) (*ItemCategory, error) {
 	}
 
 	if category == nil {
-		return nil, domain.ErrUnknownItemCat
+		return nil, ErrUnknownItemCat
 	}
 
 	return category, nil

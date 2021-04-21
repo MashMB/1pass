@@ -6,7 +6,6 @@ package out
 
 import (
 	"github.com/mashmb/1pass/core/domain"
-	"github.com/mashmb/1pass/core/domain/enum"
 )
 
 const (
@@ -15,7 +14,7 @@ const (
 )
 
 type ItemRepo interface {
-	FindByCategoryAndTrashed(category *enum.ItemCategory, trashed bool) []*domain.RawItem
+	FindByCategoryAndTrashed(category *domain.ItemCategory, trashed bool) []*domain.RawItem
 }
 
 type ProfileRepo interface {

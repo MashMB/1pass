@@ -11,7 +11,6 @@ import (
 	"path/filepath"
 
 	"github.com/mashmb/1pass/core/domain"
-	"github.com/mashmb/1pass/core/domain/enum"
 	"github.com/mashmb/1pass/port/out"
 )
 
@@ -76,11 +75,11 @@ func loadItemsJson(vaultPath string) map[string]interface{} {
 	return itemsJson
 }
 
-func (repo *fileItemRepo) FindByCategoryAndTrashed(category *enum.ItemCategory, trashed bool) []*domain.RawItem {
+func (repo *fileItemRepo) FindByCategoryAndTrashed(category *domain.ItemCategory, trashed bool) []*domain.RawItem {
 	resultSet := make([]*domain.RawItem, 0)
 
 	for _, item := range repo.items {
-		cat, err := enum.ItemCategoryEnum.FromCode(item.Category)
+		cat, err := domain.ItemCategoryEnum.FromCode(item.Category)
 
 		if err == nil && cat == category && item.Trashed == trashed {
 			resultSet = append(resultSet, item)

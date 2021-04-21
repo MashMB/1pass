@@ -10,7 +10,6 @@ import (
 	"sort"
 
 	"github.com/mashmb/1pass/core/domain"
-	"github.com/mashmb/1pass/core/domain/enum"
 	"github.com/mashmb/1pass/port/out"
 )
 
@@ -28,7 +27,7 @@ func NewDfltItemService(keyService KeyService, itemRepo out.ItemRepo) *dfltItemS
 
 func (s *dfltItemService) GetSimple(keys *domain.Keys) []*domain.SimpleItem {
 	items := make([]*domain.SimpleItem, 0)
-	rawItems := s.itemRepo.FindByCategoryAndTrashed(enum.ItemCategoryEnum.Login, false)
+	rawItems := s.itemRepo.FindByCategoryAndTrashed(domain.ItemCategoryEnum.Login, false)
 
 	for _, rawItem := range rawItems {
 		overviewData, _ := base64.StdEncoding.DecodeString(rawItem.Overview)
