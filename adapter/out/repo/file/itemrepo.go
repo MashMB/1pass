@@ -34,12 +34,10 @@ func loadItems(vaultPath string) *list.List {
 		v := value.(map[string]interface{})
 		created := int64(v["created"].(float64))
 		updated := int64(v["updated"].(float64))
-		var trashed bool
+		trashed := false
 
 		if v["trashed"] != nil {
 			trashed = v["trashed"].(bool)
-		} else {
-			trashed = false
 		}
 
 		item := domain.NewRawItem(v["category"].(string), v["d"].(string), v["hmac"].(string), v["k"].(string),
@@ -86,7 +84,7 @@ func (repo *fileItemRepo) FindByCategoryAndTrashed(category *enum.ItemCategory, 
 		item := element.Value.(*domain.RawItem)
 		cat, err := enum.ItemCategoryEnum.FromCode(item.Category)
 
-		if err != nil && cat == category && item.Trashed == trashed {
+		if err == nil && cat == category && item.Trashed == trashed {
 			resultSet.PushBack(item)
 		}
 	}
