@@ -24,6 +24,10 @@ type RawItem struct {
 	Updated  int64
 }
 
+type SimpleItem struct {
+	Title string
+}
+
 func NewKeys(derivedKey, derivedMac, masterKey, masterMac, overviewKey, overviewMac []byte) *Keys {
 	return &Keys{
 		DerivedKey:  derivedKey,
@@ -45,5 +49,11 @@ func NewRawItem(category, details, hmac, keys, overview string, created, updated
 		Overview: overview,
 		Trashed:  trashed,
 		Updated:  updated,
+	}
+}
+
+func NewSimpleItem(title string) *SimpleItem {
+	return &SimpleItem{
+		Title: title,
 	}
 }

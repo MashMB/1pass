@@ -4,6 +4,16 @@
 
 package service
 
+import (
+	"container/list"
+
+	"github.com/mashmb/1pass/core/domain"
+)
+
+type ItemService interface {
+	GetSimple(keys *domain.Keys) *list.List
+}
+
 type KeyService interface {
 	CheckHmac(msg, key, desiredHmac []byte) error
 
