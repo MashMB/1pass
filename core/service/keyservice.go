@@ -90,16 +90,16 @@ func (s *dfltKeyService) DecodeOpdata(cipherText, key, macKey []byte) ([]byte, e
 		return nil, err
 	}
 
-	plain, err := s.DecodeData(key, data[16:32], data[32:])
+	var plainSize int64
+	reader := bytes.NewReader(data[8:16])
 
-	if err != nil {
+	if err := binary.Read(reader, binary.LittleEndian, &plainSize); err != nil {
 		return nil, err
 	}
 
-	var plainSize int64
-	reader := bytes.NewReader(plain[8:16])
+	plain, err := s.DecodeData(key, data[16:32], data[32:])
 
-	if err := binary.Read(reader, binary.LittleEndian, &plainSize); err != nil {
+	if err != nil {
 		return nil, err
 	}
 
