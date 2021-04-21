@@ -15,16 +15,47 @@ import (
 
 func setupVaultFacade() *dfltVaultFacade {
 	var cryptoUtils out.CrytpoUtils
+	var itemRepo out.ItemRepo
 	var profileRepo out.ProfileRepo
 
+	var itemService service.ItemService
 	var keyService service.KeyService
 
 	cryptoUtils = crypto.NewPbkdf2CryptoUtils()
+	itemRepo = file.NewFileItemRepo("../../assets/onepassword_data")
 	profileRepo = file.NewFileProfileRepo("../../assets/onepassword_data")
 
 	keyService = service.NewDfltKeyService(cryptoUtils, profileRepo)
+	itemService = service.NewDfltItemService(keyService, itemRepo)
 
-	return NewDfltVaultFacade(keyService)
+	return NewDfltVaultFacade(itemService, keyService)
+}
+
+func TestGetItems(t *testing.T) {
+	facade := setupVaultFacade()
+	pass := "freddy"
+	expected := 10
+	first := "Bank of America"
+	last := "YouTube"
+	err := facade.Unlock(pass)
+
+	if err != nil {
+		t.Error("Unlock() should pass because of valid password")
+	}
+
+	items := facade.GetItems()
+
+	if len(items) != 10 {
+		t.Errorf("GetItems() = %d; expected = %d", len(items), expected)
+	}
+
+	if items[0].Title != first {
+		t.Errorf("GetItems() = %v; expected = %v", items[0].Title, first)
+	}
+
+	if items[len(items)-1].Title != last {
+		t.Errorf("GetItems() = %v; expected = %v", items[len(items)-1], last)
+	}
 }
 
 func TestIsUnlocked(t *testing.T) {
