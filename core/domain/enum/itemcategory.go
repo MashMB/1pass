@@ -11,20 +11,20 @@ var (
 )
 
 type ItemCategory struct {
-	Code string
-	Name string
-}
-
-func newItemCategory(code, name string) *ItemCategory {
-	return &ItemCategory{
-		Code: code,
-		Name: name,
-	}
+	code string
+	name string
 }
 
 type itemCategoryRegistry struct {
 	Login  *ItemCategory
-	Values []*ItemCategory
+	values []*ItemCategory
+}
+
+func newItemCategory(code, name string) *ItemCategory {
+	return &ItemCategory{
+		code: code,
+		name: name,
+	}
 }
 
 func newItemCategoryRegistry() *itemCategoryRegistry {
@@ -32,15 +32,27 @@ func newItemCategoryRegistry() *itemCategoryRegistry {
 
 	return &itemCategoryRegistry{
 		Login:  login,
-		Values: []*ItemCategory{login},
+		values: []*ItemCategory{login},
 	}
+}
+
+func (ic *ItemCategory) GetCode() string {
+	return ic.code
+}
+
+func (ic *ItemCategory) GetName() string {
+	return ic.name
+}
+
+func (r *itemCategoryRegistry) GetValues() []*ItemCategory {
+	return r.values
 }
 
 func (r *itemCategoryRegistry) FromCode(code string) (*ItemCategory, error) {
 	var category *ItemCategory
 
-	for _, value := range r.Values {
-		if value.Code == code {
+	for _, value := range r.values {
+		if value.code == code {
 			category = value
 			break
 		}
@@ -56,8 +68,8 @@ func (r *itemCategoryRegistry) FromCode(code string) (*ItemCategory, error) {
 func (r *itemCategoryRegistry) FromName(name string) (*ItemCategory, error) {
 	var category *ItemCategory
 
-	for _, value := range r.Values {
-		if value.Name == name {
+	for _, value := range r.values {
+		if value.name == name {
 			category = value
 			break
 		}
