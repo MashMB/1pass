@@ -10,14 +10,20 @@ import (
 )
 
 type dfltVaultFacade struct {
-	keys       *domain.Keys
-	keyService service.KeyService
+	keys        *domain.Keys
+	itemService service.ItemService
+	keyService  service.KeyService
 }
 
-func NewDfltVaultFacade(keyService service.KeyService) *dfltVaultFacade {
+func NewDfltVaultFacade(itemService service.ItemService, keyService service.KeyService) *dfltVaultFacade {
 	return &dfltVaultFacade{
-		keyService: keyService,
+		itemService: itemService,
+		keyService:  keyService,
 	}
+}
+
+func (f *dfltVaultFacade) GetItems() []*domain.SimpleItem {
+	return f.itemService.GetSimple(f.keys)
 }
 
 func (f *dfltVaultFacade) IsUnlocked() bool {

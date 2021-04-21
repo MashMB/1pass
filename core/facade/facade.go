@@ -4,7 +4,11 @@
 
 package facade
 
+import "github.com/mashmb/1pass/core/domain"
+
 type VaultFacade interface {
+	GetItems() []*domain.SimpleItem
+
 	IsUnlocked() bool
 
 	Lock()
