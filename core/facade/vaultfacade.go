@@ -51,7 +51,14 @@ func (f *dfltVaultFacade) Lock() {
 	f.keys = nil
 }
 
-func (f *dfltVaultFacade) Unlock(password string) error {
+func (f *dfltVaultFacade) Unlock(path, password string) error {
+	vault := domain.NewVault(path)
+	err := f.vaultService.ValidateVault(vault)
+
+	if err != nil {
+		return err
+	}
+
 	derivedKey, derivedMac, err := f.keyService.DerivedKeys(password)
 
 	if err != nil {
@@ -73,10 +80,4 @@ func (f *dfltVaultFacade) Unlock(password string) error {
 	f.keys = domain.NewKeys(derivedKey, derivedMac, masterKey, masterMac, overviewKey, overviewMac)
 
 	return nil
-}
-
-func (f *dfltVaultFacade) Validate(path string) error {
-	vault := domain.NewVault(path)
-
-	return f.vaultService.ValidateVault(vault)
 }
