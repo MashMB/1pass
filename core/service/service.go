@@ -33,3 +33,7 @@ type KeyService interface {
 
 	OverviewKeys(derivedKey, derivedMac []byte) ([]byte, []byte, error)
 }
+
+type VaultService interface {
+	ValidateVault(vault *domain.Vault) error
+}

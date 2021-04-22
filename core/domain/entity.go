@@ -38,6 +38,10 @@ type SimpleItem struct {
 	Uid   string
 }
 
+type Vault struct {
+	Path string
+}
+
 func NewItem(category *ItemCategory, details, uid string, created, updated int64) *Item {
 	return &Item{
 		Category: category,
@@ -77,5 +81,11 @@ func NewSimpleItem(title, uid string) *SimpleItem {
 	return &SimpleItem{
 		Title: title,
 		Uid:   uid,
+	}
+}
+
+func NewVault(path string) *Vault {
+	return &Vault{
+		Path: path,
 	}
 }

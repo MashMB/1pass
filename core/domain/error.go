@@ -10,6 +10,7 @@ import (
 
 var (
 	ErrInvalidHmac    = errors.New("invalid HMAC")
-	ErrUnknownItemCat = errors.New("unknown item category")
 	ErrInvalidPass    = errors.New("invalid password")
+	ErrInvalidVault   = errors.New("invalid vault")
+	ErrUnknownItemCat = errors.New("unknown item category")
 )
