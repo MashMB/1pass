@@ -13,33 +13,12 @@ import (
 	"github.com/mashmb/1pass/core/domain"
 )
 
-const (
-	profileFile string = "profile.js"
-)
-
 type fileProfileRepo struct {
 	profileJson map[string]interface{}
 }
 
-func NewFileProfileRepo(vaultPath string) *fileProfileRepo {
-	return &fileProfileRepo{
-		profileJson: loadProfileJson(vaultPath),
-	}
-}
-
-func loadProfileJson(vaultPath string) map[string]interface{} {
-	var profileJson map[string]interface{}
-	file, err := ioutil.ReadFile(filepath.Join(vaultPath, domain.ProfileDir, profileFile))
-
-	if err != nil {
-		log.Fatalln(err)
-	}
-
-	if err := json.Unmarshal(file[12:len(file)-1], &profileJson); err != nil {
-		log.Fatalln(err)
-	}
-
-	return profileJson
+func NewFileProfileRepo() *fileProfileRepo {
+	return &fileProfileRepo{}
 }
 
 func (repo *fileProfileRepo) GetIterations() int {
@@ -56,4 +35,18 @@ func (repo *fileProfileRepo) GetOverviewKey() string {
 
 func (repo *fileProfileRepo) GetSalt() string {
 	return repo.profileJson["salt"].(string)
+}
+
+func (repo *fileProfileRepo) LoadProfile(vault *domain.Vault) {
+	if repo.profileJson == nil {
+		file, err := ioutil.ReadFile(filepath.Join(vault.Path, domain.ProfileDir, domain.ProfileFile))
+
+		if err != nil {
+			log.Fatalln(err)
+		}
+
+		if err := json.Unmarshal(file[12:len(file)-1], &repo.profileJson); err != nil {
+			log.Fatalln(err)
+		}
+	}
 }

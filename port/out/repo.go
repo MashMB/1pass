@@ -22,4 +22,6 @@ type ProfileRepo interface {
 	GetOverviewKey() string
 
 	GetSalt() string
+
+	LoadProfile(vault *domain.Vault)
 }
