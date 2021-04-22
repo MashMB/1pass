@@ -18,4 +18,6 @@ type VaultFacade interface {
 	Lock()
 
 	Unlock(password string) error
+
+	Validate(path string) error
 }

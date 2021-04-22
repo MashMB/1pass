@@ -10,15 +10,18 @@ import (
 )
 
 type dfltVaultFacade struct {
-	keys        *domain.Keys
-	itemService service.ItemService
-	keyService  service.KeyService
+	keys         *domain.Keys
+	itemService  service.ItemService
+	keyService   service.KeyService
+	vaultService service.VaultService
 }
 
-func NewDfltVaultFacade(itemService service.ItemService, keyService service.KeyService) *dfltVaultFacade {
+func NewDfltVaultFacade(itemService service.ItemService, keyService service.KeyService,
+	vaultService service.VaultService) *dfltVaultFacade {
 	return &dfltVaultFacade{
-		itemService: itemService,
-		keyService:  keyService,
+		itemService:  itemService,
+		keyService:   keyService,
+		vaultService: vaultService,
 	}
 }
 
@@ -70,4 +73,10 @@ func (f *dfltVaultFacade) Unlock(password string) error {
 	f.keys = domain.NewKeys(derivedKey, derivedMac, masterKey, masterMac, overviewKey, overviewMac)
 
 	return nil
+}
+
+func (f *dfltVaultFacade) Validate(path string) error {
+	vault := domain.NewVault(path)
+
+	return f.vaultService.ValidateVault(vault)
 }
