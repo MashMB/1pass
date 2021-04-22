@@ -19,7 +19,22 @@ func TestFindByCategoryAndTrashed(t *testing.T) {
 	expected := 10
 	logins := repo.FindByCategoryAndTrashed(domain.ItemCategoryEnum.Login, false)
 
-	if len(logins) != 10 {
+	if len(logins) != expected {
 		t.Errorf("FindByCategoryAndTrashed() = %d; expected = %d", len(logins), expected)
+	}
+}
+
+func TestFindFirtByUidAndTrashed(t *testing.T) {
+	repo := setupFileItemRepo()
+	uid := "358B7411EB8B45CD9CE592ED16F3E9DE"
+	trashed := false
+	item := repo.FindFirstByUidAndTrashed(uid, trashed)
+
+	if item.Uid != uid {
+		t.Errorf("FindFirstByUidAndTrashed() = %v; expected = %v", item.Uid, uid)
+	}
+
+	if item.Trashed != trashed {
+		t.Errorf("FindFirstByUidAndTrashed() = %v; expected = %v", item.Trashed, trashed)
 	}
 }
