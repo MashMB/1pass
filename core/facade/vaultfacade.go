@@ -26,8 +26,8 @@ func (f *dfltVaultFacade) GetItemDetails(title string) []*domain.Item {
 	return f.itemService.GetDetails(title, f.keys)
 }
 
-func (f *dfltVaultFacade) GetItemOverview(title string) []*domain.Item {
-	return f.itemService.GetOverview(title, f.keys)
+func (f *dfltVaultFacade) GetItemOverview(uid string) *domain.Item {
+	return f.itemService.GetOverview(uid, f.keys)
 }
 
 func (f *dfltVaultFacade) GetItems() []*domain.SimpleItem {
