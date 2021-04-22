@@ -5,9 +5,10 @@
 package main
 
 import (
-	"fmt"
+	"github.com/mashmb/1pass/cli"
 )
 
 func main() {
-	fmt.Println("Hello World!")
+	cobraCli := cli.NewCobraCli()
+	cobraCli.Run()
 }
