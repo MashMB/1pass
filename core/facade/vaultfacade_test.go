@@ -31,6 +31,24 @@ func setupVaultFacade() *dfltVaultFacade {
 	return NewDfltVaultFacade(itemService, keyService)
 }
 
+func TestGetItemOverview(t *testing.T) {
+	facade := setupVaultFacade()
+	pass := "freddy"
+	expected := 1
+	title := "YouTube"
+	err := facade.Unlock(pass)
+
+	if err != nil {
+		t.Error("Unlock() should pass because of valid password")
+	}
+
+	items := facade.GetItemOverview(title)
+
+	if len(items) != expected {
+		t.Errorf("GetItemOverview() = %d; expected = %d", len(items), expected)
+	}
+}
+
 func TestGetItems(t *testing.T) {
 	facade := setupVaultFacade()
 	pass := "freddy"
@@ -45,7 +63,7 @@ func TestGetItems(t *testing.T) {
 
 	items := facade.GetItems()
 
-	if len(items) != 10 {
+	if len(items) != expected {
 		t.Errorf("GetItems() = %d; expected = %d", len(items), expected)
 	}
 
