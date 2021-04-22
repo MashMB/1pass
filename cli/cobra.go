@@ -8,20 +8,21 @@ import (
 	"fmt"
 	"log"
 
+	"github.com/mashmb/1pass/port/in"
 	"github.com/spf13/cobra"
 )
 
 type cobraCli struct {
-	rootCmd *cobra.Command
+	cliControl in.CliControl
 }
 
-func NewCobraCli() *cobraCli {
+func NewCobraCli(cliControl in.CliControl) *cobraCli {
 	return &cobraCli{
-		rootCmd: initalize(),
+		cliControl: cliControl,
 	}
 }
 
-func initalize() *cobra.Command {
+func (cli *cobraCli) init() *cobra.Command {
 	rootCmd := &cobra.Command{
 		Use:   "1pass",
 		Short: "1Password Linux CLI explorer",
@@ -36,7 +37,9 @@ efficiently in terminal.`,
 }
 
 func (cli *cobraCli) Run() {
-	if err := cli.rootCmd.Execute(); err != nil {
+	rootCmd := cli.init()
+
+	if err := rootCmd.Execute(); err != nil {
 		log.Fatalln(err)
 	}
 }
