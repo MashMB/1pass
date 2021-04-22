@@ -8,6 +8,7 @@ import (
 	"encoding/json"
 	"io/ioutil"
 	"log"
+	"path/filepath"
 
 	"github.com/mashmb/1pass/core/domain"
 )
@@ -28,7 +29,7 @@ func NewFileProfileRepo(vaultPath string) *fileProfileRepo {
 
 func loadProfileJson(vaultPath string) map[string]interface{} {
 	var profileJson map[string]interface{}
-	file, err := ioutil.ReadFile(vaultPath + "/" + domain.ProfileDir + "/" + profileFile)
+	file, err := ioutil.ReadFile(filepath.Join(vaultPath, domain.ProfileDir, profileFile))
 
 	if err != nil {
 		log.Fatalln(err)
