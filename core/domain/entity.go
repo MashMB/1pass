@@ -34,6 +34,7 @@ type RawItem struct {
 
 type SimpleItem struct {
 	Title string
+	Uid   string
 }
 
 func NewItem(category *ItemCategory, details string, created, updated int64) *Item {
@@ -70,8 +71,9 @@ func NewRawItem(category, details, hmac, keys, overview, uid string, created, up
 	}
 }
 
-func NewSimpleItem(title string) *SimpleItem {
+func NewSimpleItem(title, uid string) *SimpleItem {
 	return &SimpleItem{
 		Title: title,
+		Uid:   uid,
 	}
 }

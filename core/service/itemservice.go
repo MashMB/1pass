@@ -98,15 +98,15 @@ func (s *dfltItemService) GetSimple(keys *domain.Keys) []*domain.SimpleItem {
 	for _, rawItem := range rawItems {
 		overviewData, _ := base64.StdEncoding.DecodeString(rawItem.Overview)
 		overview, _ := s.keyService.DecodeOpdata(overviewData, keys.OverviewKey, keys.OverviewMac)
-		var itemData map[string]interface{}
-		json.Unmarshal(overview, &itemData)
+		var itemOverview map[string]interface{}
+		json.Unmarshal(overview, &itemOverview)
 		title := ""
 
-		if itemData["title"] != nil {
-			title = strings.TrimSpace(itemData["title"].(string))
+		if itemOverview["title"] != nil {
+			title = strings.TrimSpace(itemOverview["title"].(string))
 		}
 
-		item := domain.NewSimpleItem(title)
+		item := domain.NewSimpleItem(title, rawItem.Uid)
 		items = append(items, item)
 	}
 
