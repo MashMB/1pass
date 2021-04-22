@@ -22,6 +22,10 @@ func NewDfltVaultFacade(itemService service.ItemService, keyService service.KeyS
 	}
 }
 
+func (f *dfltVaultFacade) GetItemOverview(title string) []*domain.Item {
+	return f.itemService.GetOverview(title, f.keys)
+}
+
 func (f *dfltVaultFacade) GetItems() []*domain.SimpleItem {
 	return f.itemService.GetSimple(f.keys)
 }
