@@ -17,61 +17,8 @@ type fileItemRepo struct {
 	items []*domain.RawItem
 }
 
-func NewFileItemRepo(vaultPath string) *fileItemRepo {
-	return &fileItemRepo{
-		items: loadItems(vaultPath),
-	}
-}
-
-func loadItems(vaultPath string) []*domain.RawItem {
-	items := make([]*domain.RawItem, 0)
-	itemsJson := loadItemsJson(vaultPath)
-
-	for uid, value := range itemsJson {
-		v := value.(map[string]interface{})
-		created := int64(v["created"].(float64))
-		updated := int64(v["updated"].(float64))
-		trashed := false
-
-		if v["trashed"] != nil {
-			trashed = v["trashed"].(bool)
-		}
-
-		item := domain.NewRawItem(v["category"].(string), v["d"].(string), v["hmac"].(string), v["k"].(string),
-			v["o"].(string), uid, created, updated, trashed)
-		items = append(items, item)
-	}
-
-	return items
-}
-
-func loadItemsJson(vaultPath string) map[string]interface{} {
-	var itemsJson map[string]interface{}
-	bandFiles, err := filepath.Glob(filepath.Join(vaultPath, domain.ProfileDir, domain.BandFilePattern))
-
-	if err != nil {
-		log.Fatalln(err)
-	}
-
-	items := "{"
-
-	for _, bandFile := range bandFiles {
-		file, err := ioutil.ReadFile(bandFile)
-
-		if err != nil {
-			log.Fatalln(err)
-		}
-
-		items = items + string(file[4:len(file)-3]) + ","
-	}
-
-	items = items[:len(items)-1] + "}"
-
-	if err := json.Unmarshal([]byte(items), &itemsJson); err != nil {
-		log.Fatalln(err)
-	}
-
-	return itemsJson
+func NewFileItemRepo() *fileItemRepo {
+	return &fileItemRepo{}
 }
 
 func (repo *fileItemRepo) FindByCategoryAndTrashed(category *domain.ItemCategory, trashed bool) []*domain.RawItem {
@@ -99,4 +46,52 @@ func (repo *fileItemRepo) FindFirstByUidAndTrashed(uid string, trashed bool) *do
 	}
 
 	return item
+}
+
+func (repo *fileItemRepo) LoadItems(vault *domain.Vault) {
+	if repo.items == nil {
+		var itemsJson map[string]interface{}
+		bandFiles, err := filepath.Glob(filepath.Join(vault.Path, domain.ProfileDir, domain.BandFilePattern))
+
+		if err != nil {
+			log.Fatalln(err)
+		}
+
+		itemsFile := "{"
+
+		for _, bandFile := range bandFiles {
+			file, err := ioutil.ReadFile(bandFile)
+
+			if err != nil {
+				log.Fatalln(err)
+			}
+
+			itemsFile = itemsFile + string(file[4:len(file)-3]) + ","
+		}
+
+		itemsFile = itemsFile[:len(itemsFile)-1] + "}"
+
+		if err := json.Unmarshal([]byte(itemsFile), &itemsJson); err != nil {
+			log.Fatalln(err)
+		}
+
+		items := make([]*domain.RawItem, 0)
+
+		for uid, value := range itemsJson {
+			v := value.(map[string]interface{})
+			created := int64(v["created"].(float64))
+			updated := int64(v["updated"].(float64))
+			trashed := false
+
+			if v["trashed"] != nil {
+				trashed = v["trashed"].(bool)
+			}
+
+			item := domain.NewRawItem(v["category"].(string), v["d"].(string), v["hmac"].(string), v["k"].(string),
+				v["o"].(string), uid, created, updated, trashed)
+			items = append(items, item)
+		}
+
+		repo.items = items
+	}
 }
