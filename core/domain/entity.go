@@ -8,6 +8,7 @@ type Item struct {
 	Category *ItemCategory
 	Created  int64
 	Details  string
+	Uid      string
 	Updated  int64
 }
 
@@ -37,11 +38,12 @@ type SimpleItem struct {
 	Uid   string
 }
 
-func NewItem(category *ItemCategory, details string, created, updated int64) *Item {
+func NewItem(category *ItemCategory, details, uid string, created, updated int64) *Item {
 	return &Item{
 		Category: category,
 		Created:  created,
 		Details:  details,
+		Uid:      uid,
 		Updated:  updated,
 	}
 }

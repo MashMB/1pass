@@ -5,6 +5,7 @@
 package service
 
 import (
+	"bytes"
 	"encoding/base64"
 	"encoding/json"
 	"sort"
@@ -52,7 +53,7 @@ func (s *dfltItemService) GetDetails(title string, keys *domain.Keys) []*domain.
 				var itemDetails map[string]interface{}
 				json.Unmarshal(details, &itemDetails)
 				details, _ = json.MarshalIndent(itemDetails, "", "  ")
-				item := domain.NewItem(cat, string(details), rawItem.Created, rawItem.Updated)
+				item := domain.NewItem(cat, string(details), rawItem.Uid, rawItem.Created, rawItem.Updated)
 				items = append(items, item)
 			}
 		}
@@ -61,34 +62,23 @@ func (s *dfltItemService) GetDetails(title string, keys *domain.Keys) []*domain.
 	return items
 }
 
-func (s *dfltItemService) GetOverview(title string, keys *domain.Keys) []*domain.Item {
-	title = strings.TrimSpace(strings.ToLower(title))
-	items := make([]*domain.Item, 0)
-	rawItems := s.itemRepo.FindByCategoryAndTrashed(domain.ItemCategoryEnum.Login, false)
+func (s *dfltItemService) GetOverview(uid string, keys *domain.Keys) *domain.Item {
+	var item *domain.Item
+	rawItem := s.itemRepo.FindFirstByUidAndTrashed(uid, false)
 
-	for _, rawItem := range rawItems {
+	if rawItem != nil {
 		overviewData, _ := base64.StdEncoding.DecodeString(rawItem.Overview)
 		overview, _ := s.keyService.DecodeOpdata(overviewData, keys.OverviewKey, keys.OverviewMac)
-		var itemOverview map[string]interface{}
-		json.Unmarshal(overview, &itemOverview)
-		itemTitle := ""
+		cat, err := domain.ItemCategoryEnum.FromCode(rawItem.Category)
 
-		if itemOverview["title"] != nil {
-			itemTitle = strings.TrimSpace(strings.ToLower(itemOverview["title"].(string)))
-		}
-
-		if itemTitle == title {
-			cat, err := domain.ItemCategoryEnum.FromCode(rawItem.Category)
-
-			if err == nil {
-				overview, _ = json.MarshalIndent(itemOverview, "", "  ")
-				item := domain.NewItem(cat, string(overview), rawItem.Created, rawItem.Updated)
-				items = append(items, item)
-			}
+		if err == nil {
+			var jsonBuffer bytes.Buffer
+			json.Indent(&jsonBuffer, overview, "", "  ")
+			item = domain.NewItem(cat, string(jsonBuffer.Bytes()), rawItem.Uid, rawItem.Created, rawItem.Updated)
 		}
 	}
 
-	return items
+	return item
 }
 
 func (s *dfltItemService) GetSimple(keys *domain.Keys) []*domain.SimpleItem {
