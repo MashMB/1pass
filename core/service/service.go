@@ -9,6 +9,8 @@ import (
 )
 
 type ItemService interface {
+	GetDetails(title string, keys *domain.Keys) []*domain.Item
+
 	GetOverview(title string, keys *domain.Keys) []*domain.Item
 
 	GetSimple(keys *domain.Keys) []*domain.SimpleItem
