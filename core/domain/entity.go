@@ -4,6 +4,13 @@
 
 package domain
 
+type Item struct {
+	Category *ItemCategory
+	Created  int64
+	Details  string
+	Updated  int64
+}
+
 type Keys struct {
 	DerivedKey  []byte
 	DerivedMac  []byte
@@ -26,6 +33,15 @@ type RawItem struct {
 
 type SimpleItem struct {
 	Title string
+}
+
+func NewItem(category *ItemCategory, details string, created, updated int64) *Item {
+	return &Item{
+		Category: category,
+		Created:  created,
+		Details:  details,
+		Updated:  updated,
+	}
 }
 
 func NewKeys(derivedKey, derivedMac, masterKey, masterMac, overviewKey, overviewMac []byte) *Keys {
