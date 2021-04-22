@@ -15,6 +15,8 @@ const (
 
 type ItemRepo interface {
 	FindByCategoryAndTrashed(category *domain.ItemCategory, trashed bool) []*domain.RawItem
+
+	FindFirstByUidAndTrashed(uid string, trashed bool) *domain.RawItem
 }
 
 type ProfileRepo interface {

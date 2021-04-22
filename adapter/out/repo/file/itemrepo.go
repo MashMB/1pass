@@ -88,3 +88,16 @@ func (repo *fileItemRepo) FindByCategoryAndTrashed(category *domain.ItemCategory
 
 	return resultSet
 }
+
+func (repo *fileItemRepo) FindFirstByUidAndTrashed(uid string, trashed bool) *domain.RawItem {
+	var item *domain.RawItem
+
+	for _, rawItem := range repo.items {
+		if rawItem.Uid == uid && rawItem.Trashed == trashed {
+			item = rawItem
+			break
+		}
+	}
+
+	return item
+}
