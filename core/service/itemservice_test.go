@@ -30,6 +30,27 @@ func setupItemAndKeyService() (*dfltItemService, KeyService) {
 	return NewDfltItemService(keyService, itemRepo), keyService
 }
 
+func TestGetOverview(t *testing.T) {
+	itemService, keyService := setupItemAndKeyService()
+	pass := "freddy"
+	sucess := 1
+	fail := 0
+	derivedKey, derivedMac, _ := keyService.DerivedKeys(pass)
+	overviewKey, overviewMac, _ := keyService.OverviewKeys(derivedKey, derivedMac)
+	keys := domain.NewKeys(derivedKey, derivedMac, nil, nil, overviewKey, overviewMac)
+	items := itemService.GetOverview("YouTube", keys)
+
+	if len(items) != sucess {
+		t.Errorf("[SUCESS] GetOverview() = %d; expected = %d", len(items), sucess)
+	}
+
+	items = itemService.GetOverview("", keys)
+
+	if len(items) != fail {
+		t.Errorf("[FAIL] GetOverview() = %d; expected = %d", len(items), fail)
+	}
+}
+
 func TestGetSimple(t *testing.T) {
 	itemService, keyService := setupItemAndKeyService()
 	expected := 10
@@ -41,7 +62,7 @@ func TestGetSimple(t *testing.T) {
 	keys := domain.NewKeys(derivedKey, derivedMac, nil, nil, overviewKey, overviewMac)
 	items := itemService.GetSimple(keys)
 
-	if len(items) != 10 {
+	if len(items) != expected {
 		t.Errorf("GetSimple() = %d; expected = %d", len(items), expected)
 	}
 
