@@ -34,36 +34,34 @@ func setupVaultFacade() *dfltVaultFacade {
 func TestGetItemDetails(t *testing.T) {
 	facade := setupVaultFacade()
 	pass := "freddy"
-	expected := 1
-	title := "YouTube"
+	uid := "358B7411EB8B45CD9CE592ED16F3E9DE"
 	err := facade.Unlock(pass)
 
 	if err != nil {
 		t.Error("Unlock() should pass because of valid password")
 	}
 
-	items := facade.GetItemDetails(title)
+	item := facade.GetItemDetails(uid)
 
-	if len(items) != expected {
-		t.Errorf("GetItemDetails() = %d; expected = %d", len(items), expected)
+	if item.Uid != uid {
+		t.Errorf("GetItemDetails() = %v; expected = %v", item.Uid, uid)
 	}
 }
 
 func TestGetItemOverview(t *testing.T) {
 	facade := setupVaultFacade()
 	pass := "freddy"
-	expected := 1
-	title := "YouTube"
+	uid := "358B7411EB8B45CD9CE592ED16F3E9DE"
 	err := facade.Unlock(pass)
 
 	if err != nil {
 		t.Error("Unlock() should pass because of valid password")
 	}
 
-	items := facade.GetItemOverview(title)
+	item := facade.GetItemOverview(uid)
 
-	if len(items) != expected {
-		t.Errorf("GetItemOverview() = %d; expected = %d", len(items), expected)
+	if item.Uid != uid {
+		t.Errorf("GetItemOverview() = %v; expected = %v", item.Uid, uid)
 	}
 }
 
