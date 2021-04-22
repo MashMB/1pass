@@ -33,51 +33,49 @@ func setupItemAndKeyService() (*dfltItemService, KeyService) {
 func TestGetDetails(t *testing.T) {
 	itemService, keyService := setupItemAndKeyService()
 	pass := "freddy"
-	sucess := 1
-	fail := 0
+	uid := "358B7411EB8B45CD9CE592ED16F3E9DE"
 	derivedKey, derivedMac, _ := keyService.DerivedKeys(pass)
 	overviewKey, overviewMac, _ := keyService.OverviewKeys(derivedKey, derivedMac)
 	masterKey, masterMac, _ := keyService.MasterKeys(derivedKey, derivedMac)
 	keys := domain.NewKeys(derivedKey, derivedMac, masterKey, masterMac, overviewKey, overviewMac)
-	items := itemService.GetDetails("YouTube", keys)
+	item := itemService.GetDetails(uid, keys)
 
-	if len(items) != sucess {
-		t.Errorf("[SUCESS] GetDetails() = %d; expected = %d", len(items), sucess)
+	if item.Uid != uid {
+		t.Errorf("[SUCESS] GetDetails() = %v; expected = %v", item.Uid, uid)
 	}
 
-	items = itemService.GetDetails("", keys)
+	item = itemService.GetDetails("", keys)
 
-	if len(items) != fail {
-		t.Errorf("[FAIL] GetDetails() = %d; expected = %d", len(items), fail)
+	if item != nil {
+		t.Errorf("[FAIL] GetDetails() = %v; expected = %v", item.Uid, nil)
 	}
 }
 
 func TestGetOverview(t *testing.T) {
 	itemService, keyService := setupItemAndKeyService()
 	pass := "freddy"
-	sucess := 1
-	fail := 0
+	uid := "358B7411EB8B45CD9CE592ED16F3E9DE"
 	derivedKey, derivedMac, _ := keyService.DerivedKeys(pass)
 	overviewKey, overviewMac, _ := keyService.OverviewKeys(derivedKey, derivedMac)
 	keys := domain.NewKeys(derivedKey, derivedMac, nil, nil, overviewKey, overviewMac)
-	items := itemService.GetOverview("YouTube", keys)
+	item := itemService.GetOverview(uid, keys)
 
-	if len(items) != sucess {
-		t.Errorf("[SUCESS] GetOverview() = %d; expected = %d", len(items), sucess)
+	if item.Uid != uid {
+		t.Errorf("[SUCESS] GetOverview() = %v; expected = %v", item.Uid, uid)
 	}
 
-	items = itemService.GetOverview("", keys)
+	item = itemService.GetOverview("", keys)
 
-	if len(items) != fail {
-		t.Errorf("[FAIL] GetOverview() = %d; expected = %d", len(items), fail)
+	if item != nil {
+		t.Errorf("[FAIL] GetOverview() = %v; expected = %v", item.Uid, nil)
 	}
 }
 
 func TestGetSimple(t *testing.T) {
 	itemService, keyService := setupItemAndKeyService()
 	expected := 10
-	first := "Bank of America"
-	last := "YouTube"
+	first, firstUid := "Bank of America", "EC0A40400ABB4B16926B7417E95C9669"
+	last, lastUid := "YouTube", "358B7411EB8B45CD9CE592ED16F3E9DE"
 	pass := "freddy"
 	derivedKey, derivedMac, _ := keyService.DerivedKeys(pass)
 	overviewKey, overviewMac, _ := keyService.OverviewKeys(derivedKey, derivedMac)
@@ -88,11 +86,11 @@ func TestGetSimple(t *testing.T) {
 		t.Errorf("GetSimple() = %d; expected = %d", len(items), expected)
 	}
 
-	if items[0].Title != first {
-		t.Errorf("GetSimple() = %v; expected = %v", items[0].Title, first)
+	if items[0].Title != first || items[0].Uid != firstUid {
+		t.Errorf("[FIRST] GetSimple() = %v, %v; expected = %v, %v", items[0].Title, items[0].Uid, first, firstUid)
 	}
 
-	if items[len(items)-1].Title != last {
-		t.Errorf("GetSimple() = %v; expected = %v", items[len(items)-1], last)
+	if items[len(items)-1].Title != last || items[len(items)-1].Uid != lastUid {
+		t.Errorf("[LAST] GetSimple() = %v, %v; expected = %v, %v", items[len(items)-1].Title, items[len(items)-1].Uid, last, lastUid)
 	}
 }
