@@ -30,6 +30,28 @@ func setupItemAndKeyService() (*dfltItemService, KeyService) {
 	return NewDfltItemService(keyService, itemRepo), keyService
 }
 
+func TestGetDetails(t *testing.T) {
+	itemService, keyService := setupItemAndKeyService()
+	pass := "freddy"
+	sucess := 1
+	fail := 0
+	derivedKey, derivedMac, _ := keyService.DerivedKeys(pass)
+	overviewKey, overviewMac, _ := keyService.OverviewKeys(derivedKey, derivedMac)
+	masterKey, masterMac, _ := keyService.MasterKeys(derivedKey, derivedMac)
+	keys := domain.NewKeys(derivedKey, derivedMac, masterKey, masterMac, overviewKey, overviewMac)
+	items := itemService.GetDetails("YouTube", keys)
+
+	if len(items) != sucess {
+		t.Errorf("[SUCESS] GetDetails() = %d; expected = %d", len(items), sucess)
+	}
+
+	items = itemService.GetDetails("", keys)
+
+	if len(items) != fail {
+		t.Errorf("[FAIL] GetDetails() = %d; expected = %d", len(items), fail)
+	}
+}
+
 func TestGetOverview(t *testing.T) {
 	itemService, keyService := setupItemAndKeyService()
 	pass := "freddy"
