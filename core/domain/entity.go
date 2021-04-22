@@ -28,6 +28,7 @@ type RawItem struct {
 	Keys     string
 	Overview string
 	Trashed  bool
+	Uid      string
 	Updated  int64
 }
 
@@ -55,7 +56,7 @@ func NewKeys(derivedKey, derivedMac, masterKey, masterMac, overviewKey, overview
 	}
 }
 
-func NewRawItem(category, details, hmac, keys, overview string, created, updated int64, trashed bool) *RawItem {
+func NewRawItem(category, details, hmac, keys, overview, uid string, created, updated int64, trashed bool) *RawItem {
 	return &RawItem{
 		Category: category,
 		Created:  created,
@@ -64,6 +65,7 @@ func NewRawItem(category, details, hmac, keys, overview string, created, updated
 		Keys:     keys,
 		Overview: overview,
 		Trashed:  trashed,
+		Uid:      uid,
 		Updated:  updated,
 	}
 }
