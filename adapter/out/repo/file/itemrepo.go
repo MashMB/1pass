@@ -28,7 +28,7 @@ func loadItems(vaultPath string) []*domain.RawItem {
 	items := make([]*domain.RawItem, 0)
 	itemsJson := loadItemsJson(vaultPath)
 
-	for _, value := range itemsJson {
+	for uid, value := range itemsJson {
 		v := value.(map[string]interface{})
 		created := int64(v["created"].(float64))
 		updated := int64(v["updated"].(float64))
@@ -39,7 +39,7 @@ func loadItems(vaultPath string) []*domain.RawItem {
 		}
 
 		item := domain.NewRawItem(v["category"].(string), v["d"].(string), v["hmac"].(string), v["k"].(string),
-			v["o"].(string), created, updated, trashed)
+			v["o"].(string), uid, created, updated, trashed)
 		items = append(items, item)
 	}
 
