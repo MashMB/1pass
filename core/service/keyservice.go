@@ -119,6 +119,14 @@ func (s *dfltKeyService) DerivedKeys(password string) ([]byte, []byte, error) {
 	return keys[:32], keys[32:], nil
 }
 
+func (s *dfltKeyService) ItemKeys(item *domain.RawItem, keys *domain.Keys) ([]byte, []byte) {
+	itemKeys, _ := base64.StdEncoding.DecodeString(item.Keys)
+	data := itemKeys[:len(itemKeys)-32]
+	plain, _ := s.DecodeData(keys.MasterKey, data[0:16], data[16:])
+
+	return plain[0:32], plain[32:64]
+}
+
 func (s *dfltKeyService) MasterKeys(derivedKey, derivedMac []byte) ([]byte, []byte, error) {
 	encoded, err := base64.StdEncoding.DecodeString(s.profileRepo.GetMasterKey())
 

@@ -25,6 +25,8 @@ type KeyService interface {
 
 	DerivedKeys(password string) ([]byte, []byte, error)
 
+	ItemKeys(item *domain.RawItem, keys *domain.Keys) ([]byte, []byte)
+
 	MasterKeys(derivedKey, derivedMac []byte) ([]byte, []byte, error)
 
 	OverviewKeys(derivedKey, derivedMac []byte) ([]byte, []byte, error)
