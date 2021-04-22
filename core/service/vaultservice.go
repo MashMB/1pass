@@ -9,13 +9,19 @@ import (
 	"path/filepath"
 
 	"github.com/mashmb/1pass/core/domain"
+	"github.com/mashmb/1pass/port/out"
 )
 
 type dfltVaultService struct {
+	itemRepo    out.ItemRepo
+	profileRepo out.ProfileRepo
 }
 
-func NewDfltVaultService() *dfltVaultService {
-	return &dfltVaultService{}
+func NewDfltVaultService(itemRepo out.ItemRepo, profileRepo out.ProfileRepo) *dfltVaultService {
+	return &dfltVaultService{
+		itemRepo:    itemRepo,
+		profileRepo: profileRepo,
+	}
 }
 
 func (s *dfltVaultService) ValidateVault(vault *domain.Vault) error {
@@ -40,6 +46,9 @@ func (s *dfltVaultService) ValidateVault(vault *domain.Vault) error {
 	if info.IsDir() {
 		return domain.ErrInvalidVault
 	}
+
+	s.profileRepo.LoadProfile(vault)
+	s.itemRepo.LoadItems(vault)
 
 	return nil
 }
