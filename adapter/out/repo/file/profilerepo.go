@@ -9,7 +9,7 @@ import (
 	"io/ioutil"
 	"log"
 
-	"github.com/mashmb/1pass/port/out"
+	"github.com/mashmb/1pass/core/domain"
 )
 
 const (
@@ -28,7 +28,7 @@ func NewFileProfileRepo(vaultPath string) *fileProfileRepo {
 
 func loadProfileJson(vaultPath string) map[string]interface{} {
 	var profileJson map[string]interface{}
-	file, err := ioutil.ReadFile(vaultPath + "/" + out.ProfileDir + "/" + profileFile)
+	file, err := ioutil.ReadFile(vaultPath + "/" + domain.ProfileDir + "/" + profileFile)
 
 	if err != nil {
 		log.Fatalln(err)

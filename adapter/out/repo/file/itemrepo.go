@@ -11,7 +11,6 @@ import (
 	"path/filepath"
 
 	"github.com/mashmb/1pass/core/domain"
-	"github.com/mashmb/1pass/port/out"
 )
 
 type fileItemRepo struct {
@@ -48,7 +47,7 @@ func loadItems(vaultPath string) []*domain.RawItem {
 
 func loadItemsJson(vaultPath string) map[string]interface{} {
 	var itemsJson map[string]interface{}
-	bandFiles, err := filepath.Glob(filepath.Join(vaultPath, out.ProfileDir, out.BandFilePattern))
+	bandFiles, err := filepath.Glob(filepath.Join(vaultPath, domain.ProfileDir, domain.BandFilePattern))
 
 	if err != nil {
 		log.Fatalln(err)
