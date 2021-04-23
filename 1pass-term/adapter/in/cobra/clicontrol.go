@@ -9,7 +9,7 @@ import (
 	"os"
 	"syscall"
 
-	"github.com/mashmb/1pass/core/facade"
+	"github.com/mashmb/1pass/1pass-core/core/facade"
 	"golang.org/x/term"
 )
 
