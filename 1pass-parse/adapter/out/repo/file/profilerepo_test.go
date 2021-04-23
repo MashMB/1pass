@@ -7,12 +7,12 @@ package file
 import (
 	"testing"
 
-	"github.com/mashmb/1pass/core/domain"
+	"github.com/mashmb/1pass/1pass-core/core/domain"
 )
 
 func setupFileProfileRepo() *fileProfileRepo {
 	repo := NewFileProfileRepo()
-	vault := domain.NewVault("../../../../assets/onepassword_data")
+	vault := domain.NewVault("../../../../../assets/onepassword_data")
 	repo.LoadProfile(vault)
 
 	return repo
@@ -60,7 +60,7 @@ func TestGetSalt(t *testing.T) {
 
 func TestLoadProfile(t *testing.T) {
 	repo := NewFileProfileRepo()
-	vault := domain.NewVault("../../../../assets/onepassword_data")
+	vault := domain.NewVault("../../../../../assets/onepassword_data")
 	repo.LoadProfile(vault)
 
 	if repo.profileJson == nil || len(repo.profileJson) == 0 {

@@ -7,12 +7,12 @@ package file
 import (
 	"testing"
 
-	"github.com/mashmb/1pass/core/domain"
+	"github.com/mashmb/1pass/1pass-core/core/domain"
 )
 
 func setupFileItemRepo() *fileItemRepo {
 	repo := NewFileItemRepo()
-	vault := domain.NewVault("../../../../assets/onepassword_data")
+	vault := domain.NewVault("../../../../../assets/onepassword_data")
 	repo.LoadItems(vault)
 
 	return repo
@@ -45,7 +45,7 @@ func TestFindFirtByUidAndTrashed(t *testing.T) {
 
 func TestLoadItems(t *testing.T) {
 	repo := NewFileItemRepo()
-	vault := domain.NewVault("../../../../assets/onepassword_data")
+	vault := domain.NewVault("../../../../../assets/onepassword_data")
 	repo.LoadItems(vault)
 
 	if repo.items == nil || len(repo.items) == 0 {
@@ -53,7 +53,7 @@ func TestLoadItems(t *testing.T) {
 	}
 
 	repo.items = nil
-	vault = domain.NewVault("../../../../assets/nobands")
+	vault = domain.NewVault("../../../../../assets/nobands")
 
 	if repo.items != nil || len(repo.items) != 0 {
 		t.Error("LoadItems() should initialize empty repository")
