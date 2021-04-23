@@ -5,8 +5,8 @@
 package facade
 
 import (
-	"github.com/mashmb/1pass/core/domain"
-	"github.com/mashmb/1pass/core/service"
+	"github.com/mashmb/1pass/1pass-core/core/domain"
+	"github.com/mashmb/1pass/1pass-core/core/service"
 )
 
 type dfltVaultFacade struct {

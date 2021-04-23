@@ -15,8 +15,8 @@ import (
 	"encoding/binary"
 	"io"
 
-	"github.com/mashmb/1pass/core/domain"
-	"github.com/mashmb/1pass/port/out"
+	"github.com/mashmb/1pass/1pass-core/core/domain"
+	"github.com/mashmb/1pass/1pass-core/port/out"
 )
 
 type dfltKeyService struct {

@@ -4,7 +4,9 @@
 
 package facade
 
-import "github.com/mashmb/1pass/core/domain"
+import (
+	"github.com/mashmb/1pass/1pass-core/core/domain"
+)
 
 type VaultFacade interface {
 	GetItemDetails(uid string) *domain.Item
