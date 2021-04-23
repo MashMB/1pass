@@ -15,6 +15,10 @@ import (
 	"github.com/mashmb/1pass/port/out"
 )
 
+const (
+	Version string = "0.0.0"
+)
+
 func main() {
 	var cryptoUtils out.CrytpoUtils
 	var itemRepo out.ItemRepo
@@ -40,6 +44,6 @@ func main() {
 
 	cliControl = cobra.NewCobraCliControl(vaultFacade)
 
-	cobraCli := cli.NewCobraCli(cliControl)
+	cobraCli := cli.NewCobraCli(Version, cliControl)
 	cobraCli.Run()
 }

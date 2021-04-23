@@ -12,11 +12,13 @@ import (
 )
 
 type cobraCli struct {
+	version    string
 	cliControl in.CliControl
 }
 
-func NewCobraCli(cliControl in.CliControl) *cobraCli {
+func NewCobraCli(version string, cliControl in.CliControl) *cobraCli {
 	return &cobraCli{
+		version:    version,
 		cliControl: cliControl,
 	}
 }
@@ -62,9 +64,19 @@ like passwords. Details will be displayed in JSON format.`,
 		},
 	}
 
+	versionCmd := &cobra.Command{
+		Use:   "version",
+		Short: "Check application version",
+		Run: func(cmd *cobra.Command, args []string) {
+			ver := fmt.Sprintf("=== %v ===", cli.version)
+			fmt.Println(ver)
+		},
+	}
+
 	rootCmd.AddCommand(listCmd)
 	rootCmd.AddCommand(overviewCmd)
 	rootCmd.AddCommand(detailsCmd)
+	rootCmd.AddCommand(versionCmd)
 
 	return rootCmd
 }
