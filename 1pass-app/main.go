@@ -5,14 +5,14 @@
 package main
 
 import (
-	"github.com/mashmb/1pass/adapter/in/cobra"
-	"github.com/mashmb/1pass/adapter/out/repo/file"
-	"github.com/mashmb/1pass/adapter/out/util/crypto"
-	"github.com/mashmb/1pass/cli"
-	"github.com/mashmb/1pass/core/facade"
-	"github.com/mashmb/1pass/core/service"
-	"github.com/mashmb/1pass/port/in"
-	"github.com/mashmb/1pass/port/out"
+	"github.com/mashmb/1pass/1pass-app/cli"
+	"github.com/mashmb/1pass/1pass-core/core/facade"
+	"github.com/mashmb/1pass/1pass-core/core/service"
+	"github.com/mashmb/1pass/1pass-core/port/in"
+	"github.com/mashmb/1pass/1pass-core/port/out"
+	"github.com/mashmb/1pass/1pass-parse/adapter/out/repo/file"
+	"github.com/mashmb/1pass/1pass-parse/adapter/out/util/crypto"
+	"github.com/mashmb/1pass/1pass-term/adapter/in/cobra"
 )
 
 const (

@@ -7,7 +7,7 @@ package cli
 import (
 	"fmt"
 
-	"github.com/mashmb/1pass/port/in"
+	"github.com/mashmb/1pass/1pass-core/port/in"
 	"github.com/spf13/cobra"
 )
 
