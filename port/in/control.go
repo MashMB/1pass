@@ -5,4 +5,5 @@
 package in
 
 type CliControl interface {
+	GetItems(vaultPath, password string)
 }
