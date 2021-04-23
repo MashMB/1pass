@@ -11,7 +11,11 @@ import (
 )
 
 func setupFileItemRepo() *fileItemRepo {
-	return NewFileItemRepo("../../../../assets/onepassword_data")
+	repo := NewFileItemRepo()
+	vault := domain.NewVault("../../../../assets/onepassword_data")
+	repo.LoadItems(vault)
+
+	return repo
 }
 
 func TestFindByCategoryAndTrashed(t *testing.T) {
@@ -36,5 +40,22 @@ func TestFindFirtByUidAndTrashed(t *testing.T) {
 
 	if item.Trashed != trashed {
 		t.Errorf("FindFirstByUidAndTrashed() = %v; expected = %v", item.Trashed, trashed)
+	}
+}
+
+func TestLoadItems(t *testing.T) {
+	repo := NewFileItemRepo()
+	vault := domain.NewVault("../../../../assets/onepassword_data")
+	repo.LoadItems(vault)
+
+	if repo.items == nil || len(repo.items) == 0 {
+		t.Error("LoadItems() should initialize repository")
+	}
+
+	repo.items = nil
+	vault = domain.NewVault("../../../../assets/nobands")
+
+	if repo.items != nil || len(repo.items) != 0 {
+		t.Error("LoadItems() should initialize empty repository")
 	}
 }

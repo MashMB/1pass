@@ -6,10 +6,16 @@ package file
 
 import (
 	"testing"
+
+	"github.com/mashmb/1pass/core/domain"
 )
 
 func setupFileProfileRepo() *fileProfileRepo {
-	return NewFileProfileRepo("../../../../assets/onepassword_data")
+	repo := NewFileProfileRepo()
+	vault := domain.NewVault("../../../../assets/onepassword_data")
+	repo.LoadProfile(vault)
+
+	return repo
 }
 
 func TestGetIterations(t *testing.T) {
@@ -49,5 +55,15 @@ func TestGetSalt(t *testing.T) {
 
 	if salt != expected {
 		t.Errorf("GetSalt() = %v; expected %v", salt, expected)
+	}
+}
+
+func TestLoadProfile(t *testing.T) {
+	repo := NewFileProfileRepo()
+	vault := domain.NewVault("../../../../assets/onepassword_data")
+	repo.LoadProfile(vault)
+
+	if repo.profileJson == nil || len(repo.profileJson) == 0 {
+		t.Error("LoadProfile() should initialize repository")
 	}
 }
