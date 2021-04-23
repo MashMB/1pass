@@ -54,13 +54,13 @@ passwords. Overview will be displayed in JSON format.`,
 	}
 
 	detailsCmd := &cobra.Command{
-		Use:   "details [OPVault] [master_password] [UID]",
+		Use:   "details [OPVault] [UID]",
 		Short: "Details of single item stored in 1Password OPVault format (logins only)",
 		Long: `Details of single item stored in 1Password OPVault format (logins only). Details contains sensitive data 
 like passwords. Details will be displayed in JSON format.`,
-		Args: cobra.ExactArgs(3),
+		Args: cobra.ExactArgs(2),
 		Run: func(cmd *cobra.Command, args []string) {
-			cli.cliControl.GetItemDetails(args[0], args[1], args[2])
+			cli.cliControl.GetItemDetails(args[0], args[1])
 		},
 	}
 
