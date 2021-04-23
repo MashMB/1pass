@@ -57,41 +57,43 @@ func (repo *fileItemRepo) LoadItems(vault *domain.Vault) {
 			log.Fatalln(err)
 		}
 
-		itemsFile := "{"
+		if len(bandFiles) != 0 {
+			itemsFile := "{"
 
-		for _, bandFile := range bandFiles {
-			file, err := ioutil.ReadFile(bandFile)
+			for _, bandFile := range bandFiles {
+				file, err := ioutil.ReadFile(bandFile)
 
-			if err != nil {
+				if err != nil {
+					log.Fatalln(err)
+				}
+
+				itemsFile = itemsFile + string(file[4:len(file)-3]) + ","
+			}
+
+			itemsFile = itemsFile[:len(itemsFile)-1] + "}"
+
+			if err := json.Unmarshal([]byte(itemsFile), &itemsJson); err != nil {
 				log.Fatalln(err)
 			}
 
-			itemsFile = itemsFile + string(file[4:len(file)-3]) + ","
-		}
+			items := make([]*domain.RawItem, 0)
 
-		itemsFile = itemsFile[:len(itemsFile)-1] + "}"
+			for uid, value := range itemsJson {
+				v := value.(map[string]interface{})
+				created := int64(v["created"].(float64))
+				updated := int64(v["updated"].(float64))
+				trashed := false
 
-		if err := json.Unmarshal([]byte(itemsFile), &itemsJson); err != nil {
-			log.Fatalln(err)
-		}
+				if v["trashed"] != nil {
+					trashed = v["trashed"].(bool)
+				}
 
-		items := make([]*domain.RawItem, 0)
-
-		for uid, value := range itemsJson {
-			v := value.(map[string]interface{})
-			created := int64(v["created"].(float64))
-			updated := int64(v["updated"].(float64))
-			trashed := false
-
-			if v["trashed"] != nil {
-				trashed = v["trashed"].(bool)
+				item := domain.NewRawItem(v["category"].(string), v["d"].(string), v["hmac"].(string), v["k"].(string),
+					v["o"].(string), uid, created, updated, trashed)
+				items = append(items, item)
 			}
 
-			item := domain.NewRawItem(v["category"].(string), v["d"].(string), v["hmac"].(string), v["k"].(string),
-				v["o"].(string), uid, created, updated, trashed)
-			items = append(items, item)
+			repo.items = items
 		}
-
-		repo.items = items
 	}
 }
