@@ -7,30 +7,28 @@ package service
 import (
 	"testing"
 
-	"github.com/mashmb/1pass/adapter/out/repo/file"
-	"github.com/mashmb/1pass/core/domain"
-	"github.com/mashmb/1pass/port/out"
+	"github.com/mashmb/1pass/1pass-core/core/domain"
+	coreservice "github.com/mashmb/1pass/1pass-core/core/service"
+	"github.com/mashmb/1pass/1pass-core/port/out"
+	"github.com/mashmb/1pass/1pass-parse/adapter/out/repo/file"
 )
 
-func setupVaultService() *dfltVaultService {
+func setupVaultService() coreservice.VaultService {
 	var itemRepo out.ItemRepo
 	var profileRepo out.ProfileRepo
 
 	itemRepo = file.NewFileItemRepo()
 	profileRepo = file.NewFileProfileRepo()
 
-	return &dfltVaultService{
-		itemRepo:    itemRepo,
-		profileRepo: profileRepo,
-	}
+	return coreservice.NewDfltVaultService(itemRepo, profileRepo)
 }
 
 func TestValidateVault(t *testing.T) {
 	service := setupVaultService()
-	correctPath := "../../assets/onepassword_data"
-	noBandsPath := "../../assets/nobands"
-	noProfilePath := "../../assets/noprofile"
-	notVaultPath := "../../assets/empty"
+	correctPath := "../../../../assets/onepassword_data"
+	noBandsPath := "../../../../assets/nobands"
+	noProfilePath := "../../../../assets/noprofile"
+	notVaultPath := "../../../../assets/empty"
 	vault := domain.NewVault(correctPath)
 	err := service.ValidateVault(vault)
 

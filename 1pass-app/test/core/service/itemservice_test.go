@@ -7,19 +7,20 @@ package service
 import (
 	"testing"
 
-	"github.com/mashmb/1pass/adapter/out/repo/file"
-	"github.com/mashmb/1pass/adapter/out/util/crypto"
-	"github.com/mashmb/1pass/core/domain"
-	"github.com/mashmb/1pass/port/out"
+	"github.com/mashmb/1pass/1pass-core/core/domain"
+	coreservice "github.com/mashmb/1pass/1pass-core/core/service"
+	"github.com/mashmb/1pass/1pass-core/port/out"
+	"github.com/mashmb/1pass/1pass-parse/adapter/out/repo/file"
+	"github.com/mashmb/1pass/1pass-parse/adapter/out/util/crypto"
 )
 
-func setupItemAndKeyService() (*dfltItemService, KeyService) {
-	vault := domain.NewVault("../../assets/onepassword_data")
+func setupItemAndKeyService() (coreservice.ItemService, coreservice.KeyService) {
+	vault := domain.NewVault("../../../../assets/onepassword_data")
 	var crytpoUtils out.CrytpoUtils
 	var itemRepo out.ItemRepo
 	var profileRepo out.ProfileRepo
 
-	var keyService KeyService
+	var keyService coreservice.KeyService
 
 	crytpoUtils = crypto.NewPbkdf2CryptoUtils()
 	itemRepo = file.NewFileItemRepo()
@@ -27,9 +28,9 @@ func setupItemAndKeyService() (*dfltItemService, KeyService) {
 	profileRepo = file.NewFileProfileRepo()
 	profileRepo.LoadProfile(vault)
 
-	keyService = NewDfltKeyService(crytpoUtils, profileRepo)
+	keyService = coreservice.NewDfltKeyService(crytpoUtils, profileRepo)
 
-	return NewDfltItemService(keyService, itemRepo), keyService
+	return coreservice.NewDfltItemService(keyService, itemRepo), keyService
 }
 
 func TestGetDetails(t *testing.T) {
