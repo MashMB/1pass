@@ -7,8 +7,10 @@ package cobra
 import (
 	"fmt"
 	"os"
+	"syscall"
 
 	"github.com/mashmb/1pass/core/facade"
+	"golang.org/x/term"
 )
 
 type cobraCliControl struct {
@@ -58,8 +60,10 @@ func (ctrl *cobraCliControl) GetItemOverview(vaultPath, password, uid string) {
 	}
 }
 
-func (ctrl *cobraCliControl) GetItems(vaultPath, password string) {
-	err := ctrl.vaultFacade.Unlock(vaultPath, password)
+func (ctrl *cobraCliControl) GetItems(vaultPath string) {
+	fmt.Println("Password:")
+	password, err := term.ReadPassword(int(syscall.Stdin))
+	err = ctrl.vaultFacade.Unlock(vaultPath, string(password))
 
 	if err != nil {
 		fmt.Println(err)

@@ -32,13 +32,13 @@ efficiently in terminal.`,
 	}
 
 	listCmd := &cobra.Command{
-		Use:   "list [OPVault] [master_password]",
+		Use:   "list [OPVault]",
 		Short: "Get list of items stored in 1Passowrd OPVault format (logins only)",
 		Long: `Get list of items stored in 1Passowrd OPVault format (logins only). Items will be displayd in form of 
 [<UID>] --- <title>. UID value is required for item overview and details identifiaction.`,
-		Args: cobra.ExactArgs(2),
+		Args: cobra.ExactArgs(1),
 		Run: func(cmd *cobra.Command, args []string) {
-			cli.cliControl.GetItems(args[0], args[1])
+			cli.cliControl.GetItems(args[0])
 		},
 	}
 
