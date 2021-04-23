@@ -7,7 +7,7 @@ package in
 type CliControl interface {
 	GetItemDetails(vaultPath, password, uid string)
 
-	GetItemOverview(vaultPath, password, uid string)
+	GetItemOverview(vaultPath, uid string)
 
 	GetItems(vaultPath string)
 }

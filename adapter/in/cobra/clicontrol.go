@@ -42,8 +42,10 @@ func (ctrl *cobraCliControl) GetItemDetails(vaultPath, password, uid string) {
 
 }
 
-func (ctrl *cobraCliControl) GetItemOverview(vaultPath, password, uid string) {
-	err := ctrl.vaultFacade.Unlock(vaultPath, password)
+func (ctrl *cobraCliControl) GetItemOverview(vaultPath, uid string) {
+	fmt.Println("Password:")
+	password, err := term.ReadPassword(int(syscall.Stdin))
+	err = ctrl.vaultFacade.Unlock(vaultPath, string(password))
 
 	if err != nil {
 		fmt.Println(err)
