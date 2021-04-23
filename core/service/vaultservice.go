@@ -5,6 +5,8 @@
 package service
 
 import (
+	"errors"
+	"fmt"
 	"os"
 	"path/filepath"
 
@@ -28,11 +30,15 @@ func (s *dfltVaultService) ValidateVault(vault *domain.Vault) error {
 	info, err := os.Stat(vault.Path)
 
 	if err != nil {
-		return err
+		errMsg := fmt.Sprintf(domain.ErrInvalidVault.Error(), vault.Path+" is not a valid path")
+
+		return errors.New(errMsg)
 	}
 
 	if !info.IsDir() {
-		return domain.ErrInvalidVault
+		errMsg := fmt.Sprintf(domain.ErrInvalidVault.Error(), vault.Path+" is not a directory")
+
+		return errors.New(errMsg)
 	}
 
 	profilePath := filepath.Join(vault.Path, domain.ProfileDir, domain.ProfileFile)
@@ -40,11 +46,15 @@ func (s *dfltVaultService) ValidateVault(vault *domain.Vault) error {
 	info, err = os.Stat(profilePath)
 
 	if err != nil {
-		return err
+		errMsg := fmt.Sprintf(domain.ErrInvalidVault.Error(), profilePath+" do not exist")
+
+		return errors.New(errMsg)
 	}
 
 	if info.IsDir() {
-		return domain.ErrInvalidVault
+		errMsg := fmt.Sprintf(domain.ErrInvalidVault.Error(), profilePath+" is not a file")
+
+		return errors.New(errMsg)
 	}
 
 	s.profileRepo.LoadProfile(vault)
