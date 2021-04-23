@@ -21,6 +21,24 @@ func NewCobraCliControl(vaultFacade facade.VaultFacade) *cobraCliControl {
 	}
 }
 
+func (ctrl *cobraCliControl) GetItemOverview(vaultPath, password, uid string) {
+	err := ctrl.vaultFacade.Unlock(vaultPath, password)
+
+	if err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
+
+	item := ctrl.vaultFacade.GetItemOverview(uid)
+
+	if item != nil {
+		fmt.Println(item.Details)
+	} else {
+		msg := fmt.Sprintf("Item with UID %v do not exist", uid)
+		fmt.Println(msg)
+	}
+}
+
 func (ctrl *cobraCliControl) GetItems(vaultPath, password string) {
 	err := ctrl.vaultFacade.Unlock(vaultPath, password)
 
