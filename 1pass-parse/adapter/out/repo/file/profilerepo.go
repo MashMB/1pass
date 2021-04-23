@@ -10,7 +10,7 @@ import (
 	"log"
 	"path/filepath"
 
-	"github.com/mashmb/1pass/core/domain"
+	"github.com/mashmb/1pass/1pass-core/core/domain"
 )
 
 type fileProfileRepo struct {
