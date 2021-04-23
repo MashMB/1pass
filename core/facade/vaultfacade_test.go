@@ -20,22 +20,24 @@ func setupVaultFacade() *dfltVaultFacade {
 
 	var itemService service.ItemService
 	var keyService service.KeyService
+	var vaultService service.VaultService
 
 	cryptoUtils = crypto.NewPbkdf2CryptoUtils()
-	itemRepo = file.NewFileItemRepo("../../assets/onepassword_data")
-	profileRepo = file.NewFileProfileRepo("../../assets/onepassword_data")
+	itemRepo = file.NewFileItemRepo()
+	profileRepo = file.NewFileProfileRepo()
 
 	keyService = service.NewDfltKeyService(cryptoUtils, profileRepo)
 	itemService = service.NewDfltItemService(keyService, itemRepo)
+	vaultService = service.NewDfltVaultService(itemRepo, profileRepo)
 
-	return NewDfltVaultFacade(itemService, keyService)
+	return NewDfltVaultFacade(itemService, keyService, vaultService)
 }
 
 func TestGetItemDetails(t *testing.T) {
 	facade := setupVaultFacade()
 	pass := "freddy"
 	uid := "358B7411EB8B45CD9CE592ED16F3E9DE"
-	err := facade.Unlock(pass)
+	err := facade.Unlock("../../assets/onepassword_data", pass)
 
 	if err != nil {
 		t.Error("Unlock() should pass because of valid password")
@@ -52,7 +54,7 @@ func TestGetItemOverview(t *testing.T) {
 	facade := setupVaultFacade()
 	pass := "freddy"
 	uid := "358B7411EB8B45CD9CE592ED16F3E9DE"
-	err := facade.Unlock(pass)
+	err := facade.Unlock("../../assets/onepassword_data", pass)
 
 	if err != nil {
 		t.Error("Unlock() should pass because of valid password")
@@ -71,7 +73,7 @@ func TestGetItems(t *testing.T) {
 	expected := 10
 	first := "Bank of America"
 	last := "YouTube"
-	err := facade.Unlock(pass)
+	err := facade.Unlock("../../assets/onepassword_data", pass)
 
 	if err != nil {
 		t.Error("Unlock() should pass because of valid password")
@@ -101,7 +103,7 @@ func TestIsUnlocked(t *testing.T) {
 		t.Errorf("IsUnlocked() = %v; expected %v", unlocked, false)
 	}
 
-	facade.Unlock(pass)
+	facade.Unlock("../../assets/onepassword_data", pass)
 	unlocked = facade.IsUnlocked()
 
 	if unlocked == false {
@@ -112,7 +114,7 @@ func TestIsUnlocked(t *testing.T) {
 func TestLock(t *testing.T) {
 	facade := setupVaultFacade()
 	pass := "freddy"
-	facade.Unlock(pass)
+	facade.Unlock("../../assets/onepassword_data", pass)
 
 	if facade.keys == nil {
 		t.Error("Unlock() should provide keys")
@@ -129,13 +131,13 @@ func TestUnlock(t *testing.T) {
 	facade := setupVaultFacade()
 	goodPass := "freddy"
 	badPass := ""
-	err := facade.Unlock(badPass)
+	err := facade.Unlock("../../assets/onepassword_data", badPass)
 
 	if err == nil {
 		t.Error("Unlock() should fail because of invalid password")
 	}
 
-	err = facade.Unlock(goodPass)
+	err = facade.Unlock("../../assets/onepassword_data", goodPass)
 
 	if err != nil {
 		t.Error("Unlock() should pass because of valid password")

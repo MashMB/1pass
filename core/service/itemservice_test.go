@@ -14,7 +14,7 @@ import (
 )
 
 func setupItemAndKeyService() (*dfltItemService, KeyService) {
-	vaultPath := "../../assets/onepassword_data"
+	vault := domain.NewVault("../../assets/onepassword_data")
 	var crytpoUtils out.CrytpoUtils
 	var itemRepo out.ItemRepo
 	var profileRepo out.ProfileRepo
@@ -22,8 +22,10 @@ func setupItemAndKeyService() (*dfltItemService, KeyService) {
 	var keyService KeyService
 
 	crytpoUtils = crypto.NewPbkdf2CryptoUtils()
-	itemRepo = file.NewFileItemRepo(vaultPath)
-	profileRepo = file.NewFileProfileRepo(vaultPath)
+	itemRepo = file.NewFileItemRepo()
+	itemRepo.LoadItems(vault)
+	profileRepo = file.NewFileProfileRepo()
+	profileRepo.LoadProfile(vault)
 
 	keyService = NewDfltKeyService(crytpoUtils, profileRepo)
 
