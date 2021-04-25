@@ -3,10 +3,15 @@
 # @author TSS
 
 app = 1pass-app
+bin = bin
 binary = 1pass
 core = 1pass-core
+license = LICENSE.md
 parse = 1pass-parse
+pkg = pkg
+readme = README.md
 repo = github.com/mashmb/1pass/1pass-app
+tar = '1Pass-1.0.0-Linux(x86_64).tar.gz'
 term = 1pass-term
 test-all = test-core test-parse test-term test-app
 test-all-simple = test-core.s test-parse.s test-term.s test-app.s
@@ -15,20 +20,24 @@ all: build run clean
 
 build: $(test-all-simple)
 	echo "--- Building $(binary) ---"
-	cd $(app) && go build -o ../bin/$(binary)
+	cd $(app) && go build -o ../$(bin)/$(binary)
 
 clean:
 	echo "--- Cleaning ---"
-	rm -rf ./bin/
-	rm -rf ./pkg/
+	rm -rf ./$(bin)/
+	rm -rf ./$(pkg)/
 
 exec: $(test-all-simple)
 	echo "--- Building executable $(binary) ---"
-	cd $(app) && env GOOS=linux GOARCH=amd64 go build -o ../pkg/$(binary) $(repo)
+	cd $(app) && env GOOS=linux GOARCH=amd64 go build -o ../$(pkg)/$(binary)/$(binary) $(repo)
+	cp $(readme) $(pkg)/$(binary)/$(readme)
+	cp $(license) $(pkg)/$(binary)/$(license)
+	cd $(pkg) && tar -czvf $(tar) $(binary)
+	cd $(pkg) && rm -rf $(binary)
 
 run:
 	echo "--- Running $(binary) ---"
-	./bin/$(binary)
+	./$(bin)/$(binary)
 
 test: $(test-all)
 
