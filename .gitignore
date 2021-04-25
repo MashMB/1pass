@@ -6,6 +6,9 @@
 # Build directory
 /bin/
 
+# Executable package directory
+/pkg/
+
 # Binaries for programs and plugins
 *.exe
 *.exe~

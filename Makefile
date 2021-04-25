@@ -6,6 +6,7 @@ app = 1pass-app
 binary = 1pass
 core = 1pass-core
 parse = 1pass-parse
+repo = github.com/mashmb/1pass/1pass-app
 term = 1pass-term
 test-all = test-core test-parse test-term test-app
 test-all-simple = test-core.s test-parse.s test-term.s test-app.s
@@ -19,6 +20,11 @@ build: $(test-all-simple)
 clean:
 	echo "--- Cleaning ---"
 	rm -rf ./bin/
+	rm -rf ./pkg/
+
+exec: $(test-all-simple)
+	echo "--- Building executable $(binary) ---"
+	cd $(app) && env GOOS=linux GOARCH=amd64 go build -o ../pkg/$(binary) $(repo)
 
 run:
 	echo "--- Running $(binary) ---"
