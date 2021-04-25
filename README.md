@@ -37,8 +37,10 @@ The most important commands are:
 2. *overview* - displays overview of item without sensitive data as JSON
 3. *details* - displays details of item with sensitive data as JSON
 
-- **<path>** - path to 1Password [OPVault](https://support.1password.com/opvault-design/)
-- **<uid>** - unique UID of item (obtained with *list* command)
+Legend:
+
+- **path** - path to 1Password [OPVault](https://support.1password.com/opvault-design/)
+- **uid** - unique UID of item (obtained with *list* command)
 
 ## What is new?
 
@@ -109,7 +111,7 @@ you want to do. The more detailed description, the better. Git branch name shoul
 1.0.0/pr/pretty_item_overview/#99
 ```
 
-I am trying to use [Conventional commits](conventionalcommits.org/en/v1.0.0/), so it is really important that your commits 
+I am trying to use [Conventional commits](https://conventionalcommits.org/en/v1.0.0/), so it is really important that your commits 
 also should. Example:
 
 ```
