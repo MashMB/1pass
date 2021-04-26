@@ -7,9 +7,9 @@ module github.com/mashmb/1pass/1pass-app
 go 1.15
 
 require (
-	github.com/mashmb/1pass/1pass-core v0.0.0
-	github.com/mashmb/1pass/1pass-parse v0.0.0
-	github.com/mashmb/1pass/1pass-term v0.0.0
+	github.com/mashmb/1pass/1pass-core v1.0.0
+	github.com/mashmb/1pass/1pass-parse v1.0.0
+	github.com/mashmb/1pass/1pass-term v1.0.0
 	github.com/spf13/cobra v1.1.3
 )
 
