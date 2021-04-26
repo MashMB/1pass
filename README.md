@@ -15,6 +15,19 @@ Linux way - using CLI only.
 
 ## Installation
 
+Application is available only for Linux x86_64. Specific installation instructions below.
+
+### Binary
+
+In [GitHub releases](https://github.com/mashmb/1pass/releases) section binary files can be found. Binary is distributed 
+in **tar** archive. Download archive that matches your system and architecture. The installation process is following:
+
+1. Download archive.
+2. Unpack it with *tar -xf <archive_path>*.
+3. Move file to */usr/bin/* (*mv 1pass /usr/bin*).
+4. If it is needed, change permissions to **1pass** (*chmod 755 /usr/bin/1pass*).
+5. Type *1pass* and check if it works.
+
 ## Usage
 
 1Pass is a command line tool, so usage is limited to command variations. First of all type:
@@ -68,7 +81,7 @@ All actual work on project can be tracked in [GitHub issues](https://github.com/
 ## Contribution guide
 
 Below you will find instructions how to contribute without changing my software developing workflow. All other type of 
-contribution or contribution that do now follow rules, will be "banned" out of the box.
+contribution or contribution that do not follow rules, will be "banned" out of the box.
 
 ## Bugs
 
