@@ -6,8 +6,8 @@
 # Build directory
 /bin/
 
-# Executable package directory
-/pkg/
+# Release binaries output directory
+/out/
 
 # Binaries for programs and plugins
 *.exe
