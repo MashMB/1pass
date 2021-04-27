@@ -25,10 +25,16 @@ func (repo *fileItemRepo) FindByCategoryAndTrashed(category *domain.ItemCategory
 	resultSet := make([]*domain.RawItem, 0)
 
 	for _, item := range repo.items {
-		cat, err := domain.ItemCategoryEnum.FromCode(item.Category)
+		if category == nil {
+			if item.Trashed == trashed {
+				resultSet = append(resultSet, item)
+			}
+		} else {
+			cat, err := domain.ItemCategoryEnum.FromCode(item.Category)
 
-		if err == nil && cat == category && item.Trashed == trashed {
-			resultSet = append(resultSet, item)
+			if err == nil && cat == category && item.Trashed == trashed {
+				resultSet = append(resultSet, item)
+			}
 		}
 	}
 
