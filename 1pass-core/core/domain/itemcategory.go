@@ -4,6 +4,10 @@
 
 package domain
 
+import (
+	"strings"
+)
+
 var (
 	ItemCategoryEnum = newItemCategoryRegistry()
 )
@@ -117,10 +121,11 @@ func (r *itemCategoryRegistry) FromCode(code string) (*ItemCategory, error) {
 }
 
 func (r *itemCategoryRegistry) FromName(name string) (*ItemCategory, error) {
+	name = strings.ToLower(name)
 	var category *ItemCategory
 
 	for _, value := range r.values {
-		if value.name == name {
+		if strings.ToLower(value.name) == name {
 			category = value
 			break
 		}
