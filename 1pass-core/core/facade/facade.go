@@ -13,7 +13,7 @@ type VaultFacade interface {
 
 	GetItemOverview(uid string) *domain.Item
 
-	GetItems(category *domain.ItemCategory) []*domain.SimpleItem
+	GetItems(category *domain.ItemCategory, trashed bool) []*domain.SimpleItem
 
 	IsUnlocked() bool
 

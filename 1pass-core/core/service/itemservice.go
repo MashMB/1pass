@@ -66,9 +66,9 @@ func (s *dfltItemService) GetOverview(uid string, keys *domain.Keys) *domain.Ite
 	return item
 }
 
-func (s *dfltItemService) GetSimple(keys *domain.Keys, category *domain.ItemCategory) []*domain.SimpleItem {
+func (s *dfltItemService) GetSimple(keys *domain.Keys, category *domain.ItemCategory, trashed bool) []*domain.SimpleItem {
 	items := make([]*domain.SimpleItem, 0)
-	rawItems := s.itemRepo.FindByCategoryAndTrashed(category, false)
+	rawItems := s.itemRepo.FindByCategoryAndTrashed(category, trashed)
 
 	for _, rawItem := range rawItems {
 		overviewData, _ := base64.StdEncoding.DecodeString(rawItem.Overview)
