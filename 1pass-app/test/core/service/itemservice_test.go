@@ -76,14 +76,14 @@ func TestGetOverview(t *testing.T) {
 
 func TestGetSimple(t *testing.T) {
 	itemService, keyService := setupItemAndKeyService()
-	expected := 10
+	expected := 27
 	first, firstUid := "Bank of America", "EC0A40400ABB4B16926B7417E95C9669"
-	last, lastUid := "YouTube", "358B7411EB8B45CD9CE592ED16F3E9DE"
+	last, lastUid := "Email Account", "FD2EADB43C4F4FC7BEB35A1692DDFDEA"
 	pass := "freddy"
 	derivedKey, derivedMac, _ := keyService.DerivedKeys(pass)
 	overviewKey, overviewMac, _ := keyService.OverviewKeys(derivedKey, derivedMac)
 	keys := domain.NewKeys(derivedKey, derivedMac, nil, nil, overviewKey, overviewMac)
-	items := itemService.GetSimple(keys)
+	items := itemService.GetSimple(keys, nil)
 
 	if len(items) != expected {
 		t.Errorf("GetSimple() = %d; expected = %d", len(items), expected)
