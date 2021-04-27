@@ -12,6 +12,7 @@ import (
 )
 
 type cobraCli struct {
+	category   string
 	version    string
 	cliControl in.CliControl
 }
@@ -38,9 +39,11 @@ efficiently in terminal.`,
 [<UID>] (<category>) --- <title>. UID value is required for item overview and details identifiaction.`,
 		Args: cobra.ExactArgs(1),
 		Run: func(cmd *cobra.Command, args []string) {
-			cli.cliControl.GetItems(args[0], nil)
+			cli.cliControl.GetItems(args[0], cli.category)
 		},
 	}
+
+	listCmd.Flags().StringVarP(&cli.category, "category", "c", "", "filtering over item category")
 
 	overviewCmd := &cobra.Command{
 		Use:   "overview [OPVault] [UID]",
