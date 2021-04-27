@@ -33,8 +33,8 @@ efficiently in terminal.`,
 
 	listCmd := &cobra.Command{
 		Use:   "list [OPVault]",
-		Short: "Get list of items stored in 1Passowrd OPVault format (logins only)",
-		Long: `Get list of items stored in 1Passowrd OPVault format (logins only). Items will be displayd in form of 
+		Short: "Get list of items stored in 1Passowrd OPVault format",
+		Long: `Get list of items stored in 1Passowrd OPVault format. Items will be displayd in form of 
 [<UID>] (<category>) --- <title>. UID value is required for item overview and details identifiaction.`,
 		Args: cobra.ExactArgs(1),
 		Run: func(cmd *cobra.Command, args []string) {
@@ -44,8 +44,8 @@ efficiently in terminal.`,
 
 	overviewCmd := &cobra.Command{
 		Use:   "overview [OPVault] [UID]",
-		Short: "Overview single item sotred in 1Password OPVault format (logins only)",
-		Long: `Overview single item sotred in 1Password OPVault format (logins only). Overview has no sensitive data like 
+		Short: "Overview single item sotred in 1Password OPVault format",
+		Long: `Overview single item sotred in 1Password OPVault format. Overview has no sensitive data like 
 passwords. Overview will be displayed in JSON format.`,
 		Args: cobra.ExactArgs(2),
 		Run: func(cmd *cobra.Command, args []string) {
@@ -55,8 +55,8 @@ passwords. Overview will be displayed in JSON format.`,
 
 	detailsCmd := &cobra.Command{
 		Use:   "details [OPVault] [UID]",
-		Short: "Details of single item stored in 1Password OPVault format (logins only)",
-		Long: `Details of single item stored in 1Password OPVault format (logins only). Details contains sensitive data 
+		Short: "Details of single item stored in 1Password OPVault format",
+		Long: `Details of single item stored in 1Password OPVault format. Details contains sensitive data 
 like passwords. Details will be displayed in JSON format.`,
 		Args: cobra.ExactArgs(2),
 		Run: func(cmd *cobra.Command, args []string) {
