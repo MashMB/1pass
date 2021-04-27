@@ -56,11 +56,23 @@ func TestFindFirtByUidAndTrashed(t *testing.T) {
 	item := repo.FindFirstByUidAndTrashed(uid, trashed)
 
 	if item.Uid != uid {
-		t.Errorf("FindFirstByUidAndTrashed() = %v; expected = %v", item.Uid, uid)
+		t.Errorf("[NOT-TRSHED] FindFirstByUidAndTrashed() = %v; expected = %v", item.Uid, uid)
 	}
 
 	if item.Trashed != trashed {
-		t.Errorf("FindFirstByUidAndTrashed() = %v; expected = %v", item.Trashed, trashed)
+		t.Errorf("[NOT-TRASHED] FindFirstByUidAndTrashed() = %v; expected = %v", item.Trashed, trashed)
+	}
+
+	uid = "0C4F27910A64488BB339AED63565D148"
+	trashed = true
+	item = repo.FindFirstByUidAndTrashed(uid, trashed)
+
+	if item.Uid != uid {
+		t.Errorf("[TRSHED] FindFirstByUidAndTrashed() = %v; expected = %v", item.Uid, uid)
+	}
+
+	if item.Trashed != trashed {
+		t.Errorf("[TRASHED] FindFirstByUidAndTrashed() = %v; expected = %v", item.Trashed, trashed)
 	}
 }
 
