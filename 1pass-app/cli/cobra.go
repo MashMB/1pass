@@ -75,9 +75,11 @@ passwords. Overview will be displayed in JSON format.`,
 like passwords. Details will be displayed in JSON format.`,
 		Args: cobra.ExactArgs(2),
 		Run: func(cmd *cobra.Command, args []string) {
-			cli.cliControl.GetItemDetails(args[0], args[1], false)
+			cli.cliControl.GetItemDetails(args[0], args[1], cli.trashed)
 		},
 	}
+
+	detailsCmd.Flags().BoolVarP(&cli.trashed, "trashed", "t", false, "search in trashed items")
 
 	versionCmd := &cobra.Command{
 		Use:   "version",
