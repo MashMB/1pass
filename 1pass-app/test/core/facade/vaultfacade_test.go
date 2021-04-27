@@ -7,6 +7,7 @@ package facade
 import (
 	"testing"
 
+	"github.com/mashmb/1pass/1pass-core/core/domain"
 	corefacade "github.com/mashmb/1pass/1pass-core/core/facade"
 	"github.com/mashmb/1pass/1pass-core/core/service"
 	"github.com/mashmb/1pass/1pass-core/port/out"
@@ -80,18 +81,18 @@ func TestGetItems(t *testing.T) {
 		t.Error("Unlock() should pass because of valid password")
 	}
 
-	items := facade.GetItems()
+	items := facade.GetItems(domain.ItemCategoryEnum.Login)
 
 	if len(items) != expected {
-		t.Errorf("GetItems() = %d; expected = %d", len(items), expected)
+		t.Errorf("[LENGTH] GetItems() = %d; expected = %d", len(items), expected)
 	}
 
 	if items[0].Title != first {
-		t.Errorf("GetItems() = %v; expected = %v", items[0].Title, first)
+		t.Errorf("[FIRST] GetItems() = %v; expected = %v", items[0].Title, first)
 	}
 
 	if items[len(items)-1].Title != last {
-		t.Errorf("GetItems() = %v; expected = %v", items[len(items)-1], last)
+		t.Errorf("[LAST] GetItems() = %v; expected = %v", items[len(items)-1], last)
 	}
 }
 
