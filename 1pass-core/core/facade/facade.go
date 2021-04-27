@@ -9,7 +9,7 @@ import (
 )
 
 type VaultFacade interface {
-	GetItemDetails(uid string) *domain.Item
+	GetItemDetails(uid string, trashed bool) *domain.Item
 
 	GetItemOverview(uid string, trashed bool) *domain.Item
 

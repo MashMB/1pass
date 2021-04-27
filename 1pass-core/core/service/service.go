@@ -9,7 +9,7 @@ import (
 )
 
 type ItemService interface {
-	GetDetails(uid string, keys *domain.Keys) *domain.Item
+	GetDetails(uid string, trashed bool, keys *domain.Keys) *domain.Item
 
 	GetOverview(uid string, trashed bool, keys *domain.Keys) *domain.Item
 

@@ -25,8 +25,8 @@ func NewDfltVaultFacade(itemService service.ItemService, keyService service.KeyS
 	}
 }
 
-func (f *dfltVaultFacade) GetItemDetails(uid string) *domain.Item {
-	return f.itemService.GetDetails(uid, f.keys)
+func (f *dfltVaultFacade) GetItemDetails(uid string, trashed bool) *domain.Item {
+	return f.itemService.GetDetails(uid, trashed, f.keys)
 }
 
 func (f *dfltVaultFacade) GetItemOverview(uid string, trashed bool) *domain.Item {

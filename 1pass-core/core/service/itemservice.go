@@ -27,9 +27,9 @@ func NewDfltItemService(keyService KeyService, itemRepo out.ItemRepo) *dfltItemS
 	}
 }
 
-func (s *dfltItemService) GetDetails(uid string, keys *domain.Keys) *domain.Item {
+func (s *dfltItemService) GetDetails(uid string, trashed bool, keys *domain.Keys) *domain.Item {
 	var item *domain.Item
-	rawItem := s.itemRepo.FindFirstByUidAndTrashed(uid, false)
+	rawItem := s.itemRepo.FindFirstByUidAndTrashed(uid, trashed)
 
 	if rawItem != nil {
 		cat, err := domain.ItemCategoryEnum.FromCode(rawItem.Category)
