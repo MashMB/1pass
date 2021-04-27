@@ -33,8 +33,8 @@ func (f *dfltVaultFacade) GetItemOverview(uid string) *domain.Item {
 	return f.itemService.GetOverview(uid, f.keys)
 }
 
-func (f *dfltVaultFacade) GetItems() []*domain.SimpleItem {
-	return f.itemService.GetSimple(f.keys)
+func (f *dfltVaultFacade) GetItems(category *domain.ItemCategory) []*domain.SimpleItem {
+	return f.itemService.GetSimple(f.keys, category)
 }
 
 func (f *dfltVaultFacade) IsUnlocked() bool {
