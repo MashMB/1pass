@@ -38,6 +38,7 @@ func setupVaultFacade() corefacade.VaultFacade {
 func TestGetItemDetails(t *testing.T) {
 	facade := setupVaultFacade()
 	pass := "freddy"
+	trashed := false
 	uid := "358B7411EB8B45CD9CE592ED16F3E9DE"
 	err := facade.Unlock("../../../../assets/onepassword_data", pass)
 
@@ -45,16 +46,25 @@ func TestGetItemDetails(t *testing.T) {
 		t.Error("Unlock() should pass because of valid password")
 	}
 
-	item := facade.GetItemDetails(uid)
+	item := facade.GetItemDetails(uid, trashed)
 
 	if item.Uid != uid {
-		t.Errorf("GetItemDetails() = %v; expected = %v", item.Uid, uid)
+		t.Errorf("[NOT-TRASHED] GetItemDetails() = %v; expected = %v", item.Uid, uid)
+	}
+
+	trashed = true
+	uid = "AE272805811C450586BA3EDEAEF8AE19"
+	item = facade.GetItemDetails(uid, trashed)
+
+	if item.Uid != uid {
+		t.Errorf("[TRASHED] GetItemDetails() = %v; expected = %v", item.Uid, uid)
 	}
 }
 
 func TestGetItemOverview(t *testing.T) {
 	facade := setupVaultFacade()
 	pass := "freddy"
+	trashed := false
 	uid := "358B7411EB8B45CD9CE592ED16F3E9DE"
 	err := facade.Unlock("../../../../assets/onepassword_data", pass)
 
@@ -62,10 +72,18 @@ func TestGetItemOverview(t *testing.T) {
 		t.Error("Unlock() should pass because of valid password")
 	}
 
-	item := facade.GetItemOverview(uid)
+	item := facade.GetItemOverview(uid, trashed)
 
 	if item.Uid != uid {
-		t.Errorf("GetItemOverview() = %v; expected = %v", item.Uid, uid)
+		t.Errorf("[NOT-TRASHED] GetItemOverview() = %v; expected = %v", item.Uid, uid)
+	}
+
+	trashed = true
+	uid = "AE272805811C450586BA3EDEAEF8AE19"
+	item = facade.GetItemOverview(uid, trashed)
+
+	if item.Uid != uid {
+		t.Errorf("[TRASHED] GetItemOverview() = %v; expected = %v", item.Uid, uid)
 	}
 }
 
@@ -73,6 +91,7 @@ func TestGetItems(t *testing.T) {
 	facade := setupVaultFacade()
 	pass := "freddy"
 	expected := 10
+	trashed := false
 	first := "Bank of America"
 	last := "YouTube"
 	err := facade.Unlock("../../../../assets/onepassword_data", pass)
@@ -81,18 +100,36 @@ func TestGetItems(t *testing.T) {
 		t.Error("Unlock() should pass because of valid password")
 	}
 
-	items := facade.GetItems(domain.ItemCategoryEnum.Login)
+	items := facade.GetItems(domain.ItemCategoryEnum.Login, trashed)
 
 	if len(items) != expected {
-		t.Errorf("[LENGTH] GetItems() = %d; expected = %d", len(items), expected)
+		t.Errorf("[NOT-TRASHED-LENGTH] GetItems() = %d; expected = %d", len(items), expected)
 	}
 
 	if items[0].Title != first {
-		t.Errorf("[FIRST] GetItems() = %v; expected = %v", items[0].Title, first)
+		t.Errorf("[NOT-TRASHED-FIRST] GetItems() = %v; expected = %v", items[0].Title, first)
 	}
 
 	if items[len(items)-1].Title != last {
-		t.Errorf("[LAST] GetItems() = %v; expected = %v", items[len(items)-1], last)
+		t.Errorf("[NOT-TRASHED-LAST] GetItems() = %v; expected = %v", items[len(items)-1], last)
+	}
+
+	expected = 2
+	trashed = true
+	first = "A note to Trash"
+	last = ""
+	items = facade.GetItems(nil, trashed)
+
+	if len(items) != expected {
+		t.Errorf("[TRASHED-LENGTH] GetItems() = %d; expected = %d", len(items), expected)
+	}
+
+	if items[0].Title != first {
+		t.Errorf("[TRASHED-FIRST] GetItems() = %v; expected = %v", items[0].Title, first)
+	}
+
+	if items[len(items)-1].Title != last {
+		t.Errorf("[TRASHED-LAST] GetItems() = %v; expected = %v", items[len(items)-1], last)
 	}
 }
 
