@@ -7,6 +7,7 @@ package cobra
 import (
 	"fmt"
 	"os"
+	"sort"
 	"strings"
 	"syscall"
 
@@ -22,6 +23,19 @@ type cobraCliControl struct {
 func NewCobraCliControl(vaultFacade facade.VaultFacade) *cobraCliControl {
 	return &cobraCliControl{
 		vaultFacade: vaultFacade,
+	}
+}
+
+func (ctrl *cobraCliControl) GetCategories() {
+	categories := domain.ItemCategoryEnum.GetValues()
+
+	sort.Slice(categories, func(i, j int) bool {
+		return categories[i].GetCode() < categories[j].GetCode()
+	})
+
+	for i, cat := range categories {
+		msg := fmt.Sprintf("%d. %v", i+1, cat.GetName())
+		fmt.Println(msg)
 	}
 }
 
