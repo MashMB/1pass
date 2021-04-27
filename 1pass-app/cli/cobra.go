@@ -62,9 +62,11 @@ efficiently in terminal.`,
 passwords. Overview will be displayed in JSON format.`,
 		Args: cobra.ExactArgs(2),
 		Run: func(cmd *cobra.Command, args []string) {
-			cli.cliControl.GetItemOverview(args[0], args[1], false)
+			cli.cliControl.GetItemOverview(args[0], args[1], cli.trashed)
 		},
 	}
+
+	overviewCmd.Flags().BoolVarP(&cli.trashed, "trashed", "t", false, "search in trashed items")
 
 	detailsCmd := &cobra.Command{
 		Use:   "details [OPVault] [UID]",
