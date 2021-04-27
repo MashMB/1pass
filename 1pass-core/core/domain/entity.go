@@ -34,8 +34,9 @@ type RawItem struct {
 }
 
 type SimpleItem struct {
-	Title string
-	Uid   string
+	Category *ItemCategory
+	Title    string
+	Uid      string
 }
 
 type Vault struct {
@@ -77,10 +78,11 @@ func NewRawItem(category, details, hmac, keys, overview, uid string, created, up
 	}
 }
 
-func NewSimpleItem(title, uid string) *SimpleItem {
+func NewSimpleItem(category *ItemCategory, title, uid string) *SimpleItem {
 	return &SimpleItem{
-		Title: title,
-		Uid:   uid,
+		Category: category,
+		Title:    title,
+		Uid:      uid,
 	}
 }
 
