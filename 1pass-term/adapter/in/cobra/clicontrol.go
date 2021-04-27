@@ -39,7 +39,7 @@ func (ctrl *cobraCliControl) GetCategories() {
 	}
 }
 
-func (ctrl *cobraCliControl) GetItemDetails(vaultPath, uid string) {
+func (ctrl *cobraCliControl) GetItemDetails(vaultPath, uid string, trashed bool) {
 	fmt.Println("Password:")
 	password, err := term.ReadPassword(int(syscall.Stdin))
 	err = ctrl.vaultFacade.Unlock(vaultPath, string(password))
@@ -49,7 +49,7 @@ func (ctrl *cobraCliControl) GetItemDetails(vaultPath, uid string) {
 		os.Exit(1)
 	}
 
-	item := ctrl.vaultFacade.GetItemDetails(uid)
+	item := ctrl.vaultFacade.GetItemDetails(uid, trashed)
 
 	if item != nil {
 		fmt.Println(item.Details)

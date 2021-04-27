@@ -7,7 +7,7 @@ package in
 type CliControl interface {
 	GetCategories()
 
-	GetItemDetails(vaultPath, uid string)
+	GetItemDetails(vaultPath, uid string, trashed bool)
 
 	GetItemOverview(vaultPath, uid string, trashed bool)
 
