@@ -14,8 +14,25 @@ type ItemCategory struct {
 }
 
 type itemCategoryRegistry struct {
-	Login  *ItemCategory
-	values []*ItemCategory
+	BankAccount     *ItemCategory
+	CreditCard      *ItemCategory
+	Database        *ItemCategory
+	DriverLicense   *ItemCategory
+	Email           *ItemCategory
+	Identity        *ItemCategory
+	Login           *ItemCategory
+	Membership      *ItemCategory
+	OutdoorLicense  *ItemCategory
+	Passport        *ItemCategory
+	Password        *ItemCategory
+	Rewards         *ItemCategory
+	Router          *ItemCategory
+	SecureNote      *ItemCategory
+	Server          *ItemCategory
+	SoftwareLicense *ItemCategory
+	Ssn             *ItemCategory
+	Tombstone       *ItemCategory
+	values          []*ItemCategory
 }
 
 func newItemCategory(code, name string) *ItemCategory {
@@ -26,11 +43,47 @@ func newItemCategory(code, name string) *ItemCategory {
 }
 
 func newItemCategoryRegistry() *itemCategoryRegistry {
+	bankAccount := newItemCategory("101", "Bank Account")
+	creditCard := newItemCategory("002", "Credit Card")
+	database := newItemCategory("102", "Database")
+	driverLicense := newItemCategory("103", "Driver License")
+	email := newItemCategory("111", "Email")
+	identity := newItemCategory("004", "Identity")
 	login := newItemCategory("001", "Login")
+	membership := newItemCategory("105", "Membership")
+	outdoorLicense := newItemCategory("104", "Outdoor License")
+	passport := newItemCategory("106", "Passport")
+	password := newItemCategory("005", "Password")
+	rewards := newItemCategory("107", "Rewards")
+	router := newItemCategory("109", "Router")
+	secureNote := newItemCategory("003", "Secure Note")
+	server := newItemCategory("110", "Server")
+	softwareLicense := newItemCategory("100", "Software License")
+	ssn := newItemCategory("108", "SSN")
+	tombstone := newItemCategory("099", "Tombstone")
 
 	return &itemCategoryRegistry{
-		Login:  login,
-		values: []*ItemCategory{login},
+		BankAccount:     bankAccount,
+		CreditCard:      creditCard,
+		Database:        database,
+		DriverLicense:   driverLicense,
+		Email:           email,
+		Identity:        identity,
+		Login:           login,
+		Membership:      membership,
+		OutdoorLicense:  outdoorLicense,
+		Passport:        passport,
+		Password:        password,
+		Rewards:         rewards,
+		Router:          router,
+		SecureNote:      secureNote,
+		Server:          server,
+		SoftwareLicense: softwareLicense,
+		Ssn:             ssn,
+		Tombstone:       tombstone,
+		values: []*ItemCategory{bankAccount, creditCard, database, driverLicense, email, identity, login,
+			membership, outdoorLicense, passport, password, rewards, router, secureNote, server, softwareLicense,
+			ssn, tombstone},
 	}
 }
 
