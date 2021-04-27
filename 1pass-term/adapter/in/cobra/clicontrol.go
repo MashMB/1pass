@@ -7,6 +7,7 @@ package cobra
 import (
 	"fmt"
 	"os"
+	"strings"
 	"syscall"
 
 	"github.com/mashmb/1pass/1pass-core/core/domain"
@@ -65,7 +66,7 @@ func (ctrl *cobraCliControl) GetItemOverview(vaultPath, uid string) {
 	}
 }
 
-func (ctrl *cobraCliControl) GetItems(vaultPath string, category *domain.ItemCategory) {
+func (ctrl *cobraCliControl) GetItems(vaultPath, category string) {
 	fmt.Println("Password:")
 	password, err := term.ReadPassword(int(syscall.Stdin))
 	err = ctrl.vaultFacade.Unlock(vaultPath, string(password))
@@ -75,7 +76,19 @@ func (ctrl *cobraCliControl) GetItems(vaultPath string, category *domain.ItemCat
 		os.Exit(1)
 	}
 
-	items := ctrl.vaultFacade.GetItems(category)
+	var cat *domain.ItemCategory
+
+	if category != "" {
+		category = strings.TrimSpace(category)
+		cat, err = domain.ItemCategoryEnum.FromName(category)
+
+		if err != nil {
+			fmt.Println(err)
+			os.Exit(1)
+		}
+	}
+
+	items := ctrl.vaultFacade.GetItems(cat)
 
 	for _, item := range items {
 		row := fmt.Sprintf("[%v] (%v) --- %v", item.Uid, item.Category.GetName(), item.Title)
