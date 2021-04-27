@@ -9,6 +9,7 @@ import (
 	"os"
 	"syscall"
 
+	"github.com/mashmb/1pass/1pass-core/core/domain"
 	"github.com/mashmb/1pass/1pass-core/core/facade"
 	"golang.org/x/term"
 )
@@ -64,7 +65,7 @@ func (ctrl *cobraCliControl) GetItemOverview(vaultPath, uid string) {
 	}
 }
 
-func (ctrl *cobraCliControl) GetItems(vaultPath string) {
+func (ctrl *cobraCliControl) GetItems(vaultPath string, category *domain.ItemCategory) {
 	fmt.Println("Password:")
 	password, err := term.ReadPassword(int(syscall.Stdin))
 	err = ctrl.vaultFacade.Unlock(vaultPath, string(password))
@@ -74,10 +75,10 @@ func (ctrl *cobraCliControl) GetItems(vaultPath string) {
 		os.Exit(1)
 	}
 
-	items := ctrl.vaultFacade.GetItems()
+	items := ctrl.vaultFacade.GetItems(category)
 
 	for _, item := range items {
-		row := fmt.Sprintf("[%v] --- %v", item.Uid, item.Title)
+		row := fmt.Sprintf("[%v] (%v) --- %v", item.Uid, item.Category.GetName(), item.Title)
 		fmt.Println(row)
 	}
 }
