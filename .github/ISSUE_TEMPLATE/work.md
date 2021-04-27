@@ -2,7 +2,7 @@
 name: Work
 about: Work to do
 title: ''
-labels: ''
+labels: feature
 assignees: ''
 
 ---
