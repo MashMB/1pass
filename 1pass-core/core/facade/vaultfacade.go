@@ -29,8 +29,8 @@ func (f *dfltVaultFacade) GetItemDetails(uid string) *domain.Item {
 	return f.itemService.GetDetails(uid, f.keys)
 }
 
-func (f *dfltVaultFacade) GetItemOverview(uid string) *domain.Item {
-	return f.itemService.GetOverview(uid, f.keys)
+func (f *dfltVaultFacade) GetItemOverview(uid string, trashed bool) *domain.Item {
+	return f.itemService.GetOverview(uid, trashed, f.keys)
 }
 
 func (f *dfltVaultFacade) GetItems(category *domain.ItemCategory, trashed bool) []*domain.SimpleItem {

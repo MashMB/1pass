@@ -11,7 +11,7 @@ import (
 type VaultFacade interface {
 	GetItemDetails(uid string) *domain.Item
 
-	GetItemOverview(uid string) *domain.Item
+	GetItemOverview(uid string, trashed bool) *domain.Item
 
 	GetItems(category *domain.ItemCategory, trashed bool) []*domain.SimpleItem
 

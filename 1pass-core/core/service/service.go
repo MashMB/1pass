@@ -11,7 +11,7 @@ import (
 type ItemService interface {
 	GetDetails(uid string, keys *domain.Keys) *domain.Item
 
-	GetOverview(uid string, keys *domain.Keys) *domain.Item
+	GetOverview(uid string, trashed bool, keys *domain.Keys) *domain.Item
 
 	GetSimple(keys *domain.Keys, category *domain.ItemCategory, trashed bool) []*domain.SimpleItem
 }
