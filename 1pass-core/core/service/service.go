@@ -13,7 +13,7 @@ type ItemService interface {
 
 	GetOverview(uid string, keys *domain.Keys) *domain.Item
 
-	GetSimple(keys *domain.Keys) []*domain.SimpleItem
+	GetSimple(keys *domain.Keys, category *domain.ItemCategory) []*domain.SimpleItem
 }
 
 type KeyService interface {

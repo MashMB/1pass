@@ -66,9 +66,9 @@ func (s *dfltItemService) GetOverview(uid string, keys *domain.Keys) *domain.Ite
 	return item
 }
 
-func (s *dfltItemService) GetSimple(keys *domain.Keys) []*domain.SimpleItem {
+func (s *dfltItemService) GetSimple(keys *domain.Keys, category *domain.ItemCategory) []*domain.SimpleItem {
 	items := make([]*domain.SimpleItem, 0)
-	rawItems := s.itemRepo.FindByCategoryAndTrashed(domain.ItemCategoryEnum.Login, false)
+	rawItems := s.itemRepo.FindByCategoryAndTrashed(category, false)
 
 	for _, rawItem := range rawItems {
 		overviewData, _ := base64.StdEncoding.DecodeString(rawItem.Overview)
@@ -81,11 +81,19 @@ func (s *dfltItemService) GetSimple(keys *domain.Keys) []*domain.SimpleItem {
 			title = strings.TrimSpace(itemOverview["title"].(string))
 		}
 
-		item := domain.NewSimpleItem(title, rawItem.Uid)
-		items = append(items, item)
+		cat, err := domain.ItemCategoryEnum.FromCode(rawItem.Category)
+
+		if err == nil {
+			item := domain.NewSimpleItem(cat, title, rawItem.Uid)
+			items = append(items, item)
+		}
 	}
 
 	sort.Slice(items, func(i, j int) bool {
+		if items[i].Category.GetCode() != items[j].Category.GetCode() {
+			return items[i].Category.GetCode() < items[j].Category.GetCode()
+		}
+
 		return items[i].Title < items[j].Title
 	})
 
