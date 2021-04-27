@@ -2,6 +2,14 @@
 
 History of **1Pass** releases with changes description.
 
+## Release 1.1.0
+
+- [CLI] Commands `list`, `overview` and `details` works with trashed items (`-t` flag)
+- [CLI] Command used to display all available item categories
+- [CLI] `list` command with item category filtering (`-c` flag)
+- [API] Work with items from trash
+- [API] Handle all item categories according to [OPVault design](https://support.1password.com/opvault-design/)
+
 ## Release 1.0.0 [25.04.2021]
 
 - [CLI] Prompt for user master password without input displaying
