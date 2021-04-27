@@ -13,6 +13,7 @@ import (
 
 type cobraCli struct {
 	category   string
+	trashed    bool
 	version    string
 	cliControl in.CliControl
 }
@@ -47,11 +48,12 @@ efficiently in terminal.`,
 [<UID>] (<category>) --- <title>. UID value is required for item overview and details identifiaction.`,
 		Args: cobra.ExactArgs(1),
 		Run: func(cmd *cobra.Command, args []string) {
-			cli.cliControl.GetItems(args[0], cli.category, false)
+			cli.cliControl.GetItems(args[0], cli.category, cli.trashed)
 		},
 	}
 
 	listCmd.Flags().StringVarP(&cli.category, "category", "c", "", "filtering over item category")
+	listCmd.Flags().BoolVarP(&cli.trashed, "trashed", "t", false, "work on trashed items")
 
 	overviewCmd := &cobra.Command{
 		Use:   "overview [OPVault] [UID]",
