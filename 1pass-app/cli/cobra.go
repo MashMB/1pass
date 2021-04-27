@@ -32,6 +32,14 @@ func (cli *cobraCli) init() *cobra.Command {
 efficiently in terminal.`,
 	}
 
+	categoriesCmd := &cobra.Command{
+		Use:   "categories",
+		Short: "Get list of available item categories",
+		Run: func(cmd *cobra.Command, args []string) {
+			cli.cliControl.GetCategories()
+		},
+	}
+
 	listCmd := &cobra.Command{
 		Use:   "list [OPVault]",
 		Short: "Get list of items stored in 1Passowrd OPVault format",
@@ -76,6 +84,7 @@ like passwords. Details will be displayed in JSON format.`,
 		},
 	}
 
+	rootCmd.AddCommand(categoriesCmd)
 	rootCmd.AddCommand(listCmd)
 	rootCmd.AddCommand(overviewCmd)
 	rootCmd.AddCommand(detailsCmd)
