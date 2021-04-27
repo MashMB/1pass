@@ -20,11 +20,32 @@ func setupFileItemRepo() *fileItemRepo {
 
 func TestFindByCategoryAndTrashed(t *testing.T) {
 	repo := setupFileItemRepo()
-	expected := 10
+	expected := 27
+	all := repo.FindByCategoryAndTrashed(nil, false)
+
+	if len(all) != expected {
+		t.Errorf("[ALL] FindByCategoryAndTrashed() = %d; expected = %d", len(all), expected)
+	}
+
+	expected = 10
 	logins := repo.FindByCategoryAndTrashed(domain.ItemCategoryEnum.Login, false)
 
 	if len(logins) != expected {
-		t.Errorf("FindByCategoryAndTrashed() = %d; expected = %d", len(logins), expected)
+		t.Errorf("[LOGINS] FindByCategoryAndTrashed() = %d; expected = %d", len(logins), expected)
+	}
+
+	expected = 2
+	cards := repo.FindByCategoryAndTrashed(domain.ItemCategoryEnum.CreditCard, false)
+
+	if len(cards) != expected {
+		t.Errorf("[CARD] FindByCategoryAndTrashed() = %d; expected = %d", len(cards), expected)
+	}
+
+	expected = 2
+	trashed := repo.FindByCategoryAndTrashed(nil, true)
+
+	if len(trashed) != expected {
+		t.Errorf("[TRASH] FindByCategoryAndTrashed() = %d; expected = %d", len(trashed), expected)
 	}
 }
 
