@@ -47,7 +47,7 @@ efficiently in terminal.`,
 [<UID>] (<category>) --- <title>. UID value is required for item overview and details identifiaction.`,
 		Args: cobra.ExactArgs(1),
 		Run: func(cmd *cobra.Command, args []string) {
-			cli.cliControl.GetItems(args[0], cli.category)
+			cli.cliControl.GetItems(args[0], cli.category, false)
 		},
 	}
 
