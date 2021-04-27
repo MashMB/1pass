@@ -11,5 +11,5 @@ type CliControl interface {
 
 	GetItemOverview(vaultPath, uid string)
 
-	GetItems(vaultPath, category string)
+	GetItems(vaultPath, category string, trashed bool)
 }

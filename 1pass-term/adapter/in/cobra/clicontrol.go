@@ -80,7 +80,7 @@ func (ctrl *cobraCliControl) GetItemOverview(vaultPath, uid string) {
 	}
 }
 
-func (ctrl *cobraCliControl) GetItems(vaultPath, category string) {
+func (ctrl *cobraCliControl) GetItems(vaultPath, category string, trashed bool) {
 	fmt.Println("Password:")
 	password, err := term.ReadPassword(int(syscall.Stdin))
 	err = ctrl.vaultFacade.Unlock(vaultPath, string(password))
@@ -102,7 +102,7 @@ func (ctrl *cobraCliControl) GetItems(vaultPath, category string) {
 		}
 	}
 
-	items := ctrl.vaultFacade.GetItems(cat)
+	items := ctrl.vaultFacade.GetItems(cat, trashed)
 
 	for _, item := range items {
 		row := fmt.Sprintf("[%v] (%v) --- %v", item.Uid, item.Category.GetName(), item.Title)
