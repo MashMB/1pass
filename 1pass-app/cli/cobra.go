@@ -57,8 +57,8 @@ efficiently in terminal.`,
 
 	overviewCmd := &cobra.Command{
 		Use:   "overview [OPVault] [UID]",
-		Short: "Overview single item sotred in 1Password OPVault format",
-		Long: `Overview single item sotred in 1Password OPVault format. Overview has no sensitive data like 
+		Short: "Overview single item stored in 1Password OPVault format",
+		Long: `Overview single item stored in 1Password OPVault format. Overview has no sensitive data like 
 passwords. Overview will be displayed in JSON format.`,
 		Args: cobra.ExactArgs(2),
 		Run: func(cmd *cobra.Command, args []string) {
