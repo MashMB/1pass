@@ -14,7 +14,6 @@ import (
 )
 
 type fileItemRepo struct {
-	items []*domain.RawItem
 }
 
 func NewFileItemRepo() *fileItemRepo {
@@ -54,52 +53,49 @@ func (repo *fileItemRepo) FindFirstByUidAndTrashed(uid string, trashed bool) *do
 	return item
 }
 
-func (repo *fileItemRepo) LoadItems(vault *domain.Vault) {
-	if repo.items == nil {
-		var itemsJson map[string]interface{}
-		bandFiles, err := filepath.Glob(filepath.Join(vault.Path, domain.ProfileDir, domain.BandFilePattern))
+func (repo *fileItemRepo) LoadItems(vault *domain.Vault) []*domain.RawItem {
+	items := make([]*domain.RawItem, 0)
+	var itemsJson map[string]interface{}
+	bandFiles, err := filepath.Glob(filepath.Join(vault.Path, domain.ProfileDir, domain.BandFilePattern))
 
-		if err != nil {
-			log.Fatalln(err)
-		}
+	if err != nil {
+		log.Fatalln(err)
+	}
 
-		if len(bandFiles) != 0 {
-			itemsFile := "{"
+	if len(bandFiles) != 0 {
+		itemsFile := "{"
 
-			for _, bandFile := range bandFiles {
-				file, err := ioutil.ReadFile(bandFile)
+		for _, bandFile := range bandFiles {
+			file, err := ioutil.ReadFile(bandFile)
 
-				if err != nil {
-					log.Fatalln(err)
-				}
-
-				itemsFile = itemsFile + string(file[4:len(file)-3]) + ","
-			}
-
-			itemsFile = itemsFile[:len(itemsFile)-1] + "}"
-
-			if err := json.Unmarshal([]byte(itemsFile), &itemsJson); err != nil {
+			if err != nil {
 				log.Fatalln(err)
 			}
 
-			items := make([]*domain.RawItem, 0)
+			itemsFile = itemsFile + string(file[4:len(file)-3]) + ","
+		}
 
-			for uid, value := range itemsJson {
-				v := value.(map[string]interface{})
-				created := int64(v["created"].(float64))
-				updated := int64(v["updated"].(float64))
-				trashed := false
+		itemsFile = itemsFile[:len(itemsFile)-1] + "}"
 
-				if v["trashed"] != nil {
-					trashed = v["trashed"].(bool)
-				}
+		if err := json.Unmarshal([]byte(itemsFile), &itemsJson); err != nil {
+			log.Fatalln(err)
+		}
 
-				item := domain.NewRawItem(v["category"].(string), v["d"].(string), v["hmac"].(string), v["k"].(string),
-					v["o"].(string), uid, created, updated, trashed)
-				items = append(items, item)
+		for uid, value := range itemsJson {
+			v := value.(map[string]interface{})
+			created := int64(v["created"].(float64))
+			updated := int64(v["updated"].(float64))
+			trashed := false
+
+			if v["trashed"] != nil {
+				trashed = v["trashed"].(bool)
 			}
 
-			repo.items = items
+			item := domain.NewRawItem(v["category"].(string), v["d"].(string), v["hmac"].(string), v["k"].(string),
+				v["o"].(string), uid, created, updated, trashed)
+			items = append(items, item)
 		}
 	}
+
+	return items
 }

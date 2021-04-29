@@ -13,7 +13,7 @@ type ItemRepo interface {
 
 	FindFirstByUidAndTrashed(uid string, trashed bool) *domain.RawItem
 
-	LoadItems(vault *domain.Vault)
+	LoadItems(vault *domain.Vault) []*domain.RawItem
 }
 
 type ProfileRepo interface {
