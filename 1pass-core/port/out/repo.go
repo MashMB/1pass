@@ -14,6 +14,8 @@ type ItemRepo interface {
 	FindFirstByUidAndTrashed(uid string, trashed bool) *domain.RawItem
 
 	LoadItems(vault *domain.Vault) []*domain.RawItem
+
+	StoreItems(items []*domain.Item)
 }
 
 type ProfileRepo interface {

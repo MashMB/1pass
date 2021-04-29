@@ -14,6 +14,7 @@ import (
 )
 
 type fileItemRepo struct {
+	items []*domain.Item
 }
 
 func NewFileItemRepo() *fileItemRepo {
@@ -98,4 +99,10 @@ func (repo *fileItemRepo) LoadItems(vault *domain.Vault) []*domain.RawItem {
 	}
 
 	return items
+}
+
+func (repo *fileItemRepo) StoreItems(items []*domain.Item) {
+	if repo.items == nil {
+		repo.items = items
+	}
 }
