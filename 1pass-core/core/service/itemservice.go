@@ -99,3 +99,43 @@ func (s *dfltItemService) GetSimple(keys *domain.Keys, category *domain.ItemCate
 
 	return items
 }
+
+func (s *dfltItemService) ParseItemField(fromSection bool, data map[string]interface{}) *domain.ItemField {
+	var field *domain.ItemField
+	var value string
+
+	if !fromSection {
+		if data["value"] != nil {
+			value = data["value"].(string)
+		}
+
+		if value != "" {
+			name := data["name"].(string)
+			field = domain.NewItemField(strings.Title(name), value)
+		}
+	} else {
+		if data["v"] != nil {
+			dataType, err := domain.DataTypeEnum.FromName(data["k"].(string))
+
+			if err != nil {
+				value = data["v"].(string)
+			} else {
+				switch dataType {
+				case domain.DataTypeEnum.Address:
+					value = domain.DataTypeEnum.ParseValue(dataType, "", data["v"].(map[string]interface{}))
+
+				case domain.DataTypeEnum.Date:
+					unix := data["v"].(int64)
+					value = domain.DataTypeEnum.ParseValue(dataType, string(unix), nil)
+
+				default:
+					value = domain.DataTypeEnum.ParseValue(dataType, data["v"].(string), nil)
+				}
+			}
+
+			field = domain.NewItemField(strings.Title(data["t"].(string)), value)
+		}
+	}
+
+	return field
+}
