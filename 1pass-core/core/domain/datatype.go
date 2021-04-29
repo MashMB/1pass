@@ -20,25 +20,26 @@ type DataType struct {
 }
 
 type dataTypeRegistry struct {
+	Address   *DataType
 	Date      *DataType
 	MonthYear *DataType
 	values    []*DataType
 }
 
 func newDataType(name string) *DataType {
-	return &DataType{
-		name,
-	}
+	return &DataType{name}
 }
 
 func newDataTypeRegistry() *dataTypeRegistry {
+	address := newDataType("address")
 	date := newDataType("date")
 	monthYear := newDataType("monthYear")
 
 	return &dataTypeRegistry{
+		Address:   address,
 		Date:      date,
 		MonthYear: monthYear,
-		values:    []*DataType{date, monthYear},
+		values:    []*DataType{address, date, monthYear},
 	}
 }
 
@@ -68,6 +69,22 @@ func (r *dataTypeRegistry) FromName(name string) (*DataType, error) {
 	return dt, nil
 }
 
+func (r *dataTypeRegistry) parseAddress(jsonValue map[string]interface{}) string {
+	var parsed string
+
+	for key, value := range jsonValue {
+		val := value.(string)
+		val = strings.TrimSpace(val)
+		val = strings.ReplaceAll(val, "\n", " ")
+		formatted := fmt.Sprintf("%v: %v\n", key, val)
+		parsed = parsed + formatted
+	}
+
+	parsed = strings.TrimSpace(parsed)
+
+	return parsed
+}
+
 func (r *dataTypeRegistry) parseDate(value string) string {
 	unix, _ := strconv.ParseInt(value, 10, 64)
 	timestamp := time.Unix(unix, 0)
@@ -85,8 +102,11 @@ func (r *dataTypeRegistry) parseMonthYear(value string) string {
 	return value
 }
 
-func (r *dataTypeRegistry) ParseValue(dataType *DataType, value string) string {
+func (r *dataTypeRegistry) ParseValue(dataType *DataType, value string, jsonValue map[string]interface{}) string {
 	switch dataType {
+	case r.Address:
+		value = r.parseAddress(jsonValue)
+
 	case r.Date:
 		value = r.parseDate(value)
 
