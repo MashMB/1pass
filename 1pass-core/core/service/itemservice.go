@@ -139,3 +139,27 @@ func (s *dfltItemService) ParseItemField(fromSection bool, data map[string]inter
 
 	return field
 }
+
+func (s *dfltItemService) ParseItemSection(data map[string]interface{}) *domain.ItemSection {
+	var title string
+	fields := make([]*domain.ItemField, 0)
+	fieldsData := data["fields"].([]map[string]interface{})
+
+	for _, fieldData := range fieldsData {
+		field := s.ParseItemField(true, fieldData)
+
+		if field != nil {
+			fields = append(fields, field)
+		}
+	}
+
+	if len(fields) == 0 {
+		fields = nil
+	}
+
+	if data["title"] != nil {
+		title = strings.Title(data["title"].(string))
+	}
+
+	return domain.NewItemSection(strings.Title(title), fields)
+}

@@ -16,6 +16,8 @@ type ItemService interface {
 	GetSimple(keys *domain.Keys, category *domain.ItemCategory, trashed bool) []*domain.SimpleItem
 
 	ParseItemField(fromSection bool, data map[string]interface{}) *domain.ItemField
+
+	ParseItemSection(data map[string]interface{}) *domain.ItemSection
 }
 
 type KeyService interface {
