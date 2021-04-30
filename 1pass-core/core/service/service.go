@@ -11,9 +11,9 @@ import (
 type ItemService interface {
 	DecodeItems(vault *domain.Vault, keys *domain.Keys)
 
-	GetDetails(uid string, trashed bool, keys *domain.Keys) *domain.Item
+	DecodeOverview(encoded *domain.RawItem, keys *domain.Keys) map[string]interface{}
 
-	GetOverview(uid string, trashed bool, keys *domain.Keys) *domain.Item
+	GetDetails(uid string, trashed bool, keys *domain.Keys) *domain.Item
 
 	GetSimple(keys *domain.Keys, category *domain.ItemCategory, trashed bool) []*domain.SimpleItem
 

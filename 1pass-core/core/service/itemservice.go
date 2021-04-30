@@ -35,10 +35,7 @@ func (s *dfltItemService) DecodeItems(vault *domain.Vault, keys *domain.Keys) {
 		cat, err := domain.ItemCategoryEnum.FromCode(encoded.Category)
 
 		if err == nil {
-			var overviewJson map[string]interface{}
-			overviewData, _ := base64.StdEncoding.DecodeString(encoded.Overview)
-			overview, _ := s.keyService.DecodeOpdata(overviewData, keys.OverviewKey, keys.OverviewMac)
-			json.Unmarshal(overview, &overviewJson)
+			overviewJson := s.DecodeOverview(encoded, keys)
 
 			var detailsJson map[string]interface{}
 			detailsData, _ := base64.StdEncoding.DecodeString(encoded.Details)
@@ -104,6 +101,15 @@ func (s *dfltItemService) DecodeItems(vault *domain.Vault, keys *domain.Keys) {
 	s.itemRepo.StoreItems(items)
 }
 
+func (s *dfltItemService) DecodeOverview(encoded *domain.RawItem, keys *domain.Keys) map[string]interface{} {
+	var overviewJson map[string]interface{}
+	overviewData, _ := base64.StdEncoding.DecodeString(encoded.Overview)
+	overview, _ := s.keyService.DecodeOpdata(overviewData, keys.OverviewKey, keys.OverviewMac)
+	json.Unmarshal(overview, &overviewJson)
+
+	return overviewJson
+}
+
 func (s *dfltItemService) GetDetails(uid string, trashed bool, keys *domain.Keys) *domain.Item {
 	var item *domain.Item
 	rawItem := s.itemRepo.FindFirstByUidAndTrashed(uid, trashed)
@@ -117,25 +123,6 @@ func (s *dfltItemService) GetDetails(uid string, trashed bool, keys *domain.Keys
 			details, _ := s.keyService.DecodeOpdata(detailsData, itemKey, itemMac)
 			var jsonBuffer bytes.Buffer
 			json.Indent(&jsonBuffer, details, "", "  ")
-			item = domain.NewItem(cat, string(jsonBuffer.Bytes()), rawItem.Uid, rawItem.Created, rawItem.Updated)
-		}
-	}
-
-	return item
-}
-
-func (s *dfltItemService) GetOverview(uid string, trashed bool, keys *domain.Keys) *domain.Item {
-	var item *domain.Item
-	rawItem := s.itemRepo.FindFirstByUidAndTrashed(uid, trashed)
-
-	if rawItem != nil {
-		cat, err := domain.ItemCategoryEnum.FromCode(rawItem.Category)
-
-		if err == nil {
-			overviewData, _ := base64.StdEncoding.DecodeString(rawItem.Overview)
-			overview, _ := s.keyService.DecodeOpdata(overviewData, keys.OverviewKey, keys.OverviewMac)
-			var jsonBuffer bytes.Buffer
-			json.Indent(&jsonBuffer, overview, "", "  ")
 			item = domain.NewItem(cat, string(jsonBuffer.Bytes()), rawItem.Uid, rawItem.Created, rawItem.Updated)
 		}
 	}
