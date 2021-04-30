@@ -79,16 +79,10 @@ func TestFindFirtByUidAndTrashed(t *testing.T) {
 func TestLoadItems(t *testing.T) {
 	repo := NewFileItemRepo()
 	vault := domain.NewVault("../../../../../assets/onepassword_data")
-	repo.LoadItems(vault)
+	expected := 27
+	items := repo.LoadItems(vault)
 
-	if repo.items == nil || len(repo.items) == 0 {
-		t.Error("LoadItems() should initialize repository")
-	}
-
-	repo.items = nil
-	vault = domain.NewVault("../../../../../assets/nobands")
-
-	if repo.items != nil || len(repo.items) != 0 {
-		t.Error("LoadItems() should initialize empty repository")
+	if len(items) != expected {
+		t.Errorf("LoadItems() = %d; expected = %d", len(items), expected)
 	}
 }
