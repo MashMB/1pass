@@ -5,7 +5,6 @@
 package service
 
 import (
-	"bytes"
 	"encoding/base64"
 	"encoding/json"
 	"sort"
@@ -114,27 +113,13 @@ func (s *dfltItemService) DecodeOverview(encoded *domain.RawItem, keys *domain.K
 	return overviewJson
 }
 
-func (s *dfltItemService) GetSimple(keys *domain.Keys, category *domain.ItemCategory, trashed bool) []*domain.SimpleItem {
+func (s *dfltItemService) GetSimple(category *domain.ItemCategory, trashed bool) []*domain.SimpleItem {
 	items := make([]*domain.SimpleItem, 0)
-	rawItems := s.itemRepo.FindByCategoryAndTrashed(category, trashed)
+	decodedItems := s.itemRepo.FindByCategoryAndTrashed(category, trashed)
 
-	for _, rawItem := range rawItems {
-		overviewData, _ := base64.StdEncoding.DecodeString(rawItem.Overview)
-		overview, _ := s.keyService.DecodeOpdata(overviewData, keys.OverviewKey, keys.OverviewMac)
-		var itemOverview map[string]interface{}
-		json.Unmarshal(overview, &itemOverview)
-		title := ""
-
-		if itemOverview["title"] != nil {
-			title = strings.TrimSpace(itemOverview["title"].(string))
-		}
-
-		cat, err := domain.ItemCategoryEnum.FromCode(rawItem.Category)
-
-		if err == nil {
-			item := domain.NewSimpleItem(cat, title, rawItem.Uid)
-			items = append(items, item)
-		}
+	for _, decoded := range decodedItems {
+		item := domain.NewSimpleItem(decoded.Category, decoded.Title, decoded.Uid)
+		items = append(items, item)
 	}
 
 	sort.Slice(items, func(i, j int) bool {
