@@ -11,9 +11,21 @@ import (
 )
 
 func setupFileItemRepo() *fileItemRepo {
-	repo := NewFileItemRepo()
 	vault := domain.NewVault("../../../../../assets/onepassword_data")
-	repo.LoadItems(vault)
+	repo := NewFileItemRepo()
+	items := make([]*domain.Item, 0)
+	rawItems := repo.LoadItems(vault)
+
+	for _, rawItem := range rawItems {
+		cat, err := domain.ItemCategoryEnum.FromCode(rawItem.Category)
+
+		if err == nil {
+			item := domain.NewItem(rawItem.Uid, "", "", "", rawItem.Trashed, cat, nil, rawItem.Created, rawItem.Updated)
+			items = append(items, item)
+		}
+	}
+
+	repo.StoreItems(items)
 
 	return repo
 }
