@@ -21,8 +21,8 @@ func NewFileItemRepo() *fileItemRepo {
 	return &fileItemRepo{}
 }
 
-func (repo *fileItemRepo) FindByCategoryAndTrashed(category *domain.ItemCategory, trashed bool) []*domain.RawItem {
-	resultSet := make([]*domain.RawItem, 0)
+func (repo *fileItemRepo) FindByCategoryAndTrashed(category *domain.ItemCategory, trashed bool) []*domain.Item {
+	resultSet := make([]*domain.Item, 0)
 
 	for _, item := range repo.items {
 		if category == nil {
@@ -30,9 +30,7 @@ func (repo *fileItemRepo) FindByCategoryAndTrashed(category *domain.ItemCategory
 				resultSet = append(resultSet, item)
 			}
 		} else {
-			cat, err := domain.ItemCategoryEnum.FromCode(item.Category)
-
-			if err == nil && cat == category && item.Trashed == trashed {
+			if item.Category == category && item.Trashed == trashed {
 				resultSet = append(resultSet, item)
 			}
 		}
@@ -41,17 +39,17 @@ func (repo *fileItemRepo) FindByCategoryAndTrashed(category *domain.ItemCategory
 	return resultSet
 }
 
-func (repo *fileItemRepo) FindFirstByUidAndTrashed(uid string, trashed bool) *domain.RawItem {
-	var item *domain.RawItem
+func (repo *fileItemRepo) FindFirstByUidAndTrashed(uid string, trashed bool) *domain.Item {
+	var result *domain.Item
 
-	for _, rawItem := range repo.items {
-		if rawItem.Uid == uid && rawItem.Trashed == trashed {
-			item = rawItem
+	for _, item := range repo.items {
+		if item.Uid == uid && item.Trashed == trashed {
+			result = item
 			break
 		}
 	}
 
-	return item
+	return result
 }
 
 func (repo *fileItemRepo) LoadItems(vault *domain.Vault) []*domain.RawItem {

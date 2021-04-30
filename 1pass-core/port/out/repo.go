@@ -9,9 +9,9 @@ import (
 )
 
 type ItemRepo interface {
-	FindByCategoryAndTrashed(category *domain.ItemCategory, trashed bool) []*domain.RawItem
+	FindByCategoryAndTrashed(category *domain.ItemCategory, trashed bool) []*domain.Item
 
-	FindFirstByUidAndTrashed(uid string, trashed bool) *domain.RawItem
+	FindFirstByUidAndTrashed(uid string, trashed bool) *domain.Item
 
 	LoadItems(vault *domain.Vault) []*domain.RawItem
 
