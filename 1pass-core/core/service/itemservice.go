@@ -7,6 +7,7 @@ package service
 import (
 	"encoding/base64"
 	"encoding/json"
+	"fmt"
 	"sort"
 	"strings"
 
@@ -49,29 +50,31 @@ func (s *dfltItemService) DecodeItems(vault *domain.Vault, keys *domain.Keys) {
 			sections := make([]*domain.ItemSection, 0)
 
 			if detailsJson["sections"] == nil {
-				fieldsJson := detailsJson["fields"].([]map[string]interface{})
-				fields := make([]*domain.ItemField, 0)
+				if detailsJson["fields"] != nil {
+					fieldsJson := detailsJson["fields"].([]interface{})
+					fields := make([]*domain.ItemField, 0)
 
-				for _, fieldJson := range fieldsJson {
-					field := s.ParseItemField(false, fieldJson)
+					for _, fieldJson := range fieldsJson {
+						field := s.ParseItemField(false, fieldJson.(map[string]interface{}))
 
-					if field != nil {
-						fields = append(fields, field)
+						if field != nil {
+							fields = append(fields, field)
+						}
+					}
+
+					if len(fields) != 0 {
+						section := domain.NewItemSection("", fields)
+						sections = append(sections, section)
 					}
 				}
-
-				if len(fields) != 0 {
-					section := domain.NewItemSection("", fields)
-					sections = append(sections, section)
-				}
 			} else {
-				sectionsJson := detailsJson["sections"].([]map[string]interface{})
+				sectionsJson := detailsJson["sections"].([]interface{})
 
 				for _, sectionJson := range sectionsJson {
-					section := s.ParseItemSection(sectionJson)
+					section := s.ParseItemSection(sectionJson.(map[string]interface{}))
 
 					if section != nil {
-						sections = append(sections, s.ParseItemSection(sectionJson))
+						sections = append(sections, section)
 					}
 				}
 			}
@@ -162,11 +165,11 @@ func (s *dfltItemService) ParseItemField(fromSection bool, data map[string]inter
 					value = domain.DataTypeEnum.ParseValue(dataType, "", data["v"].(map[string]interface{}))
 
 				case domain.DataTypeEnum.Date:
-					unix := data["v"].(int64)
-					value = domain.DataTypeEnum.ParseValue(dataType, string(unix), nil)
+					unix := int64(data["v"].(float64))
+					value = domain.DataTypeEnum.ParseValue(dataType, fmt.Sprint(unix), nil)
 
 				default:
-					value = domain.DataTypeEnum.ParseValue(dataType, data["v"].(string), nil)
+					value = domain.DataTypeEnum.ParseValue(dataType, fmt.Sprint(data["v"]), nil)
 				}
 			}
 
@@ -180,13 +183,16 @@ func (s *dfltItemService) ParseItemField(fromSection bool, data map[string]inter
 func (s *dfltItemService) ParseItemSection(data map[string]interface{}) *domain.ItemSection {
 	var title string
 	fields := make([]*domain.ItemField, 0)
-	fieldsData := data["fields"].([]map[string]interface{})
 
-	for _, fieldData := range fieldsData {
-		field := s.ParseItemField(true, fieldData)
+	if data["fields"] != nil {
+		fieldsData := data["fields"].([]interface{})
 
-		if field != nil {
-			fields = append(fields, field)
+		for _, fieldData := range fieldsData {
+			field := s.ParseItemField(true, fieldData.(map[string]interface{}))
+
+			if field != nil {
+				fields = append(fields, field)
+			}
 		}
 	}
 
