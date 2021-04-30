@@ -79,7 +79,7 @@ func TestFindFirtByUidAndTrashed(t *testing.T) {
 func TestLoadItems(t *testing.T) {
 	repo := NewFileItemRepo()
 	vault := domain.NewVault("../../../../../assets/onepassword_data")
-	expected := 27
+	expected := 29
 	items := repo.LoadItems(vault)
 
 	if len(items) != expected {
