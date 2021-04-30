@@ -114,26 +114,6 @@ func (s *dfltItemService) DecodeOverview(encoded *domain.RawItem, keys *domain.K
 	return overviewJson
 }
 
-func (s *dfltItemService) GetDetails(uid string, trashed bool, keys *domain.Keys) *domain.Item {
-	var item *domain.Item
-	rawItem := s.itemRepo.FindFirstByUidAndTrashed(uid, trashed)
-
-	if rawItem != nil {
-		cat, err := domain.ItemCategoryEnum.FromCode(rawItem.Category)
-
-		if err == nil {
-			detailsData, _ := base64.StdEncoding.DecodeString(rawItem.Details)
-			itemKey, itemMac := s.keyService.ItemKeys(rawItem, keys)
-			details, _ := s.keyService.DecodeOpdata(detailsData, itemKey, itemMac)
-			var jsonBuffer bytes.Buffer
-			json.Indent(&jsonBuffer, details, "", "  ")
-			item = domain.NewItem(cat, string(jsonBuffer.Bytes()), rawItem.Uid, rawItem.Created, rawItem.Updated)
-		}
-	}
-
-	return item
-}
-
 func (s *dfltItemService) GetSimple(keys *domain.Keys, category *domain.ItemCategory, trashed bool) []*domain.SimpleItem {
 	items := make([]*domain.SimpleItem, 0)
 	rawItems := s.itemRepo.FindByCategoryAndTrashed(category, trashed)
