@@ -89,7 +89,7 @@ func (r *dataTypeRegistry) parseDate(value string) string {
 	unix, _ := strconv.ParseInt(value, 10, 64)
 	timestamp := time.Unix(unix, 0)
 
-	return timestamp.Format("2006-01-02 15.04.05")
+	return timestamp.Format("2006-01-02 15:04:05")
 }
 
 func (r *dataTypeRegistry) parseMonthYear(value string) string {
