@@ -113,7 +113,7 @@ func (s *dfltItemService) DecodeOverview(encoded *domain.RawItem, keys *domain.K
 	return overviewJson
 }
 
-func (s *dfltItemService) GetSimple(category *domain.ItemCategory, trashed bool) []*domain.SimpleItem {
+func (s *dfltItemService) GetSimpleItems(category *domain.ItemCategory, trashed bool) []*domain.SimpleItem {
 	items := make([]*domain.SimpleItem, 0)
 	decodedItems := s.itemRepo.FindByCategoryAndTrashed(category, trashed)
 

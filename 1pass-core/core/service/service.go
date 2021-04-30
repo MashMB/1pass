@@ -15,7 +15,7 @@ type ItemService interface {
 
 	DecodeOverview(encoded *domain.RawItem, keys *domain.Keys) map[string]interface{}
 
-	GetSimple(category *domain.ItemCategory, trashed bool) []*domain.SimpleItem
+	GetSimpleItems(category *domain.ItemCategory, trashed bool) []*domain.SimpleItem
 
 	ParseItemField(fromSection bool, data map[string]interface{}) *domain.ItemField
 
