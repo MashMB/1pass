@@ -78,6 +78,7 @@ func (f *dfltVaultFacade) Unlock(path, password string) error {
 	}
 
 	f.keys = domain.NewKeys(derivedKey, derivedMac, masterKey, masterMac, overviewKey, overviewMac)
+	f.itemService.DecodeItems(vault, f.keys)
 
 	return nil
 }

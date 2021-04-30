@@ -9,6 +9,8 @@ import (
 )
 
 type ItemService interface {
+	DecodeItems(vault *domain.Vault, keys *domain.Keys)
+
 	GetDetails(uid string, trashed bool, keys *domain.Keys) *domain.Item
 
 	GetOverview(uid string, trashed bool, keys *domain.Keys) *domain.Item

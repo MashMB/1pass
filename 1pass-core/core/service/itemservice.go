@@ -27,6 +27,83 @@ func NewDfltItemService(keyService KeyService, itemRepo out.ItemRepo) *dfltItemS
 	}
 }
 
+func (s *dfltItemService) DecodeItems(vault *domain.Vault, keys *domain.Keys) {
+	items := make([]*domain.Item, 0)
+	encodedItems := s.itemRepo.LoadItems(vault)
+
+	for _, encoded := range encodedItems {
+		cat, err := domain.ItemCategoryEnum.FromCode(encoded.Category)
+
+		if err == nil {
+			var overviewJson map[string]interface{}
+			overviewData, _ := base64.StdEncoding.DecodeString(encoded.Overview)
+			overview, _ := s.keyService.DecodeOpdata(overviewData, keys.OverviewKey, keys.OverviewMac)
+			json.Unmarshal(overview, &overviewJson)
+
+			var detailsJson map[string]interface{}
+			detailsData, _ := base64.StdEncoding.DecodeString(encoded.Details)
+			itemKey, itemMac := s.keyService.ItemKeys(encoded, keys)
+			details, _ := s.keyService.DecodeOpdata(detailsData, itemKey, itemMac)
+			json.Unmarshal(details, &detailsJson)
+
+			sections := make([]*domain.ItemSection, 0)
+
+			if detailsJson["sections"] == nil {
+				fieldsJson := detailsJson["fields"].([]map[string]interface{})
+				fields := make([]*domain.ItemField, 0)
+
+				for _, fieldJson := range fieldsJson {
+					field := s.ParseItemField(false, fieldJson)
+
+					if field != nil {
+						fields = append(fields, field)
+					}
+				}
+
+				if len(fields) != 0 {
+					section := domain.NewItemSection("", fields)
+					sections = append(sections, section)
+				}
+			} else {
+				sectionsJson := detailsJson["sections"].([]map[string]interface{})
+
+				for _, sectionJson := range sectionsJson {
+					section := s.ParseItemSection(sectionJson)
+
+					if section != nil {
+						sections = append(sections, s.ParseItemSection(sectionJson))
+					}
+				}
+			}
+
+			var title string
+			var url string
+			var notes string
+
+			if overviewJson["title"] != nil {
+				title = overviewJson["title"].(string)
+			}
+
+			if overviewJson["url"] != nil {
+				url = overviewJson["url"].(string)
+			}
+
+			if detailsJson["notesPlain"] != nil {
+				notes = detailsJson["notesPlain"].(string)
+			}
+
+			if len(sections) == 0 {
+				sections = nil
+			}
+
+			item := domain.NewItem(encoded.Uid, title, url, notes, encoded.Trashed, cat, sections, encoded.Created, encoded.Updated)
+			items = append(items, item)
+		}
+	}
+
+	s.itemRepo.StoreItems(items)
+}
+
 func (s *dfltItemService) GetDetails(uid string, trashed bool, keys *domain.Keys) *domain.Item {
 	var item *domain.Item
 	rawItem := s.itemRepo.FindFirstByUidAndTrashed(uid, trashed)
@@ -159,6 +236,10 @@ func (s *dfltItemService) ParseItemSection(data map[string]interface{}) *domain.
 
 	if data["title"] != nil {
 		title = strings.Title(data["title"].(string))
+	}
+
+	if fields == nil && title == "" {
+		return nil
 	}
 
 	return domain.NewItemSection(strings.Title(title), fields)
