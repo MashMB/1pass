@@ -53,7 +53,9 @@ func (ctrl *cobraCliControl) GetItemDetails(vaultPath, uid string, trashed bool)
 	item := ctrl.vaultFacade.GetItem(uid, trashed)
 
 	if item != nil {
+		fmt.Println()
 		fmt.Println(item.Category.GetName())
+		fmt.Println("------------------------------")
 		fmt.Println(fmt.Sprintf("[%v] --- %v", item.Uid, item.Title))
 		updated := time.Unix(item.Updated, 0).Format("2006-01-02 15:04:05")
 		created := time.Unix(item.Created, 0).Format("2006-01-02 15:04:05")
@@ -62,6 +64,8 @@ func (ctrl *cobraCliControl) GetItemDetails(vaultPath, uid string, trashed bool)
 		if item.Url != "" {
 			fmt.Println(fmt.Sprintf("URL: %v", item.Url))
 		}
+
+		fmt.Println()
 
 		if item.Sections != nil {
 			for _, section := range item.Sections {
@@ -76,7 +80,16 @@ func (ctrl *cobraCliControl) GetItemDetails(vaultPath, uid string, trashed bool)
 						fmt.Println(fmt.Sprintf("\t%v: %v", field.Name, field.Value))
 					}
 				}
+
+				fmt.Println()
 			}
+		}
+
+		if item.Notes != "" {
+			fmt.Println("Notes")
+			fmt.Println("------------------------------")
+			fmt.Println(item.Notes)
+			fmt.Println()
 		}
 	} else {
 		msg := fmt.Sprintf("Item with UID %v do not exist", uid)
@@ -98,7 +111,9 @@ func (ctrl *cobraCliControl) GetItemOverview(vaultPath, uid string, trashed bool
 	item := ctrl.vaultFacade.GetItem(uid, trashed)
 
 	if item != nil {
+		fmt.Println()
 		fmt.Println(item.Category.GetName())
+		fmt.Println("------------------------------")
 		fmt.Println(fmt.Sprintf("[%v] --- %v", item.Uid, item.Title))
 		updated := time.Unix(item.Updated, 0).Format("2006-01-02 15:04:05")
 		created := time.Unix(item.Created, 0).Format("2006-01-02 15:04:05")
@@ -107,6 +122,8 @@ func (ctrl *cobraCliControl) GetItemOverview(vaultPath, uid string, trashed bool
 		if item.Url != "" {
 			fmt.Println(fmt.Sprintf("URL: %v", item.Url))
 		}
+
+		fmt.Println()
 
 		if item.Sections != nil {
 			for _, section := range item.Sections {
@@ -122,6 +139,15 @@ func (ctrl *cobraCliControl) GetItemOverview(vaultPath, uid string, trashed bool
 					}
 				}
 			}
+
+			fmt.Println()
+		}
+
+		if item.Notes != "" {
+			fmt.Println("Notes")
+			fmt.Println("------------------------------")
+			fmt.Println("**********")
+			fmt.Println()
 		}
 	} else {
 		msg := fmt.Sprintf("Item with UID %v do not exist", uid)

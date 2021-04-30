@@ -76,11 +76,9 @@ func (r *dataTypeRegistry) parseAddress(jsonValue map[string]interface{}) string
 		val := value.(string)
 		val = strings.TrimSpace(val)
 		val = strings.ReplaceAll(val, "\n", " ")
-		formatted := fmt.Sprintf("%v: %v\n", key, val)
+		formatted := fmt.Sprintf("\n\t\t%v: %v", key, val)
 		parsed = parsed + formatted
 	}
-
-	parsed = strings.TrimSpace(parsed)
 
 	return parsed
 }
