@@ -27,6 +27,16 @@ func NewDfltItemService(keyService KeyService, itemRepo out.ItemRepo) *dfltItemS
 	}
 }
 
+func (s *dfltItemService) DecodeDetails(encoded *domain.RawItem, keys *domain.Keys) map[string]interface{} {
+	var detailsJson map[string]interface{}
+	detailsData, _ := base64.StdEncoding.DecodeString(encoded.Details)
+	itemKey, itemMac := s.keyService.ItemKeys(encoded, keys)
+	details, _ := s.keyService.DecodeOpdata(detailsData, itemKey, itemMac)
+	json.Unmarshal(details, &detailsJson)
+
+	return detailsJson
+}
+
 func (s *dfltItemService) DecodeItems(vault *domain.Vault, keys *domain.Keys) {
 	items := make([]*domain.Item, 0)
 	encodedItems := s.itemRepo.LoadItems(vault)
@@ -36,13 +46,7 @@ func (s *dfltItemService) DecodeItems(vault *domain.Vault, keys *domain.Keys) {
 
 		if err == nil {
 			overviewJson := s.DecodeOverview(encoded, keys)
-
-			var detailsJson map[string]interface{}
-			detailsData, _ := base64.StdEncoding.DecodeString(encoded.Details)
-			itemKey, itemMac := s.keyService.ItemKeys(encoded, keys)
-			details, _ := s.keyService.DecodeOpdata(detailsData, itemKey, itemMac)
-			json.Unmarshal(details, &detailsJson)
-
+			detailsJson := s.DecodeDetails(encoded, keys)
 			sections := make([]*domain.ItemSection, 0)
 
 			if detailsJson["sections"] == nil {

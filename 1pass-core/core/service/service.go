@@ -9,11 +9,11 @@ import (
 )
 
 type ItemService interface {
+	DecodeDetails(encoded *domain.RawItem, keys *domain.Keys) map[string]interface{}
+
 	DecodeItems(vault *domain.Vault, keys *domain.Keys)
 
 	DecodeOverview(encoded *domain.RawItem, keys *domain.Keys) map[string]interface{}
-
-	GetDetails(uid string, trashed bool, keys *domain.Keys) *domain.Item
 
 	GetSimple(keys *domain.Keys, category *domain.ItemCategory, trashed bool) []*domain.SimpleItem
 
