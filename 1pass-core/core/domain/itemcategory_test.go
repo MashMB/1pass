@@ -8,7 +8,7 @@ import (
 	"testing"
 )
 
-func TestGetCode(t *testing.T) {
+func TestICGetCode(t *testing.T) {
 	category := ItemCategoryEnum.Login
 	expected := "001"
 
@@ -24,7 +24,7 @@ func TestGetCode(t *testing.T) {
 	}
 }
 
-func TestGetName(t *testing.T) {
+func TestICGetName(t *testing.T) {
 	category := ItemCategoryEnum.Login
 	expected := "Login"
 
@@ -40,7 +40,7 @@ func TestGetName(t *testing.T) {
 	}
 }
 
-func TestGetValues(t *testing.T) {
+func TestICGetValues(t *testing.T) {
 	values := ItemCategoryEnum.GetValues()
 	expected := 18
 
@@ -49,7 +49,7 @@ func TestGetValues(t *testing.T) {
 	}
 }
 
-func TestFromCode(t *testing.T) {
+func TestICFromCode(t *testing.T) {
 	code := "001"
 	expected := ItemCategoryEnum.Login
 	category, err := ItemCategoryEnum.FromCode(code)
@@ -75,7 +75,7 @@ func TestFromCode(t *testing.T) {
 	}
 }
 
-func TestFromName(t *testing.T) {
+func TestICFromName(t *testing.T) {
 	name := "Login"
 	expected := ItemCategoryEnum.Login
 	category, err := ItemCategoryEnum.FromName(name)
