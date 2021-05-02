@@ -70,7 +70,7 @@ func TestDTParseValue(t *testing.T) {
 	address := make(map[string]interface{})
 	address["country"] = "Poland"
 	address["city"] = "Warsaw"
-	expected = "\n\t\tcountry: Poland\n\t\tcity: Warsaw"
+	expected = "\n  city: Warsaw\n  country: Poland"
 	result = DataTypeEnum.ParseValue(DataTypeEnum.Address, "", address)
 
 	if result != expected {
