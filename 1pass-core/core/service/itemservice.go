@@ -160,15 +160,9 @@ func (s *dfltItemService) ParseItemField(fromSection bool, data map[string]inter
 			if err != nil {
 				value = data["v"].(string)
 			} else {
-				switch dataType {
-				case domain.DataTypeEnum.Address:
+				if dataType == domain.DataTypeEnum.Address {
 					value = domain.DataTypeEnum.ParseValue(dataType, "", data["v"].(map[string]interface{}))
-
-				case domain.DataTypeEnum.Date:
-					unix := int64(data["v"].(float64))
-					value = domain.DataTypeEnum.ParseValue(dataType, fmt.Sprint(unix), nil)
-
-				default:
+				} else {
 					value = domain.DataTypeEnum.ParseValue(dataType, fmt.Sprint(data["v"]), nil)
 				}
 			}
