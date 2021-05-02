@@ -12,6 +12,7 @@ import (
 	"syscall"
 	"time"
 
+	"github.com/jedib0t/go-pretty/v6/table"
 	"github.com/mashmb/1pass/1pass-core/core/domain"
 	"github.com/mashmb/1pass/1pass-core/core/facade"
 	"golang.org/x/term"
@@ -28,6 +29,9 @@ func NewCobraCliControl(vaultFacade facade.VaultFacade) *cobraCliControl {
 }
 
 func (ctrl *cobraCliControl) GetCategories() {
+	t := table.NewWriter()
+	t.SetStyle(table.StyleDouble)
+	t.AppendHeader(table.Row{"lp.", "category"})
 	categories := domain.ItemCategoryEnum.GetValues()
 
 	sort.Slice(categories, func(i, j int) bool {
@@ -35,9 +39,10 @@ func (ctrl *cobraCliControl) GetCategories() {
 	})
 
 	for i, cat := range categories {
-		msg := fmt.Sprintf("%d. %v", i+1, cat.GetName())
-		fmt.Println(msg)
+		t.AppendRow(table.Row{i + 1, cat.GetName()})
 	}
+
+	fmt.Println(t.Render())
 }
 
 func (ctrl *cobraCliControl) GetItemDetails(vaultPath, uid string, trashed bool) {
