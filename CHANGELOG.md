@@ -7,6 +7,7 @@ History of **1Pass** releases with changes description.
 - [CLI] Commands `list`, `overview` and `details` works with trashed items (`-t` flag)
 - [CLI] Command used to display all available item categories
 - [CLI] `list` command with item category filtering (`-c` flag)
+- [API] Merge item overview and details (one structure, full items decoding at once, sensitive data masked in control layer)
 - [API] Work with items from trash
 - [API] Handle all item categories according to [OPVault design](https://support.1password.com/opvault-design/)
 
