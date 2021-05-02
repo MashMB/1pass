@@ -4,6 +4,9 @@ History of **1Pass** releases with changes description.
 
 ## Release 1.1.0
 
+- [CLI] Pretty print for `overview` and `details` commands
+- [CLI] Output of `list` command as table
+- [CLI] Output of `categories` command as table
 - [CLI] Commands `list`, `overview` and `details` works with trashed items (`-t` flag)
 - [CLI] Command used to display all available item categories
 - [CLI] `list` command with item category filtering (`-c` flag)
