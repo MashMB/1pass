@@ -61,19 +61,20 @@ func (ctrl *cobraCliControl) GetItemDetails(vaultPath, uid string, trashed bool)
 		fmt.Println()
 		fmt.Println(item.Category.GetName())
 		fmt.Println("------------------------------")
-		fmt.Println(fmt.Sprintf("[%v] --- %v", item.Uid, item.Title))
+		fmt.Println(item.Title)
+		fmt.Println()
 		updated := time.Unix(item.Updated, 0).Format("2006-01-02 15:04:05")
 		created := time.Unix(item.Created, 0).Format("2006-01-02 15:04:05")
-		fmt.Println(fmt.Sprintf("Updated: %v\tCreated: %v\tTrashed: %v", updated, created, item.Trashed))
+		fmt.Println(fmt.Sprintf("Updated: %v\nCreated: %v\nTrashed: %v", updated, created, item.Trashed))
 
 		if item.Url != "" {
 			fmt.Println(fmt.Sprintf("URL: %v", item.Url))
 		}
 
-		fmt.Println()
-
 		if item.Sections != nil {
 			for _, section := range item.Sections {
+				fmt.Println()
+
 				if section.Title != "" {
 					fmt.Println(section.Title)
 				}
@@ -82,12 +83,12 @@ func (ctrl *cobraCliControl) GetItemDetails(vaultPath, uid string, trashed bool)
 
 				if section.Fields != nil {
 					for _, field := range section.Fields {
-						fmt.Println(fmt.Sprintf("\t%v: %v", field.Name, field.Value))
+						fmt.Println(fmt.Sprintf("%v: %v", field.Name, field.Value))
 					}
 				}
-
-				fmt.Println()
 			}
+
+			fmt.Println()
 		}
 
 		if item.Notes != "" {
