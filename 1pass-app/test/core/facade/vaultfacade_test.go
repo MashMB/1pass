@@ -35,55 +35,26 @@ func setupVaultFacade() corefacade.VaultFacade {
 	return corefacade.NewDfltVaultFacade(itemService, keyService, vaultService)
 }
 
-func TestGetItemDetails(t *testing.T) {
+func TestGetItem(t *testing.T) {
 	facade := setupVaultFacade()
 	pass := "freddy"
+	facade.Unlock("../../../../assets/onepassword_data", pass)
+	expected := "Personal"
+	uid := "0EDE2B13D7AC4E2C9105842682ACB187"
 	trashed := false
-	uid := "358B7411EB8B45CD9CE592ED16F3E9DE"
-	err := facade.Unlock("../../../../assets/onepassword_data", pass)
+	item := facade.GetItem(uid, trashed)
 
-	if err != nil {
-		t.Error("Unlock() should pass because of valid password")
+	if item.Title != expected {
+		t.Errorf("GetItem() = %v; expected = %v", item.Title, expected)
 	}
 
-	item := facade.GetItemDetails(uid, trashed)
-
-	if item.Uid != uid {
-		t.Errorf("[NOT-TRASHED] GetItemDetails() = %v; expected = %v", item.Uid, uid)
-	}
-
-	trashed = true
+	expected = "A note to Trash"
 	uid = "AE272805811C450586BA3EDEAEF8AE19"
-	item = facade.GetItemDetails(uid, trashed)
-
-	if item.Uid != uid {
-		t.Errorf("[TRASHED] GetItemDetails() = %v; expected = %v", item.Uid, uid)
-	}
-}
-
-func TestGetItemOverview(t *testing.T) {
-	facade := setupVaultFacade()
-	pass := "freddy"
-	trashed := false
-	uid := "358B7411EB8B45CD9CE592ED16F3E9DE"
-	err := facade.Unlock("../../../../assets/onepassword_data", pass)
-
-	if err != nil {
-		t.Error("Unlock() should pass because of valid password")
-	}
-
-	item := facade.GetItemOverview(uid, trashed)
-
-	if item.Uid != uid {
-		t.Errorf("[NOT-TRASHED] GetItemOverview() = %v; expected = %v", item.Uid, uid)
-	}
-
 	trashed = true
-	uid = "AE272805811C450586BA3EDEAEF8AE19"
-	item = facade.GetItemOverview(uid, trashed)
+	item = facade.GetItem(uid, trashed)
 
-	if item.Uid != uid {
-		t.Errorf("[TRASHED] GetItemOverview() = %v; expected = %v", item.Uid, uid)
+	if item.Title != expected {
+		t.Errorf("GetItem() = %v; expected = %v", item.Title, expected)
 	}
 }
 
