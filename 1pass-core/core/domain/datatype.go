@@ -6,6 +6,7 @@ package domain
 
 import (
 	"fmt"
+	"sort"
 	"strconv"
 	"strings"
 	"time"
@@ -71,12 +72,21 @@ func (r *dataTypeRegistry) FromName(name string) (*DataType, error) {
 
 func (r *dataTypeRegistry) parseAddress(jsonValue map[string]interface{}) string {
 	var parsed string
+	keys := make([]string, len(jsonValue))
+	idx := 0
 
-	for key, value := range jsonValue {
-		val := value.(string)
+	for key := range jsonValue {
+		keys[idx] = key
+		idx++
+	}
+
+	sort.Strings(keys)
+
+	for _, key := range keys {
+		val := jsonValue[key].(string)
 		val = strings.TrimSpace(val)
 		val = strings.ReplaceAll(val, "\n", " ")
-		formatted := fmt.Sprintf("\n\t\t%v: %v", key, val)
+		formatted := fmt.Sprintf("\n  %v: %v", key, val)
 		parsed = parsed + formatted
 	}
 
