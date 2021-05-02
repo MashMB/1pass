@@ -170,6 +170,10 @@ func (ctrl *cobraCliControl) GetItems(vaultPath, category string, trashed bool) 
 		os.Exit(1)
 	}
 
+	t := table.NewWriter()
+	t.SetStyle(table.StyleDouble)
+	t.AppendHeader(table.Row{"lp.", "uid", "category", "title"})
+
 	var cat *domain.ItemCategory
 
 	if category != "" {
@@ -184,8 +188,9 @@ func (ctrl *cobraCliControl) GetItems(vaultPath, category string, trashed bool) 
 
 	items := ctrl.vaultFacade.GetItems(cat, trashed)
 
-	for _, item := range items {
-		row := fmt.Sprintf("[%v] (%v) --- %v", item.Uid, item.Category.GetName(), item.Title)
-		fmt.Println(row)
+	for i, item := range items {
+		t.AppendRow(table.Row{i + 1, item.Uid, item.Category.GetName(), item.Title})
 	}
+
+	fmt.Println(t.Render())
 }
