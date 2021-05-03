@@ -10,18 +10,20 @@ import (
 )
 
 type dfltVaultFacade struct {
-	keys         *domain.Keys
-	itemService  service.ItemService
-	keyService   service.KeyService
-	vaultService service.VaultService
+	keys          *domain.Keys
+	configService service.ConfigService
+	itemService   service.ItemService
+	keyService    service.KeyService
+	vaultService  service.VaultService
 }
 
-func NewDfltVaultFacade(itemService service.ItemService, keyService service.KeyService,
-	vaultService service.VaultService) *dfltVaultFacade {
+func NewDfltVaultFacade(configService service.ConfigService, itemService service.ItemService,
+	keyService service.KeyService, vaultService service.VaultService) *dfltVaultFacade {
 	return &dfltVaultFacade{
-		itemService:  itemService,
-		keyService:   keyService,
-		vaultService: vaultService,
+		configService: configService,
+		itemService:   itemService,
+		keyService:    keyService,
+		vaultService:  vaultService,
 	}
 }
 
@@ -48,7 +50,15 @@ func (f *dfltVaultFacade) Lock() {
 }
 
 func (f *dfltVaultFacade) Unlock(path, password string) error {
-	vault := domain.NewVault(path)
+	var vault *domain.Vault
+
+	if path != "" {
+		vault = domain.NewVault(path)
+	} else {
+		config := f.configService.GetConfig()
+		vault = domain.NewVault(config.Vault)
+	}
+
 	err := f.vaultService.ValidateVault(vault)
 
 	if err != nil {
