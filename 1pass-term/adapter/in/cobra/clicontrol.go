@@ -19,13 +19,27 @@ import (
 )
 
 type cobraCliControl struct {
-	vaultFacade facade.VaultFacade
+	configFacade facade.ConfigFacade
+	vaultFacade  facade.VaultFacade
 }
 
-func NewCobraCliControl(vaultFacade facade.VaultFacade) *cobraCliControl {
+func NewCobraCliControl(configFacade facade.ConfigFacade, vaultFacade facade.VaultFacade) *cobraCliControl {
 	return &cobraCliControl{
-		vaultFacade: vaultFacade,
+		configFacade: configFacade,
+		vaultFacade:  vaultFacade,
 	}
+}
+
+func (ctrl *cobraCliControl) Configure() {
+	var vault string
+	config := ctrl.configFacade.GetConfig()
+
+	fmt.Println("Configuring 1pass:")
+	fmt.Print(fmt.Sprintf("  1. Default OPVault path (%v): ", config.Vault))
+	fmt.Scanln(&vault)
+	config.Vault = vault
+
+	ctrl.configFacade.SaveConfig(config)
 }
 
 func (ctrl *cobraCliControl) GetCategories() {

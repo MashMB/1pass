@@ -5,6 +5,8 @@
 package in
 
 type CliControl interface {
+	Configure()
+
 	GetCategories()
 
 	GetItemDetails(vaultPath, uid string, trashed bool)
