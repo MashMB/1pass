@@ -4,6 +4,10 @@
 
 package domain
 
+type Config struct {
+	Vault string
+}
+
 type Item struct {
 	Category *ItemCategory
 	Created  int64
@@ -55,6 +59,12 @@ type SimpleItem struct {
 
 type Vault struct {
 	Path string
+}
+
+func NewConfig(vault string) *Config {
+	return &Config{
+		Vault: vault,
+	}
 }
 
 func NewItem(uid, title, url, notes string, trashed bool, category *ItemCategory, sections []*ItemSection, created,
