@@ -10,6 +10,8 @@ import (
 
 type ConfigRepo interface {
 	GetDefaultVault() string
+
+	Save(config *domain.Config)
 }
 
 type ItemRepo interface {

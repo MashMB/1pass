@@ -10,16 +10,19 @@ import (
 	"log"
 	"os"
 
+	"github.com/mashmb/1pass/1pass-core/core/domain"
 	"gopkg.in/yaml.v2"
 )
 
 type fileConfigRepo struct {
-	config map[string]interface{}
+	config     map[string]interface{}
+	configFile string
 }
 
 func NewFileConfigRepo(configFile string) *fileConfigRepo {
 	return &fileConfigRepo{
-		config: loadConfigFile(configFile),
+		config:     loadConfigFile(configFile),
+		configFile: configFile,
 	}
 }
 
@@ -51,4 +54,19 @@ func (repo *fileConfigRepo) GetDefaultVault() string {
 	}
 
 	return vault
+}
+
+func (repo *fileConfigRepo) Save(config *domain.Config) {
+	repo.config["opvault"] = config.Vault
+	file, err := yaml.Marshal(repo.config)
+
+	if err != nil {
+		log.Fatalln(err)
+	}
+
+	if err := ioutil.WriteFile(repo.configFile, file, 0644); err != nil {
+		log.Fatalln(err)
+	}
+
+	repo.config = loadConfigFile(repo.configFile)
 }
