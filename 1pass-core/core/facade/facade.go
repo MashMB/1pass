@@ -10,6 +10,8 @@ import (
 
 type ConfigFacade interface {
 	GetConfig() *domain.Config
+
+	SaveConfig(config *domain.Config)
 }
 
 type VaultFacade interface {

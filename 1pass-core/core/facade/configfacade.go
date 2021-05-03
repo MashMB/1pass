@@ -22,3 +22,7 @@ func NewDfltConfigFacade(configService service.ConfigService) *dfltConfigFacade 
 func (f *dfltConfigFacade) GetConfig() *domain.Config {
 	return f.configService.GetConfig()
 }
+
+func (f *dfltConfigFacade) SaveConfig(config *domain.Config) {
+	f.configService.SaveConfig(config)
+}
