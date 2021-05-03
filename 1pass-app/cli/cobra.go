@@ -33,6 +33,16 @@ func (cli *cobraCli) init() *cobra.Command {
 efficiently in terminal.`,
 	}
 
+	configureCmd := &cobra.Command{
+		Use:   "configure",
+		Short: "Configure 1pass application",
+		Long: `Configure 1pass application. Configuration process is interactive - answer the questions. Available settings: 
+1. Configure default OPVault path.`,
+		Run: func(cmd *cobra.Command, args []string) {
+			cli.cliControl.Configure()
+		},
+	}
+
 	categoriesCmd := &cobra.Command{
 		Use:   "categories",
 		Short: "Get list of available item categories",
@@ -107,6 +117,7 @@ like passwords. If default OPVault was configured, [OPVault] argument is not req
 		},
 	}
 
+	rootCmd.AddCommand(configureCmd)
 	rootCmd.AddCommand(categoriesCmd)
 	rootCmd.AddCommand(listCmd)
 	rootCmd.AddCommand(overviewCmd)
