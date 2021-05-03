@@ -8,6 +8,10 @@ import (
 	"github.com/mashmb/1pass/1pass-core/core/domain"
 )
 
+type ConfigFacade interface {
+	GetConfig() *domain.Config
+}
+
 type VaultFacade interface {
 	GetItem(uid string, trashed bool) *domain.Item
 
