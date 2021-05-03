@@ -9,7 +9,7 @@ import (
 )
 
 type ConfigRepo interface {
-	GetDefaultVault() *domain.Vault
+	GetDefaultVault() string
 }
 
 type ItemRepo interface {
