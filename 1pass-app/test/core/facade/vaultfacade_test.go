@@ -16,23 +16,27 @@ import (
 )
 
 func setupVaultFacade() corefacade.VaultFacade {
+	var configRepo out.ConfigRepo
 	var cryptoUtils out.CrytpoUtils
 	var itemRepo out.ItemRepo
 	var profileRepo out.ProfileRepo
 
+	var configService service.ConfigService
 	var itemService service.ItemService
 	var keyService service.KeyService
 	var vaultService service.VaultService
 
+	configRepo = file.NewFileConfigRepo("../../../../assets/1pass.yml")
 	cryptoUtils = crypto.NewPbkdf2CryptoUtils()
 	itemRepo = file.NewFileItemRepo()
 	profileRepo = file.NewFileProfileRepo()
 
+	configService = service.NewDfltConfigService(configRepo)
 	keyService = service.NewDfltKeyService(cryptoUtils, profileRepo)
 	itemService = service.NewDfltItemService(keyService, itemRepo)
 	vaultService = service.NewDfltVaultService(itemRepo, profileRepo)
 
-	return corefacade.NewDfltVaultFacade(itemService, keyService, vaultService)
+	return corefacade.NewDfltVaultFacade(configService, itemService, keyService, vaultService)
 }
 
 func TestGetItem(t *testing.T) {
