@@ -10,6 +10,8 @@ import (
 
 type ConfigService interface {
 	GetConfig() *domain.Config
+
+	SaveConfig(config *domain.Config)
 }
 
 type ItemService interface {

@@ -24,3 +24,7 @@ func (s *dfltConfigService) GetConfig() *domain.Config {
 
 	return domain.NewConfig(vault)
 }
+
+func (s *dfltConfigService) SaveConfig(config *domain.Config) {
+	s.configRepo.Save(config)
+}
