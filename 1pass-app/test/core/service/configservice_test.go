@@ -15,7 +15,7 @@ import (
 func setupConfigService() coreservice.ConfigService {
 	var configRepo out.ConfigRepo
 
-	configRepo = file.NewFileConfigRepo("../../../../assets/1pass.yml")
+	configRepo = file.NewFileConfigRepo("../../../../assets")
 
 	return coreservice.NewDfltConfigService(configRepo)
 }

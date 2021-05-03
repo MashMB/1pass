@@ -11,7 +11,7 @@ import (
 )
 
 func setupFileConfigRepo() (*fileConfigRepo, *fileConfigRepo) {
-	return NewFileConfigRepo("../../../../../assets/1pass.yml"), NewFileConfigRepo("")
+	return NewFileConfigRepo("../../../../../assets"), NewFileConfigRepo("")
 }
 
 func TestGetDefaultVault(t *testing.T) {
@@ -31,15 +31,15 @@ func TestGetDefaultVault(t *testing.T) {
 }
 
 func TestLoadConfigFile(t *testing.T) {
-	config := loadConfigFile("1pass.yml")
+	config := loadConfigFile("")
 
-	if config != nil {
+	if len(config) != 0 {
 		t.Error("loadConfigFile() should fail because config file do not exist")
 	}
 
-	config = loadConfigFile("../../../../../assets/1pass.yml")
+	config = loadConfigFile("../../../../../assets")
 
-	if config == nil {
+	if len(config) == 0 {
 		t.Error("loadConfigFile() should pass because config file exist")
 	}
 }
