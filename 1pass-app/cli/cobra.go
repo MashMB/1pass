@@ -44,8 +44,8 @@ efficiently in terminal.`,
 	listCmd := &cobra.Command{
 		Use:   "list [OPVault]",
 		Short: "Get list of items stored in 1Passowrd OPVault format",
-		Long: `Get list of items stored in 1Passowrd OPVault format. Items will be displayd in form of 
-[<UID>] (<category>) --- <title>. UID value is required for item overview and details identifiaction.`,
+		Long: `Get list of items stored in 1Passowrd OPVault format. Items will be displayd in form of table. UID value is 
+required to get item overview or details.`,
 		Args: cobra.ExactArgs(1),
 		Run: func(cmd *cobra.Command, args []string) {
 			cli.cliControl.GetItems(args[0], cli.category, cli.trashed)
@@ -59,7 +59,7 @@ efficiently in terminal.`,
 		Use:   "overview [OPVault] [UID]",
 		Short: "Overview single item stored in 1Password OPVault format",
 		Long: `Overview single item stored in 1Password OPVault format. Overview has no sensitive data like 
-passwords. Overview will be displayed in JSON format.`,
+passwords.`,
 		Args: cobra.ExactArgs(2),
 		Run: func(cmd *cobra.Command, args []string) {
 			cli.cliControl.GetItemOverview(args[0], args[1], cli.trashed)
@@ -72,7 +72,7 @@ passwords. Overview will be displayed in JSON format.`,
 		Use:   "details [OPVault] [UID]",
 		Short: "Details of single item stored in 1Password OPVault format",
 		Long: `Details of single item stored in 1Password OPVault format. Details contains sensitive data 
-like passwords. Details will be displayed in JSON format.`,
+like passwords.`,
 		Args: cobra.ExactArgs(2),
 		Run: func(cmd *cobra.Command, args []string) {
 			cli.cliControl.GetItemDetails(args[0], args[1], cli.trashed)
