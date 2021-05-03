@@ -4,12 +4,16 @@ History of **1Pass** releases with changes description.
 
 ## Release 1.1.0
 
+- [CLI] OPVault path is optional for `list`, `overview` and `details` commands (if not defined, use default one from configuration file)
 - [CLI] Pretty print for `overview` and `details` commands
 - [CLI] Output of `list` command as table
 - [CLI] Output of `categories` command as table
 - [CLI] Commands `list`, `overview` and `details` works with trashed items (`-t` flag)
 - [CLI] Command used to display all available item categories
 - [CLI] `list` command with item category filtering (`-c` flag)
+- [API] Configurable default OPVault path
+- [API] Save application configuration (YAML file in `$HOME/.config/1pass/1pass.yml`)
+- [API] Read application configuration (YAML file in `$HOME/.config/1pass/1pass.yml`)
 - [API] Merge item overview and details (one structure, full items decoding at once, sensitive data masked in control layer)
 - [API] Work with items from trash
 - [API] Handle all item categories according to [OPVault design](https://support.1password.com/opvault-design/)
