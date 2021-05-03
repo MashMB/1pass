@@ -37,7 +37,7 @@ func (ctrl *cobraCliControl) Configure() {
 	fmt.Println("Configuring 1pass:")
 	fmt.Print(fmt.Sprintf("  1. Default OPVault path (%v): ", config.Vault))
 	fmt.Scanln(&vault)
-	config.Vault = vault
+	config.Vault = strings.TrimSpace(vault)
 
 	ctrl.configFacade.SaveConfig(config)
 }
