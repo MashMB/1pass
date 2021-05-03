@@ -8,6 +8,10 @@ import (
 	"github.com/mashmb/1pass/1pass-core/core/domain"
 )
 
+type ConfigRepo interface {
+	GetDefaultVault() *domain.Vault
+}
+
 type ItemRepo interface {
 	FindByCategoryAndTrashed(category *domain.ItemCategory, trashed bool) []*domain.Item
 
