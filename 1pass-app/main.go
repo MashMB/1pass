@@ -40,11 +40,12 @@ func main() {
 	var itemService service.ItemService
 	var vaultService service.VaultService
 
+	var configFacade facade.ConfigFacade
 	var vaultFacade facade.VaultFacade
 
 	var cliControl in.CliControl
 
-	configRepo = file.NewFileConfigRepo(filepath.Join(homeDir, ".config", "1pass", "1pass.yml"))
+	configRepo = file.NewFileConfigRepo(filepath.Join(homeDir, ".config", "1pass"))
 	cryptoUtils = crypto.NewPbkdf2CryptoUtils()
 	itemRepo = file.NewFileItemRepo()
 	profileRepo = file.NewFileProfileRepo()
@@ -54,9 +55,10 @@ func main() {
 	itemService = service.NewDfltItemService(keyService, itemRepo)
 	vaultService = service.NewDfltVaultService(itemRepo, profileRepo)
 
+	configFacade = facade.NewDfltConfigFacade(configService)
 	vaultFacade = facade.NewDfltVaultFacade(configService, itemService, keyService, vaultService)
 
-	cliControl = cobra.NewCobraCliControl(vaultFacade)
+	cliControl = cobra.NewCobraCliControl(configFacade, vaultFacade)
 
 	cobraCli := cli.NewCobraCli(Version, cliControl)
 	cobraCli.Run()

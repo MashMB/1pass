@@ -9,26 +9,29 @@ import (
 	"io/ioutil"
 	"log"
 	"os"
+	"path/filepath"
 
 	"github.com/mashmb/1pass/1pass-core/core/domain"
 	"gopkg.in/yaml.v2"
 )
 
 type fileConfigRepo struct {
-	config     map[string]interface{}
-	configFile string
+	config    map[string]interface{}
+	configDir string
 }
 
-func NewFileConfigRepo(configFile string) *fileConfigRepo {
+func NewFileConfigRepo(configDir string) *fileConfigRepo {
 	return &fileConfigRepo{
-		config:     loadConfigFile(configFile),
-		configFile: configFile,
+		config:    loadConfigFile(configDir),
+		configDir: configDir,
 	}
 }
 
-func loadConfigFile(configFile string) map[string]interface{} {
+func loadConfigFile(configDir string) map[string]interface{} {
+	configFile := filepath.Join(configDir, domain.ConfigFile)
+
 	if _, err := os.Stat(configFile); err != nil {
-		return nil
+		return make(map[string]interface{})
 	}
 
 	file, err := ioutil.ReadFile(configFile)
@@ -49,7 +52,7 @@ func loadConfigFile(configFile string) map[string]interface{} {
 func (repo *fileConfigRepo) GetDefaultVault() string {
 	var vault string
 
-	if repo.config != nil && repo.config["opvault"] != nil {
+	if repo.config["opvault"] != nil {
 		vault = fmt.Sprint(repo.config["opvault"])
 	}
 
@@ -57,6 +60,7 @@ func (repo *fileConfigRepo) GetDefaultVault() string {
 }
 
 func (repo *fileConfigRepo) Save(config *domain.Config) {
+	configFile := filepath.Join(repo.configDir, domain.ConfigFile)
 	repo.config["opvault"] = config.Vault
 	file, err := yaml.Marshal(repo.config)
 
@@ -64,9 +68,13 @@ func (repo *fileConfigRepo) Save(config *domain.Config) {
 		log.Fatalln(err)
 	}
 
-	if err := ioutil.WriteFile(repo.configFile, file, 0644); err != nil {
+	if _, err := os.Stat(repo.configDir); err != nil {
+		os.MkdirAll(repo.configDir, 0700)
+	}
+
+	if err := ioutil.WriteFile(configFile, file, 0644); err != nil {
 		log.Fatalln(err)
 	}
 
-	repo.config = loadConfigFile(repo.configFile)
+	repo.config = loadConfigFile(repo.configDir)
 }
