@@ -45,10 +45,15 @@ efficiently in terminal.`,
 		Use:   "list [OPVault]",
 		Short: "Get list of items stored in 1Passowrd OPVault format",
 		Long: `Get list of items stored in 1Passowrd OPVault format. Items will be displayd in form of table. UID value is 
-required to get item overview or details.`,
-		Args: cobra.ExactArgs(1),
+required to get item overview or details. If default OPVault was configured, [OPVault] argument is not required.`,
 		Run: func(cmd *cobra.Command, args []string) {
-			cli.cliControl.GetItems(args[0], cli.category, cli.trashed)
+			var vaultPath string
+
+			if len(args) > 0 {
+				vaultPath = args[0]
+			}
+
+			cli.cliControl.GetItems(vaultPath, cli.category, cli.trashed)
 		},
 	}
 
@@ -56,26 +61,38 @@ required to get item overview or details.`,
 	listCmd.Flags().BoolVarP(&cli.trashed, "trashed", "t", false, "work on trashed items")
 
 	overviewCmd := &cobra.Command{
-		Use:   "overview [OPVault] [UID]",
+		Use:   "overview [UID] [OPVault]",
 		Short: "Overview single item stored in 1Password OPVault format",
 		Long: `Overview single item stored in 1Password OPVault format. Overview has no sensitive data like 
-passwords.`,
-		Args: cobra.ExactArgs(2),
+passwords. If default OPVault was configured, [OPVault] argument is not required.`,
+		Args: cobra.MinimumNArgs(1),
 		Run: func(cmd *cobra.Command, args []string) {
-			cli.cliControl.GetItemOverview(args[0], args[1], cli.trashed)
+			var vaultPath string
+
+			if len(args) > 1 {
+				vaultPath = args[1]
+			}
+
+			cli.cliControl.GetItemOverview(vaultPath, args[0], cli.trashed)
 		},
 	}
 
 	overviewCmd.Flags().BoolVarP(&cli.trashed, "trashed", "t", false, "search in trashed items")
 
 	detailsCmd := &cobra.Command{
-		Use:   "details [OPVault] [UID]",
+		Use:   "details [UID] [OPVault]",
 		Short: "Details of single item stored in 1Password OPVault format",
 		Long: `Details of single item stored in 1Password OPVault format. Details contains sensitive data 
-like passwords.`,
-		Args: cobra.ExactArgs(2),
+like passwords. If default OPVault was configured, [OPVault] argument is not required.`,
+		Args: cobra.MinimumNArgs(1),
 		Run: func(cmd *cobra.Command, args []string) {
-			cli.cliControl.GetItemDetails(args[0], args[1], cli.trashed)
+			var vaultPath string
+
+			if len(args) > 1 {
+				vaultPath = args[1]
+			}
+
+			cli.cliControl.GetItemDetails(vaultPath, args[0], cli.trashed)
 		},
 	}
 
