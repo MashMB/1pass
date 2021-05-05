@@ -5,7 +5,8 @@
 package domain
 
 type Config struct {
-	Vault string
+	UpdateNotify bool
+	Vault        string
 }
 
 type Item struct {
@@ -68,9 +69,10 @@ type Vault struct {
 	Path string
 }
 
-func NewConfig(vault string) *Config {
+func NewConfig(updateNotify bool, vault string) *Config {
 	return &Config{
-		Vault: vault,
+		UpdateNotify: updateNotify,
+		Vault:        vault,
 	}
 }
 
