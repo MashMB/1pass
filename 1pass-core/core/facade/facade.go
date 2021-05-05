@@ -28,4 +28,6 @@ type VaultFacade interface {
 
 type UpdateFacade interface {
 	CheckforUpdate() (*domain.UpdateInfo, error)
+
+	Update() error
 }
