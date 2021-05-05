@@ -5,6 +5,8 @@
 package in
 
 type CliControl interface {
+	CheckForUpdate()
+
 	Configure()
 
 	GetCategories()

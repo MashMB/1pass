@@ -20,17 +20,40 @@ import (
 
 type cobraCliControl struct {
 	configFacade facade.ConfigFacade
+	updateFacade facade.UpdateFacade
 	vaultFacade  facade.VaultFacade
 }
 
-func NewCobraCliControl(configFacade facade.ConfigFacade, vaultFacade facade.VaultFacade) *cobraCliControl {
+func NewCobraCliControl(configFacade facade.ConfigFacade, updateFacade facade.UpdateFacade,
+	vaultFacade facade.VaultFacade) *cobraCliControl {
 	return &cobraCliControl{
 		configFacade: configFacade,
+		updateFacade: updateFacade,
 		vaultFacade:  vaultFacade,
 	}
 }
 
+func (ctrl *cobraCliControl) CheckForUpdate() {
+	config := ctrl.configFacade.GetConfig()
+
+	if config.UpdateNotify {
+		info, err := ctrl.updateFacade.CheckForUpdate()
+
+		if err != nil {
+			if err == domain.ErrNoUpdate {
+				fmt.Println(err)
+				fmt.Println()
+			}
+		} else {
+			msg := fmt.Sprintf("New version of 1pass is available (current: %v, available: %v). Run `sudo 1pass update` to upgrade.\n",
+				domain.Version, info.Version)
+			fmt.Println(msg)
+		}
+	}
+}
+
 func (ctrl *cobraCliControl) Configure() {
+	ctrl.CheckForUpdate()
 	var vault string
 	config := ctrl.configFacade.GetConfig()
 
@@ -43,6 +66,7 @@ func (ctrl *cobraCliControl) Configure() {
 }
 
 func (ctrl *cobraCliControl) GetCategories() {
+	ctrl.CheckForUpdate()
 	t := table.NewWriter()
 	t.SetStyle(table.StyleDouble)
 	t.AppendHeader(table.Row{"lp.", "category"})
@@ -60,6 +84,7 @@ func (ctrl *cobraCliControl) GetCategories() {
 }
 
 func (ctrl *cobraCliControl) GetItemDetails(vaultPath, uid string, trashed bool) {
+	ctrl.CheckForUpdate()
 	fmt.Println("Password:")
 	password, err := term.ReadPassword(int(syscall.Stdin))
 	err = ctrl.vaultFacade.Unlock(vaultPath, string(password))
@@ -119,6 +144,7 @@ func (ctrl *cobraCliControl) GetItemDetails(vaultPath, uid string, trashed bool)
 }
 
 func (ctrl *cobraCliControl) GetItemOverview(vaultPath, uid string, trashed bool) {
+	ctrl.CheckForUpdate()
 	fmt.Println("Password:")
 	password, err := term.ReadPassword(int(syscall.Stdin))
 	err = ctrl.vaultFacade.Unlock(vaultPath, string(password))
@@ -177,6 +203,7 @@ func (ctrl *cobraCliControl) GetItemOverview(vaultPath, uid string, trashed bool
 }
 
 func (ctrl *cobraCliControl) GetItems(vaultPath, category string, trashed bool) {
+	ctrl.CheckForUpdate()
 	fmt.Println("Password:")
 	password, err := term.ReadPassword(int(syscall.Stdin))
 	err = ctrl.vaultFacade.Unlock(vaultPath, string(password))
