@@ -59,6 +59,16 @@ func (repo *fileConfigRepo) GetDefaultVault() string {
 	return vault
 }
 
+func (repo *fileConfigRepo) GetUpdateNotification() bool {
+	notification := true
+
+	if repo.config["update-notification"] != nil {
+		notification = repo.config["update-notification"].(bool)
+	}
+
+	return notification
+}
+
 func (repo *fileConfigRepo) Save(config *domain.Config) {
 	configFile := filepath.Join(repo.configDir, domain.ConfigFile)
 	repo.config["opvault"] = config.Vault

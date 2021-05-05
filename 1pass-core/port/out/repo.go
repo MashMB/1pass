@@ -11,6 +11,8 @@ import (
 type ConfigRepo interface {
 	GetDefaultVault() string
 
+	GetUpdateNotification() bool
+
 	Save(config *domain.Config)
 }
 
