@@ -153,6 +153,20 @@ func (up *githubUpdater) ExtractArchive(src, dst string) error {
 	}
 }
 
+func (up *githubUpdater) ReplaceBinary(src string) error {
+	dst, err := os.Executable()
+
+	if err != nil {
+		return err
+	}
+
+	if err := os.Rename(src, dst); err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func (up *githubUpdater) ValidateChecksum(binary, file string) error {
 	fileContent, err := ioutil.ReadFile(file)
 

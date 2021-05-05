@@ -15,5 +15,7 @@ type Updater interface {
 
 	ExtractArchive(src, dst string) error
 
+	ReplaceBinary(src string) error
+
 	ValidateChecksum(binary, file string) error
 }
