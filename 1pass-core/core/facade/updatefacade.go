@@ -19,7 +19,7 @@ func NewDfltUpdateFacade(updateService service.UpdateService) *dfltUpdateFacade 
 	}
 }
 
-func (f *dfltUpdateFacade) CheckforUpdate() (*domain.UpdateInfo, error) {
+func (f *dfltUpdateFacade) CheckForUpdate() (*domain.UpdateInfo, error) {
 	return f.updateService.CheckForUpdate()
 }
 
