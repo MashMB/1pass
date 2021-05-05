@@ -12,24 +12,43 @@ import (
 	"encoding/json"
 	"io"
 	"io/ioutil"
+	"net"
 	"net/http"
 	"os"
 	"path/filepath"
 	"strconv"
 	"strings"
+	"time"
 
 	"github.com/mashmb/1pass/1pass-core/core/domain"
 )
 
 type githubUpdater struct {
+	httpClient http.Client
 }
 
 func NewGithubUpdater() *githubUpdater {
-	return &githubUpdater{}
+	httpTransport := http.Transport{
+		Dial: dialTimeout,
+	}
+
+	httpClient := http.Client{
+		Transport: &httpTransport,
+	}
+
+	return &githubUpdater{
+		httpClient: httpClient,
+	}
+}
+
+func dialTimeout(network, address string) (net.Conn, error) {
+	timeout := time.Duration(domain.Timeout) * time.Second
+
+	return net.DialTimeout(network, address, timeout)
 }
 
 func (up *githubUpdater) CheckForUpdate() (*domain.UpdateInfo, error) {
-	resp, err := http.Get(domain.GithubReleases)
+	resp, err := up.httpClient.Get(domain.GithubReleases)
 
 	if err != nil {
 		return nil, err
@@ -84,7 +103,7 @@ func (up *githubUpdater) CheckForUpdate() (*domain.UpdateInfo, error) {
 }
 
 func (up *githubUpdater) DownloadFile(destination, url string) error {
-	resp, err := http.Get(url)
+	resp, err := up.httpClient.Get(url)
 
 	if err != nil {
 		return err

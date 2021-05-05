@@ -10,5 +10,6 @@ const (
 	GithubReleases  string = "https://api.github.com/repos/mashmb/1pass/releases"
 	ProfileDir      string = "default"
 	ProfileFile     string = "profile.js"
+	Timeout         int64  = 5
 	Version         string = "1.0.0"
 )
