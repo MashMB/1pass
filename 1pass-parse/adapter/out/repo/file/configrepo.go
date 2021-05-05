@@ -71,6 +71,7 @@ func (repo *fileConfigRepo) GetUpdateNotification() bool {
 
 func (repo *fileConfigRepo) Save(config *domain.Config) {
 	configFile := filepath.Join(repo.configDir, domain.ConfigFile)
+	repo.config["update-notification"] = config.UpdateNotify
 	repo.config["opvault"] = config.Vault
 	file, err := yaml.Marshal(repo.config)
 
