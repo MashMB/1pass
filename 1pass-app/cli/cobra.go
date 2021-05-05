@@ -33,7 +33,7 @@ func (cli *cobraCli) init() *cobra.Command {
 efficiently in terminal. Run '1pass --help' for more informations.`,
 		Run: func(cmd *cobra.Command, args []string) {
 			cli.cliControl.CheckForUpdate()
-			fmt.Println(cmd.Long)
+			fmt.Println(fmt.Sprintf("%v\n%v", cmd.Short, cmd.Long))
 		},
 	}
 
