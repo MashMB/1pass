@@ -10,4 +10,6 @@ import (
 
 type Updater interface {
 	CheckForUpdate() (*domain.UpdateInfo, error)
+
+	DownloadFile(destination, url string) error
 }
