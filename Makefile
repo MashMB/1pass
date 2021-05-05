@@ -11,8 +11,9 @@ out = out
 parse = 1pass-parse
 repo = github.com/mashmb/1pass/1pass-app
 term = 1pass-term
-test-all = test-core test-parse test-term test-app
-test-all-simple = test-core.s test-parse.s test-term.s test-app.s
+test-all = test-core test-parse test-update test-term test-app
+test-all-simple = test-core.s test-parse.s test-update.s test-term.s test-app.s
+update = 1pass-up
 version = 1.0.0
 
 all: build
@@ -62,6 +63,14 @@ test-parse:
 test-parse.s:
 	echo "--- Testing $(parse) ---"
 	cd $(parse) && go test ./...
+
+test-update:
+	echo "--- Testing $(update) ---"
+	cd $(update) && go test -v ./...
+
+test-update.s:
+	echo "--- Testing $(update) ---"
+	cd $(update) && go test ./...
 
 test-term:
 	echo "--- Testing $(term) ---"
