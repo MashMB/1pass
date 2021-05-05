@@ -25,3 +25,7 @@ type VaultFacade interface {
 
 	Unlock(path, password string) error
 }
+
+type UpdateFacade interface {
+	CheckforUpdate() (*domain.UpdateInfo, error)
+}
