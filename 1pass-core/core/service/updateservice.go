@@ -22,6 +22,20 @@ func NewDfltUpdateService(updater out.Updater) *dfltUpdateService {
 	}
 }
 
+func (s *dfltUpdateService) CheckForUpdate() (*domain.UpdateInfo, error) {
+	info, err := s.updater.CheckForUpdate()
+
+	if err != nil {
+		return nil, err
+	}
+
+	if info == nil || !info.Newer {
+		return nil, domain.ErrNoUpdate
+	}
+
+	return info, nil
+}
+
 func (s *dfltUpdateService) Update() error {
 	info, err := s.updater.CheckForUpdate()
 

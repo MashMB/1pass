@@ -49,6 +49,8 @@ type KeyService interface {
 }
 
 type UpdateService interface {
+	CheckForUpdate() (*domain.UpdateInfo, error)
+
 	Update() error
 }
 
