@@ -1,1 +1,2 @@
 opvault: ./assets/onepassword_data
+update-notification: false

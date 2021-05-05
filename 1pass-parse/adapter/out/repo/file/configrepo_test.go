@@ -30,6 +30,23 @@ func TestGetDefaultVault(t *testing.T) {
 	}
 }
 
+func TestGetUpdateNotification(t *testing.T) {
+	config, empty := setupFileConfigRepo()
+	expected := true
+	notification := empty.GetUpdateNotification()
+
+	if notification != expected {
+		t.Errorf("GetUpdateNotification() = %v; expected = %v", notification, expected)
+	}
+
+	expected = false
+	notification = config.GetUpdateNotification()
+
+	if notification != expected {
+		t.Errorf("GetUpdateNotification() = %v; expected = %v", notification, expected)
+	}
+}
+
 func TestLoadConfigFile(t *testing.T) {
 	config := loadConfigFile("")
 
@@ -47,7 +64,7 @@ func TestLoadConfigFile(t *testing.T) {
 func TestSave(t *testing.T) {
 	config, _ := setupFileConfigRepo()
 	expected := ""
-	conf := domain.NewConfig("")
+	conf := domain.NewConfig(false, "")
 	config.Save(conf)
 	vault := config.GetDefaultVault()
 
