@@ -30,7 +30,11 @@ func (cli *cobraCli) init() *cobra.Command {
 		Use:   "1pass",
 		Short: "1Password Linux CLI explorer",
 		Long: `Fast and Linux user friendly application used to explore 1Password OPVault format. Check your credentials 
-efficiently in terminal.`,
+efficiently in terminal. Run '1pass --help' for more informations.`,
+		Run: func(cmd *cobra.Command, args []string) {
+			cli.cliControl.CheckForUpdate()
+			fmt.Println(cmd.Long)
+		},
 	}
 
 	configureCmd := &cobra.Command{
