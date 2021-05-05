@@ -12,4 +12,6 @@ type Updater interface {
 	CheckForUpdate() (*domain.UpdateInfo, error)
 
 	DownloadFile(destination, url string) error
+
+	ExtractArchive(src, dst string) error
 }

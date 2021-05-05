@@ -5,11 +5,14 @@
 package github
 
 import (
+	"archive/tar"
+	"compress/gzip"
 	"encoding/json"
 	"io"
 	"io/ioutil"
 	"net/http"
 	"os"
+	"path/filepath"
 	"strconv"
 	"strings"
 
@@ -101,4 +104,49 @@ func (up *githubUpdater) DownloadFile(destination, url string) error {
 	}
 
 	return nil
+}
+
+func (up *githubUpdater) ExtractArchive(src, dst string) error {
+	archive, err := os.Open(src)
+
+	if err != nil {
+		return err
+	}
+
+	gz, err := gzip.NewReader(archive)
+
+	if err != nil {
+		return err
+	}
+
+	defer gz.Close()
+	tr := tar.NewReader(gz)
+
+	for {
+		header, err := tr.Next()
+
+		switch {
+		case err == io.EOF:
+			return nil
+
+		case err != nil:
+			return err
+		}
+
+		target := filepath.Join(dst, header.Name)
+
+		if header.Typeflag == tar.TypeReg {
+			file, err := os.Create(target)
+
+			if err != nil {
+				return err
+			}
+
+			defer file.Close()
+
+			if _, err := io.Copy(file, tr); err != nil {
+				return err
+			}
+		}
+	}
 }
