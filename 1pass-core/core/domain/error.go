@@ -16,4 +16,5 @@ var (
 	ErrNoUpdate        = errors.New("up to date")
 	ErrUnknownDataType = errors.New("unknown data type")
 	ErrUnknownItemCat  = errors.New("unknown item category")
+	ErrUnknownLogicVal = errors.New("unknown logic value")
 )
