@@ -50,12 +50,25 @@ func (ctrl *cobraCliControl) CheckForUpdate() {
 func (ctrl *cobraCliControl) Configure() {
 	ctrl.CheckForUpdate()
 	var vault string
+	var notify string
 	config := ctrl.configFacade.GetConfig()
 
 	fmt.Println("Configuring 1pass:")
 	fmt.Print(fmt.Sprintf("  1. Default OPVault path (%v): ", config.Vault))
 	fmt.Scanln(&vault)
 	config.Vault = strings.TrimSpace(vault)
+
+	fmt.Print(fmt.Sprintf("  2. Update notifications? (%v) [y - for yes/n - for no]: ",
+		domain.LogicValEnum.FromValue(config.UpdateNotify).GetName()))
+	fmt.Scanln(&notify)
+	notifyVal, err := domain.LogicValEnum.FromName(notify)
+
+	if err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
+
+	config.UpdateNotify = notifyVal.GetValue()
 
 	ctrl.configFacade.SaveConfig(config)
 }

@@ -41,7 +41,8 @@ efficiently in terminal. Run '1pass --help' for more informations.`,
 		Use:   "configure",
 		Short: "Configure 1pass application",
 		Long: `Configure 1pass application. Configuration process is interactive - answer the questions. Available settings: 
-1. Configure default OPVault path.`,
+1. Configure default OPVault path.
+2. Configure update notifications.`,
 		Run: func(cmd *cobra.Command, args []string) {
 			cli.cliControl.Configure()
 		},
