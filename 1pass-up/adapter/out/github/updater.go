@@ -7,6 +7,8 @@ package github
 import (
 	"archive/tar"
 	"compress/gzip"
+	"crypto/md5"
+	"encoding/hex"
 	"encoding/json"
 	"io"
 	"io/ioutil"
@@ -149,4 +151,35 @@ func (up *githubUpdater) ExtractArchive(src, dst string) error {
 			}
 		}
 	}
+}
+
+func (up *githubUpdater) ValidateChecksum(binary, file string) error {
+	fileContent, err := ioutil.ReadFile(file)
+
+	if err != nil {
+		return err
+	}
+
+	chunks := strings.Fields(strings.TrimSpace(string(fileContent)))
+	binaryFile, err := os.Open(binary)
+
+	if err != nil {
+		return err
+	}
+
+	defer binaryFile.Close()
+	hash := md5.New()
+
+	if _, err := io.Copy(hash, binaryFile); err != nil {
+		return err
+	}
+
+	bytes := hash.Sum(nil)
+	calculated := hex.EncodeToString(bytes)
+
+	if chunks[0] != calculated {
+		return domain.ErrInvalidMd5
+	}
+
+	return nil
 }

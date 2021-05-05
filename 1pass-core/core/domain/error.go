@@ -9,6 +9,7 @@ import (
 )
 
 var (
+	ErrInvalidMd5      = errors.New("invalid MD5 checksum")
 	ErrInvalidHmac     = errors.New("invalid HMAC")
 	ErrInvalidPass     = errors.New("invalid password")
 	ErrInvalidVault    = errors.New("invalid vault (%v)")

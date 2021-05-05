@@ -14,4 +14,6 @@ type Updater interface {
 	DownloadFile(destination, url string) error
 
 	ExtractArchive(src, dst string) error
+
+	ValidateChecksum(binary, file string) error
 }
