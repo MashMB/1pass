@@ -57,6 +57,13 @@ type SimpleItem struct {
 	Uid      string
 }
 
+type UpdateInfo struct {
+	ArchiveUrl  string
+	ChecksumUrl string
+	Name        string
+	Version     string
+}
+
 type Vault struct {
 	Path string
 }
@@ -126,6 +133,15 @@ func NewSimpleItem(category *ItemCategory, title, uid string) *SimpleItem {
 		Category: category,
 		Title:    title,
 		Uid:      uid,
+	}
+}
+
+func NewUpdateInfo(archiveUrl, checksumUrl, name, version string) *UpdateInfo {
+	return &UpdateInfo{
+		ArchiveUrl:  archiveUrl,
+		ChecksumUrl: checksumUrl,
+		Name:        name,
+		Version:     version,
 	}
 }
 
