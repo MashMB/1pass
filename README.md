@@ -10,15 +10,15 @@ to use my phone to check how it goes in passwords manager. Now I can do it on a 
 Linux way - using CLI only.
 
 <p align="center">
-  <img src="assets/1pass-categories.gif">
+  <img src="assets/gif/1pass-categories.gif">
 </p>
 
 <p align="center">
-  <img src="assets/1pass-list.gif">
+  <img src="assets/gif/1pass-list.gif">
 </p>
 
 <p align="center">
-  <img src="assets/1pass-details.gif">
+  <img src="assets/gif/1pass-details.gif">
 </p>
 
 ## Installation
