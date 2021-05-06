@@ -15,5 +15,5 @@ const (
 	ProfileDir      string = "default"
 	ProfileFile     string = "profile.js"
 	Timeout         int64  = 2
-	Version         string = "1.0.0"
+	Version         string = "1.1.0"
 )
