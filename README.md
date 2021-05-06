@@ -63,6 +63,9 @@ Whole update process:
 5. Replace running binary.
 6. Clean cache (temporary files and directories).
 
+**IMPORTANT**: updates are in real life `testing` stage, it works fine in test environment but practice shows that this 
+type of operations needs to be tested on multiple devices
+
 ## Usage
 
 1Pass is a command line tool, so usage is limited to command variations. First of all type:
