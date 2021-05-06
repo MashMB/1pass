@@ -2,7 +2,7 @@
 
 History of **1Pass** releases with changes description.
 
-## Release 1.1.0
+## Release 1.1.0 [06.05.2021]
 
 - [CLI] Command used to update application
 - [CLI] Notify about new update on every command

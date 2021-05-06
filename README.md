@@ -10,23 +10,58 @@ to use my phone to check how it goes in passwords manager. Now I can do it on a 
 Linux way - using CLI only.
 
 <p align="center">
-  <img src="1pass.gif">
+  <img src="assets/1pass-categories.gif">
+</p>
+
+<p align="center">
+  <img src="assets/1pass-list.gif">
+</p>
+
+<p align="center">
+  <img src="assets/1pass-details.gif">
 </p>
 
 ## Installation
 
-Application is available only for Linux x86_64. Specific installation instructions below.
+Application is available only for Linux x86_64. Right now it is distributed as binary only. Installation process:
 
-### Binary
+1. Go to [GitHub releases](https://github.com/mashmb/1pass/releases) section and download the newest release. 
+2. Extract downloaded archive in desired location.
+3. Run extracted binary.
 
-In [GitHub releases](https://github.com/mashmb/1pass/releases) section binary files can be found. Binary is distributed 
-in **tar** archive. Download archive that matches your system and architecture. The installation process is following:
+If application do not run, it is probably permissions problem. Try *chmod 755 1pass*, this should resolve permissions 
+problem. 
 
-1. Download archive.
-2. Unpack it with *tar -xf <archive_path>*.
-3. Move file to */usr/bin/* (*mv 1pass /usr/bin*).
-4. If it is needed, change permissions to **1pass** (*chmod 755 /usr/bin/1pass*).
-5. Type *1pass* and check if it works.
+For more comfy usage, binary can be added to **$PATH** (in .bashrc file):
+
+```
+EXPORT PATH=[path_to_binary_directory]:$PATH
+```
+
+Recommended way is to unpack downloaded archive in */usr/bin* location. It will automatically make binary executable 
+from terminal with typing just **1pass**.
+
+**IMPORTANT**: release 1.1.0 introduced update service for application (details below)
+
+## Application updates
+
+From release 1.1.0, application has implemented GitHub updates mechanism. Application automatically checks for new updates 
+and notifies user about pending one. Application is not updating without user permission. To start update, run:
+
+```
+1pass update
+```
+
+It is recommended to give application root permissions during update because it is working on computer file system.
+
+Whole update process:
+
+1. Check if there is new release on GitHub.
+2. Download newer release to temporary directory (with checksums).
+3. Extract downloaded archive.
+4. Compare checksums.
+5. Replace running binary.
+6. Clean cache (temporary files and directories).
 
 ## Usage
 
@@ -36,41 +71,64 @@ in **tar** archive. Download archive that matches your system and architecture. 
 1pass
 ```
 
-Command should print overall informations about application and available commands.
+Command should print overall informations about application.
 
 The most important commands are:
+Application provides commands:
 
 ```
-1pass list <path>
-1pass overiview <path> <uid>
-1pass details <path> <uid>
+1pass configure
+1pass categories
+1pass list [-c <category>] [-t] <path>
+1pass overiview [-t] <uid> <path>
+1pass details [-t] <uid> <path>
+1pass update
+1pass version
 ```
 
-1. *list* - displays list of logins with their UIDs saved in 1Password [OPVault format](https://support.1password.com/opvault-design/)
-2. *overview* - displays overview of item without sensitive data as JSON
-3. *details* - displays details of item with sensitive data as JSON
+1. **configure** - interactive application configuration (answer the questions), use help command to see what can be configured
+2. **categories** - display list of OPVault item categories (for filtering purposes)
+3. **list** - display list of items stored in OPVault
+4. **overview** - display overview of item without sensitive data
+5. **details** - display details of item with sensitive data
+6. **update** - check for update and upgrade **1pass**
+7. **version** - check actual **1pass** version
 
 Legend:
 
-- **path** - path to 1Password [OPVault](https://support.1password.com/opvault-design/)
-- **uid** - unique UID of item (obtained with *list* command)
+- **uid** - unique UID of item (obtained with **list** command)
+- **path** - path to 1Password OPVault
+- **-c** - filter items over category
+- **-t** - work on trashed items (archived)
 
 ## What is new?
 
-- [CLI] Prompt for user master password without input displaying
-- [CLI] Command used to display single login details
-- [CLI] Command used to display single login overview
-- [CLI] Command used to list saved in OPVault format logins
-- [CLI] Command used to display actual application version
-- [API] Get and decode single login details (sensitive data)
-- [API] Get and decode single login overview (no sensitive data)
-- [API] Get (decode) list of logins stored in OPVault
-- [API] Unlock OPVault data format with usage of master password
+- [CLI] Command used to update application
+- [CLI] Notify about new update on every command
+- [CLI] Command used to configure application in interactive way (answer the questions)
+- [CLI] OPVault path is optional for `list`, `overview` and `details` commands (if not defined, use default one from configuration file)
+- [CLI] Pretty print for `overview` and `details` commands
+- [CLI] Output of `list` command as table
+- [CLI] Output of `categories` command as table
+- [CLI] Commands `list`, `overview` and `details` works with trashed items (`-t` flag)
+- [CLI] Command used to display all available item categories
+- [CLI] `list` command with item category filtering (`-c` flag)
+- [API] Configurable updates notification
+- [API] Application self update
+- [API] Download, extract and validate checksum of new update
+- [API] Check for updates on GitHub releases section
+- [API] Configurable default OPVault path
+- [API] Save application configuration (YAML file in `$HOME/.config/1pass/1pass.yml`)
+- [API] Read application configuration (YAML file in `$HOME/.config/1pass/1pass.yml`)
+- [API] Merge item overview and details (one structure, full items decoding at once, sensitive data masked in control layer)
+- [API] Work with items from trash
+- [API] Handle all item categories according to [OPVault design](https://support.1password.com/opvault-design/)
 
 ## Releases
 
 Versions of last five releases:
 
+- 1.1.0
 - 1.0.0
 
 ## What next?
@@ -109,6 +167,7 @@ How architecture looks like right now?
 
 - **1pass-core** - core of the application (no external dependencies), business logic
 - **1pass-parse** - parsing component used to read data from [OPVault](https://support.1password.com/opvault-design/) format
+- **1pass-up** - application update component
 - **1pass-term** - component used to handle CLI interaction with application
 - **1pass-app** - real application (combines all of above)
 
