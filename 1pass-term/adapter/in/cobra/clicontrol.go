@@ -245,3 +245,24 @@ func (ctrl *cobraCliControl) GetItems(vaultPath, category string, trashed bool) 
 
 	fmt.Println(t.Render())
 }
+
+func (ctrl *cobraCliControl) Update() {
+	fmt.Println("Checking for 1pass application updates...")
+
+	info, err := ctrl.updateFacade.CheckForUpdate()
+
+	if err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
+
+	msg := fmt.Sprintf("Updating 1pass application from version %v to %v...", domain.Version, info.Version)
+	fmt.Println(msg)
+
+	if err := ctrl.updateFacade.Update(); err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
+
+	fmt.Println(fmt.Sprintf("1pass application updated to version %v", info.Version))
+}
