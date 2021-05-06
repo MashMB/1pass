@@ -4,6 +4,7 @@ History of **1Pass** releases with changes description.
 
 ## Release 1.1.0
 
+- [CLI] Command used to update application
 - [CLI] Notify about new update on every command
 - [CLI] Command used to configure application in interactive way (answer the questions)
 - [CLI] OPVault path is optional for `list`, `overview` and `details` commands (if not defined, use default one from configuration file)
