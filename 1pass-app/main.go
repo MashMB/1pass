@@ -5,7 +5,12 @@
 package main
 
 import (
+	"log"
+	"os"
+	"path/filepath"
+
 	"github.com/mashmb/1pass/1pass-app/cli"
+	"github.com/mashmb/1pass/1pass-core/core/domain"
 	"github.com/mashmb/1pass/1pass-core/core/facade"
 	"github.com/mashmb/1pass/1pass-core/core/service"
 	"github.com/mashmb/1pass/1pass-core/port/in"
@@ -13,37 +18,52 @@ import (
 	"github.com/mashmb/1pass/1pass-parse/adapter/out/repo/file"
 	"github.com/mashmb/1pass/1pass-parse/adapter/out/util/crypto"
 	"github.com/mashmb/1pass/1pass-term/adapter/in/cobra"
-)
-
-const (
-	Version string = "1.0.0"
+	"github.com/mashmb/1pass/1pass-up/adapter/out/github"
 )
 
 func main() {
+	homeDir, err := os.UserHomeDir()
+
+	if err != nil {
+		log.Fatalln(err)
+	}
+
+	var configRepo out.ConfigRepo
 	var cryptoUtils out.CrytpoUtils
 	var itemRepo out.ItemRepo
 	var profileRepo out.ProfileRepo
+	var updater out.Updater
 
+	var configService service.ConfigService
 	var keyService service.KeyService
 	var itemService service.ItemService
+	var updateService service.UpdateService
 	var vaultService service.VaultService
 
+	var configFacade facade.ConfigFacade
+	var updateFacade facade.UpdateFacade
 	var vaultFacade facade.VaultFacade
 
 	var cliControl in.CliControl
 
+	configRepo = file.NewFileConfigRepo(filepath.Join(homeDir, ".config", "1pass"))
 	cryptoUtils = crypto.NewPbkdf2CryptoUtils()
 	itemRepo = file.NewFileItemRepo()
 	profileRepo = file.NewFileProfileRepo()
+	updater = github.NewGithubUpdater()
 
+	configService = service.NewDfltConfigService(configRepo)
 	keyService = service.NewDfltKeyService(cryptoUtils, profileRepo)
 	itemService = service.NewDfltItemService(keyService, itemRepo)
+	updateService = service.NewDfltUpdateService(updater)
 	vaultService = service.NewDfltVaultService(itemRepo, profileRepo)
 
-	vaultFacade = facade.NewDfltVaultFacade(itemService, keyService, vaultService)
+	configFacade = facade.NewDfltConfigFacade(configService)
+	updateFacade = facade.NewDfltUpdateFacade(updateService)
+	vaultFacade = facade.NewDfltVaultFacade(configService, itemService, keyService, vaultService)
 
-	cliControl = cobra.NewCobraCliControl(vaultFacade)
+	cliControl = cobra.NewCobraCliControl(configFacade, updateFacade, vaultFacade)
 
-	cobraCli := cli.NewCobraCli(Version, cliControl)
+	cobraCli := cli.NewCobraCli(domain.Version, cliControl)
 	cobraCli.Run()
 }

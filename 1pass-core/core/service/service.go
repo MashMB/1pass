@@ -8,12 +8,26 @@ import (
 	"github.com/mashmb/1pass/1pass-core/core/domain"
 )
 
+type ConfigService interface {
+	GetConfig() *domain.Config
+
+	SaveConfig(config *domain.Config)
+}
+
 type ItemService interface {
-	GetDetails(uid string, keys *domain.Keys) *domain.Item
+	DecodeDetails(encoded *domain.RawItem, keys *domain.Keys) map[string]interface{}
 
-	GetOverview(uid string, keys *domain.Keys) *domain.Item
+	DecodeItems(vault *domain.Vault, keys *domain.Keys)
 
-	GetSimple(keys *domain.Keys) []*domain.SimpleItem
+	DecodeOverview(encoded *domain.RawItem, keys *domain.Keys) map[string]interface{}
+
+	GetItem(uid string, trashed bool) *domain.Item
+
+	GetSimpleItems(category *domain.ItemCategory, trashed bool) []*domain.SimpleItem
+
+	ParseItemField(fromSection bool, data map[string]interface{}) *domain.ItemField
+
+	ParseItemSection(data map[string]interface{}) *domain.ItemSection
 }
 
 type KeyService interface {
@@ -32,6 +46,12 @@ type KeyService interface {
 	MasterKeys(derivedKey, derivedMac []byte) ([]byte, []byte, error)
 
 	OverviewKeys(derivedKey, derivedMac []byte) ([]byte, []byte, error)
+}
+
+type UpdateService interface {
+	CheckForUpdate() (*domain.UpdateInfo, error)
+
+	Update() error
 }
 
 type VaultService interface {

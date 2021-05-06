@@ -4,12 +4,31 @@
 
 package domain
 
+type Config struct {
+	UpdateNotify bool
+	Vault        string
+}
+
 type Item struct {
 	Category *ItemCategory
 	Created  int64
-	Details  string
+	Notes    string
+	Title    string
+	Trashed  bool
+	Sections []*ItemSection
 	Uid      string
+	Url      string
 	Updated  int64
+}
+
+type ItemField struct {
+	Name  string
+	Value string
+}
+
+type ItemSection struct {
+	Title  string
+	Fields []*ItemField
 }
 
 type Keys struct {
@@ -34,21 +53,55 @@ type RawItem struct {
 }
 
 type SimpleItem struct {
-	Title string
-	Uid   string
+	Category *ItemCategory
+	Title    string
+	Uid      string
+}
+
+type UpdateInfo struct {
+	ArchiveUrl  string
+	ChecksumUrl string
+	Newer       bool
+	Version     string
 }
 
 type Vault struct {
 	Path string
 }
 
-func NewItem(category *ItemCategory, details, uid string, created, updated int64) *Item {
+func NewConfig(updateNotify bool, vault string) *Config {
+	return &Config{
+		UpdateNotify: updateNotify,
+		Vault:        vault,
+	}
+}
+
+func NewItem(uid, title, url, notes string, trashed bool, category *ItemCategory, sections []*ItemSection, created,
+	updated int64) *Item {
 	return &Item{
 		Category: category,
 		Created:  created,
-		Details:  details,
+		Notes:    notes,
+		Title:    title,
+		Trashed:  trashed,
+		Sections: sections,
 		Uid:      uid,
+		Url:      url,
 		Updated:  updated,
+	}
+}
+
+func NewItemSection(title string, fields []*ItemField) *ItemSection {
+	return &ItemSection{
+		Title:  title,
+		Fields: fields,
+	}
+}
+
+func NewItemField(name, value string) *ItemField {
+	return &ItemField{
+		Name:  name,
+		Value: value,
 	}
 }
 
@@ -77,10 +130,20 @@ func NewRawItem(category, details, hmac, keys, overview, uid string, created, up
 	}
 }
 
-func NewSimpleItem(title, uid string) *SimpleItem {
+func NewSimpleItem(category *ItemCategory, title, uid string) *SimpleItem {
 	return &SimpleItem{
-		Title: title,
-		Uid:   uid,
+		Category: category,
+		Title:    title,
+		Uid:      uid,
+	}
+}
+
+func NewUpdateInfo(archiveUrl, checksumUrl, version string, newer bool) *UpdateInfo {
+	return &UpdateInfo{
+		ArchiveUrl:  archiveUrl,
+		ChecksumUrl: checksumUrl,
+		Newer:       newer,
+		Version:     version,
 	}
 }
 

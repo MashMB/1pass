@@ -8,16 +8,26 @@ import (
 	"github.com/mashmb/1pass/1pass-core/core/domain"
 )
 
+type ConfigFacade interface {
+	GetConfig() *domain.Config
+
+	SaveConfig(config *domain.Config)
+}
+
 type VaultFacade interface {
-	GetItemDetails(uid string) *domain.Item
+	GetItem(uid string, trashed bool) *domain.Item
 
-	GetItemOverview(uid string) *domain.Item
-
-	GetItems() []*domain.SimpleItem
+	GetItems(category *domain.ItemCategory, trashed bool) []*domain.SimpleItem
 
 	IsUnlocked() bool
 
 	Lock()
 
 	Unlock(path, password string) error
+}
+
+type UpdateFacade interface {
+	CheckForUpdate() (*domain.UpdateInfo, error)
+
+	Update() error
 }

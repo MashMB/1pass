@@ -5,9 +5,17 @@
 package in
 
 type CliControl interface {
-	GetItemDetails(vaultPath, uid string)
+	CheckForUpdate()
 
-	GetItemOverview(vaultPath, uid string)
+	Configure()
 
-	GetItems(vaultPath string)
+	GetCategories()
+
+	GetItemDetails(vaultPath, uid string, trashed bool)
+
+	GetItemOverview(vaultPath, uid string, trashed bool)
+
+	GetItems(vaultPath, category string, trashed bool)
+
+	Update()
 }

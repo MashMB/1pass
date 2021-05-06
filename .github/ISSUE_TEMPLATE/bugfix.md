@@ -2,7 +2,7 @@
 name: Bugfix
 about: Fix for detected software malfunction
 title: ''
-labels: ''
+labels: bugfix
 assignees: ''
 
 ---

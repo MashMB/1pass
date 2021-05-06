@@ -58,7 +58,6 @@ func (s *dfltVaultService) ValidateVault(vault *domain.Vault) error {
 	}
 
 	s.profileRepo.LoadProfile(vault)
-	s.itemRepo.LoadItems(vault)
 
 	return nil
 }
