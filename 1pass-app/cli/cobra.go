@@ -37,6 +37,23 @@ efficiently in terminal. Run '1pass --help' for more informations.`,
 		},
 	}
 
+	updateCmd := &cobra.Command{
+		Use:   "update",
+		Short: "Update 1pass application. Run '1pass update --help' for more detailed informations.",
+		Long: `Update 1pass application. It is recommended to update application with root permissions. 
+
+Whole update process:
+1. Check if there is new release on GitHub.
+2. Download newer release to temporary directory (with checksums).
+3. Extract downloaded archive.
+4. Compare checksums.
+5. Replace running binary.
+6. Clean cache (temporary files and directories).`,
+		Run: func(cmd *cobra.Command, args []string) {
+			cli.cliControl.Update()
+		},
+	}
+
 	configureCmd := &cobra.Command{
 		Use:   "configure",
 		Short: "Configure 1pass application",
@@ -122,6 +139,7 @@ like passwords. If default OPVault was configured, [OPVault] argument is not req
 		},
 	}
 
+	rootCmd.AddCommand(updateCmd)
 	rootCmd.AddCommand(configureCmd)
 	rootCmd.AddCommand(categoriesCmd)
 	rootCmd.AddCommand(listCmd)
