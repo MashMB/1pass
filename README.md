@@ -82,7 +82,7 @@ Application provides commands:
 1pass configure
 1pass categories
 1pass list [-c <category>] [-t] <path>
-1pass overiview [-t] <uid> <path>
+1pass overview [-t] <uid> <path>
 1pass details [-t] <uid> <path>
 1pass update
 1pass version
