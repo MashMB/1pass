@@ -9,6 +9,7 @@ import (
 	"io/ioutil"
 	"log"
 	"path/filepath"
+	"strings"
 
 	"github.com/mashmb/1pass/1pass-core/core/domain"
 )
@@ -21,17 +22,30 @@ func NewFileItemRepo() *fileItemRepo {
 	return &fileItemRepo{}
 }
 
-func (repo *fileItemRepo) FindByCategoryAndTrashed(category *domain.ItemCategory, trashed bool) []*domain.Item {
+func (repo *fileItemRepo) FindByCategoryAndTitleAndTrashed(category *domain.ItemCategory, title string, trashed bool) []*domain.Item {
+	title = strings.ToLower(title)
 	resultSet := make([]*domain.Item, 0)
 
 	for _, item := range repo.items {
 		if category == nil {
-			if item.Trashed == trashed {
-				resultSet = append(resultSet, item)
+			if title == "" {
+				if item.Trashed == trashed {
+					resultSet = append(resultSet, item)
+				}
+			} else {
+				if strings.Contains(strings.ToLower(item.Title), title) && item.Trashed == trashed {
+					resultSet = append(resultSet, item)
+				}
 			}
 		} else {
-			if item.Category == category && item.Trashed == trashed {
-				resultSet = append(resultSet, item)
+			if title == "" {
+				if item.Category == category && item.Trashed == trashed {
+					resultSet = append(resultSet, item)
+				}
+			} else {
+				if strings.Contains(strings.ToLower(item.Title), title) && item.Category == category && item.Trashed == trashed {
+					resultSet = append(resultSet, item)
+				}
 			}
 		}
 	}

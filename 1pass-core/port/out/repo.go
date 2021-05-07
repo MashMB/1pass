@@ -17,7 +17,7 @@ type ConfigRepo interface {
 }
 
 type ItemRepo interface {
-	FindByCategoryAndTrashed(category *domain.ItemCategory, trashed bool) []*domain.Item
+	FindByCategoryAndTitleAndTrashed(category *domain.ItemCategory, title string, trashed bool) []*domain.Item
 
 	FindFirstByUidAndTrashed(uid string, trashed bool) *domain.Item
 
