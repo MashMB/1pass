@@ -17,7 +17,7 @@ type ConfigFacade interface {
 type VaultFacade interface {
 	GetItem(uid string, trashed bool) *domain.Item
 
-	GetItems(category *domain.ItemCategory, trashed bool) []*domain.SimpleItem
+	GetItems(category *domain.ItemCategory, title string, trashed bool) []*domain.SimpleItem
 
 	IsUnlocked() bool
 

@@ -31,8 +31,8 @@ func (f *dfltVaultFacade) GetItem(uid string, trashed bool) *domain.Item {
 	return f.itemService.GetItem(uid, trashed)
 }
 
-func (f *dfltVaultFacade) GetItems(category *domain.ItemCategory, trashed bool) []*domain.SimpleItem {
-	return f.itemService.GetSimpleItems(category, trashed)
+func (f *dfltVaultFacade) GetItems(category *domain.ItemCategory, title string, trashed bool) []*domain.SimpleItem {
+	return f.itemService.GetSimpleItems(category, title, trashed)
 }
 
 func (f *dfltVaultFacade) IsUnlocked() bool {
