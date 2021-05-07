@@ -2,6 +2,10 @@
 
 History of **1Pass** releases with changes description.
 
+## Release 1.2.0
+
+- (FIX) [API] Validate OPVault path before password prompt
+
 ## Release 1.1.0 [06.05.2021]
 
 - [CLI] Command used to update application
