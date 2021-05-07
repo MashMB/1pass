@@ -124,9 +124,9 @@ func (s *dfltItemService) GetItem(uid string, trashed bool) *domain.Item {
 	return s.itemRepo.FindFirstByUidAndTrashed(uid, trashed)
 }
 
-func (s *dfltItemService) GetSimpleItems(category *domain.ItemCategory, trashed bool) []*domain.SimpleItem {
+func (s *dfltItemService) GetSimpleItems(category *domain.ItemCategory, title string, trashed bool) []*domain.SimpleItem {
 	items := make([]*domain.SimpleItem, 0)
-	decodedItems := s.itemRepo.FindByCategoryAndTrashed(category, trashed)
+	decodedItems := s.itemRepo.FindByCategoryAndTitleAndTrashed(category, title, trashed)
 
 	for _, decoded := range decodedItems {
 		item := domain.NewSimpleItem(decoded.Category, decoded.Title, decoded.Uid)

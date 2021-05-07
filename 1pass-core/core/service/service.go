@@ -25,7 +25,7 @@ type ItemService interface {
 
 	GetItem(uid string, trashed bool) *domain.Item
 
-	GetSimpleItems(category *domain.ItemCategory, trashed bool) []*domain.SimpleItem
+	GetSimpleItems(category *domain.ItemCategory, title string, trashed bool) []*domain.SimpleItem
 
 	ParseItemField(fromSection bool, data map[string]interface{}) *domain.ItemField
 
