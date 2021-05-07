@@ -4,6 +4,7 @@ History of **1Pass** releases with changes description.
 
 ## Release 1.2.0
 
+- [API] Items filtering over title
 - (FIX) [API] Vault lock clears decoded items memory
 - (FIX) [API] Validate OPVault path before password prompt
 
