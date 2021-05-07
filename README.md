@@ -76,7 +76,6 @@ type of operations needs to be tested on multiple devices
 
 Command should print overall informations about application.
 
-The most important commands are:
 Application provides commands:
 
 ```
