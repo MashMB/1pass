@@ -46,6 +46,7 @@ func (f *dfltVaultFacade) IsUnlocked() bool {
 }
 
 func (f *dfltVaultFacade) Lock() {
+	f.itemService.ClearMemory()
 	f.keys = nil
 }
 
