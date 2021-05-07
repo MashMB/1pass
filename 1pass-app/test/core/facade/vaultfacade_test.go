@@ -68,6 +68,7 @@ func TestGetItems(t *testing.T) {
 	facade := setupVaultFacade()
 	pass := "freddy"
 	expected := 10
+	title := ""
 	trashed := false
 	first := "Bank of America"
 	last := "YouTube"
@@ -79,7 +80,7 @@ func TestGetItems(t *testing.T) {
 		t.Error("Unlock() should pass because of valid password")
 	}
 
-	items := facade.GetItems(domain.ItemCategoryEnum.Login, trashed)
+	items := facade.GetItems(domain.ItemCategoryEnum.Login, title, trashed)
 
 	if len(items) != expected {
 		t.Errorf("[NOT-TRASHED-LENGTH] GetItems() = %d; expected = %d", len(items), expected)
@@ -94,10 +95,11 @@ func TestGetItems(t *testing.T) {
 	}
 
 	expected = 2
+	title = ""
 	trashed = true
 	first = "A note to Trash"
 	last = ""
-	items = facade.GetItems(nil, trashed)
+	items = facade.GetItems(nil, title, trashed)
 
 	if len(items) != expected {
 		t.Errorf("[TRASHED-LENGTH] GetItems() = %d; expected = %d", len(items), expected)
@@ -109,6 +111,25 @@ func TestGetItems(t *testing.T) {
 
 	if items[len(items)-1].Title != last {
 		t.Errorf("[TRASHED-LAST] GetItems() = %v; expected = %v", items[len(items)-1], last)
+	}
+
+	expected = 3
+	title = "ap"
+	trashed = false
+	first = "The Unofficial Apple Weblog"
+	last = "Johnny Appleseed Society"
+	items = facade.GetItems(nil, title, trashed)
+
+	if len(items) != expected {
+		t.Errorf("[TITLE-LENGTH] GetItems() = %d; expected = %d", len(items), expected)
+	}
+
+	if items[0].Title != first {
+		t.Errorf("[TITLE-FIRST] GetItems() = %v; expected = %v", items[0].Title, first)
+	}
+
+	if items[len(items)-1].Title != last {
+		t.Errorf("[TITLE-LAST] GetItems() = %v; expected = %v", items[len(items)-1], last)
 	}
 }
 
@@ -142,7 +163,7 @@ func TestLock(t *testing.T) {
 		t.Error("Unlock() should provide keys")
 	}
 
-	items := facade.GetItems(nil, false)
+	items := facade.GetItems(nil, "", false)
 
 	if len(items) == 0 {
 		t.Error("Unlock() should provide decoded items")
@@ -154,7 +175,7 @@ func TestLock(t *testing.T) {
 		t.Error("Lock() should clear keys")
 	}
 
-	items = facade.GetItems(nil, false)
+	items = facade.GetItems(nil, "", false)
 
 	if len(items) > 0 {
 		t.Error("Lock() should clear decoded items memory")
