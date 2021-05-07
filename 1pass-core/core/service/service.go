@@ -15,6 +15,8 @@ type ConfigService interface {
 }
 
 type ItemService interface {
+	ClearMemory()
+
 	DecodeDetails(encoded *domain.RawItem, keys *domain.Keys) map[string]interface{}
 
 	DecodeItems(vault *domain.Vault, keys *domain.Keys)

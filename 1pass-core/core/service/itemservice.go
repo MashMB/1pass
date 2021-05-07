@@ -27,6 +27,10 @@ func NewDfltItemService(keyService KeyService, itemRepo out.ItemRepo) *dfltItemS
 	}
 }
 
+func (s *dfltItemService) ClearMemory() {
+	s.itemRepo.RemoveItems()
+}
+
 func (s *dfltItemService) DecodeDetails(encoded *domain.RawItem, keys *domain.Keys) map[string]interface{} {
 	var detailsJson map[string]interface{}
 	detailsData, _ := base64.StdEncoding.DecodeString(encoded.Details)
