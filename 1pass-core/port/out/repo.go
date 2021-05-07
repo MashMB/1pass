@@ -23,6 +23,8 @@ type ItemRepo interface {
 
 	LoadItems(vault *domain.Vault) []*domain.RawItem
 
+	RemoveItems()
+
 	StoreItems(items []*domain.Item)
 }
 

@@ -99,6 +99,12 @@ func (repo *fileItemRepo) LoadItems(vault *domain.Vault) []*domain.RawItem {
 	return items
 }
 
+func (repo *fileItemRepo) RemoveItems() {
+	if repo.items != nil {
+		repo.items = nil
+	}
+}
+
 func (repo *fileItemRepo) StoreItems(items []*domain.Item) {
 	if repo.items == nil {
 		repo.items = items
