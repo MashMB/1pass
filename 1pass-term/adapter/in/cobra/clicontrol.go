@@ -236,7 +236,7 @@ func (ctrl *cobraCliControl) GetItemOverview(vaultPath, uid string, trashed bool
 	}
 }
 
-func (ctrl *cobraCliControl) GetItems(vaultPath, category string, trashed bool) {
+func (ctrl *cobraCliControl) GetItems(vaultPath, category, title string, trashed bool) {
 	ctrl.CheckForUpdate()
 	var vault *domain.Vault
 
@@ -276,7 +276,8 @@ func (ctrl *cobraCliControl) GetItems(vaultPath, category string, trashed bool) 
 		}
 	}
 
-	items := ctrl.vaultFacade.GetItems(cat, trashed)
+	title = strings.TrimSpace(title)
+	items := ctrl.vaultFacade.GetItems(cat, title, trashed)
 
 	for i, item := range items {
 		t.AppendRow(table.Row{i + 1, item.Uid, item.Category.GetName(), item.Title})
