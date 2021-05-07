@@ -49,22 +49,7 @@ func (f *dfltVaultFacade) Lock() {
 	f.keys = nil
 }
 
-func (f *dfltVaultFacade) Unlock(path, password string) error {
-	var vault *domain.Vault
-
-	if path != "" {
-		vault = domain.NewVault(path)
-	} else {
-		config := f.configService.GetConfig()
-		vault = domain.NewVault(config.Vault)
-	}
-
-	err := f.vaultService.ValidateVault(vault)
-
-	if err != nil {
-		return err
-	}
-
+func (f *dfltVaultFacade) Unlock(vault *domain.Vault, password string) error {
 	derivedKey, derivedMac, err := f.keyService.DerivedKeys(password)
 
 	if err != nil {

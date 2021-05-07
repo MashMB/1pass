@@ -23,7 +23,7 @@ type VaultFacade interface {
 
 	Lock()
 
-	Unlock(path, password string) error
+	Unlock(vault *domain.Vault, password string) error
 
 	Validate(vault *domain.Vault) error
 }
