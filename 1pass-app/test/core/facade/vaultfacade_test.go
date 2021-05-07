@@ -157,3 +157,22 @@ func TestUnlock(t *testing.T) {
 		t.Error("Unlock() should pass because of valid password")
 	}
 }
+
+func TestValidate(t *testing.T) {
+	facade := setupVaultFacade()
+	correctPath := "../../../../assets/onepassword_data"
+	notVaultPath := "../../../../assets/empty"
+	vault := domain.NewVault(correctPath)
+	err := facade.Validate(vault)
+
+	if err != nil {
+		t.Error("Validate() should pass because of correct vault")
+	}
+
+	vault = domain.NewVault(notVaultPath)
+	err = facade.Validate(vault)
+
+	if err == nil {
+		t.Error("Validate() should fail because of invalid vault")
+	}
+}
