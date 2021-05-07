@@ -142,10 +142,22 @@ func TestLock(t *testing.T) {
 		t.Error("Unlock() should provide keys")
 	}
 
+	items := facade.GetItems(nil, false)
+
+	if len(items) == 0 {
+		t.Error("Unlock() should provide decoded items")
+	}
+
 	facade.Lock()
 
 	if facade.IsUnlocked() {
 		t.Error("Lock() should clear keys")
+	}
+
+	items = facade.GetItems(nil, false)
+
+	if len(items) > 0 {
+		t.Error("Lock() should clear decoded items memory")
 	}
 }
 
