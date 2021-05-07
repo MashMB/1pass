@@ -93,9 +93,22 @@ func (ctrl *cobraCliControl) GetCategories() {
 
 func (ctrl *cobraCliControl) GetItemDetails(vaultPath, uid string, trashed bool) {
 	ctrl.CheckForUpdate()
+	var vault *domain.Vault
+
+	if vaultPath != "" {
+		vault = domain.NewVault(vaultPath)
+	}
+
+	err := ctrl.vaultFacade.Validate(vault)
+
+	if err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
+
 	fmt.Println("Password:")
 	password, err := term.ReadPassword(int(syscall.Stdin))
-	err = ctrl.vaultFacade.Unlock(vaultPath, string(password))
+	err = ctrl.vaultFacade.Unlock(vault, string(password))
 
 	if err != nil {
 		fmt.Println(err)
