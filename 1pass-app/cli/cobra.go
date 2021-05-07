@@ -85,7 +85,7 @@ required to get item overview or details. If default OPVault was configured, [OP
 				vaultPath = args[0]
 			}
 
-			cli.cliControl.GetItems(vaultPath, cli.category, cli.trashed)
+			cli.cliControl.GetItems(vaultPath, cli.category, "", cli.trashed)
 		},
 	}
 
