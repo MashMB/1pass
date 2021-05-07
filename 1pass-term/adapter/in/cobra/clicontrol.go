@@ -279,11 +279,16 @@ func (ctrl *cobraCliControl) GetItems(vaultPath, category, title string, trashed
 	title = strings.TrimSpace(title)
 	items := ctrl.vaultFacade.GetItems(cat, title, trashed)
 
-	for i, item := range items {
-		t.AppendRow(table.Row{i + 1, item.Uid, item.Category.GetName(), item.Title})
-	}
+	if len(items) > 0 {
+		for i, item := range items {
+			t.AppendRow(table.Row{i + 1, item.Uid, item.Category.GetName(), item.Title})
+		}
 
-	fmt.Println(t.Render())
+		fmt.Println(t.Render())
+	} else {
+		msg := fmt.Sprintf("No results for search (category: %v, name: %v, trashed: %v)", category, title, trashed)
+		fmt.Println(msg)
+	}
 }
 
 func (ctrl *cobraCliControl) Update() {
