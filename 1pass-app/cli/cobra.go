@@ -13,6 +13,7 @@ import (
 
 type cobraCli struct {
 	category   string
+	name       string
 	trashed    bool
 	version    string
 	cliControl in.CliControl
@@ -85,11 +86,12 @@ required to get item overview or details. If default OPVault was configured, [OP
 				vaultPath = args[0]
 			}
 
-			cli.cliControl.GetItems(vaultPath, cli.category, "", cli.trashed)
+			cli.cliControl.GetItems(vaultPath, cli.category, cli.name, cli.trashed)
 		},
 	}
 
 	listCmd.Flags().StringVarP(&cli.category, "category", "c", "", "filtering over item category")
+	listCmd.Flags().StringVarP(&cli.name, "name", "n", "", "filtering over item name (title)")
 	listCmd.Flags().BoolVarP(&cli.trashed, "trashed", "t", false, "work on trashed items")
 
 	overviewCmd := &cobra.Command{
