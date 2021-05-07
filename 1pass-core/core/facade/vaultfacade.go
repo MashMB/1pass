@@ -88,3 +88,16 @@ func (f *dfltVaultFacade) Unlock(path, password string) error {
 
 	return nil
 }
+
+func (f *dfltVaultFacade) Validate(vault *domain.Vault) error {
+	if vault == nil {
+		config := f.configService.GetConfig()
+		vault = domain.NewVault(config.Vault)
+	}
+
+	if err := f.vaultService.ValidateVault(vault); err != nil {
+		return err
+	}
+
+	return nil
+}

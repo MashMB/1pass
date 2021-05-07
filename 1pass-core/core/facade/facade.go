@@ -24,6 +24,8 @@ type VaultFacade interface {
 	Lock()
 
 	Unlock(path, password string) error
+
+	Validate(vault *domain.Vault) error
 }
 
 type UpdateFacade interface {
