@@ -42,7 +42,9 @@ func setupVaultFacade() corefacade.VaultFacade {
 func TestGetItem(t *testing.T) {
 	facade := setupVaultFacade()
 	pass := "freddy"
-	facade.Unlock("../../../../assets/onepassword_data", pass)
+	vault := domain.NewVault("../../../../assets/onepassword_data")
+	facade.Validate(vault)
+	facade.Unlock(vault, pass)
 	expected := "Personal"
 	uid := "0EDE2B13D7AC4E2C9105842682ACB187"
 	trashed := false
@@ -69,7 +71,9 @@ func TestGetItems(t *testing.T) {
 	trashed := false
 	first := "Bank of America"
 	last := "YouTube"
-	err := facade.Unlock("../../../../assets/onepassword_data", pass)
+	vault := domain.NewVault("../../../../assets/onepassword_data")
+	facade.Validate(vault)
+	err := facade.Unlock(vault, pass)
 
 	if err != nil {
 		t.Error("Unlock() should pass because of valid password")
@@ -117,7 +121,9 @@ func TestIsUnlocked(t *testing.T) {
 		t.Errorf("IsUnlocked() = %v; expected %v", unlocked, false)
 	}
 
-	facade.Unlock("../../../../assets/onepassword_data", pass)
+	vault := domain.NewVault("../../../../assets/onepassword_data")
+	facade.Validate(vault)
+	facade.Unlock(vault, pass)
 	unlocked = facade.IsUnlocked()
 
 	if unlocked == false {
@@ -128,7 +134,9 @@ func TestIsUnlocked(t *testing.T) {
 func TestLock(t *testing.T) {
 	facade := setupVaultFacade()
 	pass := "freddy"
-	facade.Unlock("../../../../assets/onepassword_data", pass)
+	vault := domain.NewVault("../../../../assets/onepassword_data")
+	facade.Validate(vault)
+	facade.Unlock(vault, pass)
 
 	if !facade.IsUnlocked() {
 		t.Error("Unlock() should provide keys")
@@ -145,13 +153,15 @@ func TestUnlock(t *testing.T) {
 	facade := setupVaultFacade()
 	goodPass := "freddy"
 	badPass := ""
-	err := facade.Unlock("../../../../assets/onepassword_data", badPass)
+	vault := domain.NewVault("../../../../assets/onepassword_data")
+	facade.Validate(vault)
+	err := facade.Unlock(vault, badPass)
 
 	if err == nil {
 		t.Error("Unlock() should fail because of invalid password")
 	}
 
-	err = facade.Unlock("../../../../assets/onepassword_data", goodPass)
+	err = facade.Unlock(vault, goodPass)
 
 	if err != nil {
 		t.Error("Unlock() should pass because of valid password")
