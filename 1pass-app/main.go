@@ -59,7 +59,7 @@ func main() {
 	vaultService = service.NewDfltVaultService(itemRepo, profileRepo)
 
 	configFacade = facade.NewDfltConfigFacade(configService)
-	updateFacade = facade.NewDfltUpdateFacade(updateService)
+	updateFacade = facade.NewDfltUpdateFacade(configService, updateService)
 	vaultFacade = facade.NewDfltVaultFacade(configService, itemService, keyService, vaultService)
 
 	cliControl = cobra.NewCobraCliControl(configFacade, updateFacade, vaultFacade)

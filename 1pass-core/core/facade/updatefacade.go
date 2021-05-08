@@ -10,19 +10,25 @@ import (
 )
 
 type dfltUpdateFacade struct {
+	configService service.ConfigService
 	updateService service.UpdateService
 }
 
-func NewDfltUpdateFacade(updateService service.UpdateService) *dfltUpdateFacade {
+func NewDfltUpdateFacade(configService service.ConfigService, updateService service.UpdateService) *dfltUpdateFacade {
 	return &dfltUpdateFacade{
+		configService: configService,
 		updateService: updateService,
 	}
 }
 
 func (f *dfltUpdateFacade) CheckForUpdate() (*domain.UpdateInfo, error) {
-	return f.updateService.CheckForUpdate()
+	config := f.configService.GetConfig()
+
+	return f.updateService.CheckForUpdate(config.Timeout)
 }
 
 func (f *dfltUpdateFacade) Update() error {
-	return f.updateService.Update()
+	config := f.configService.GetConfig()
+
+	return f.updateService.Update(config.Timeout)
 }
