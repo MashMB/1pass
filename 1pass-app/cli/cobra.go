@@ -107,22 +107,17 @@ passwords. If default OPVault is not configured,  [-v, --vault] flag is needed. 
 	overviewCmd.Flags().BoolVarP(&cli.trashed, "trashed", "t", false, "search in trashed items")
 
 	detailsCmd := &cobra.Command{
-		Use:   "details [UID] [OPVault]",
+		Use:   "details [UID]",
 		Short: "Details of single item stored in 1Password OPVault format",
 		Long: `Details of single item stored in 1Password OPVault format. Details contains sensitive data 
-like passwords. If default OPVault was configured, [OPVault] argument is not required.`,
-		Args: cobra.MinimumNArgs(1),
+like passwords. If default OPVault is not configured,  [-v, --vault] flag is needed. Run '1pass details --help' for more info.`,
+		Args: cobra.ExactArgs(1),
 		Run: func(cmd *cobra.Command, args []string) {
-			var vaultPath string
-
-			if len(args) > 1 {
-				vaultPath = args[1]
-			}
-
-			cli.cliControl.GetItemDetails(vaultPath, args[0], cli.trashed)
+			cli.cliControl.GetItemDetails(cli.vault, args[0], cli.trashed)
 		},
 	}
 
+	detailsCmd.Flags().StringVarP(&cli.vault, "vault", "v", "", "OPVault path")
 	detailsCmd.Flags().BoolVarP(&cli.trashed, "trashed", "t", false, "search in trashed items")
 
 	versionCmd := &cobra.Command{
