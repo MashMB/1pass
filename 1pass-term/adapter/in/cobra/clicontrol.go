@@ -54,6 +54,7 @@ func (ctrl *cobraCliControl) Configure() {
 	var vault string
 	var notify string
 	var timeoutVal string
+	var periodVal string
 	config := ctrl.configFacade.GetConfig()
 
 	fmt.Println("Configuring 1pass:")
@@ -90,6 +91,24 @@ func (ctrl *cobraCliControl) Configure() {
 	}
 
 	config.Timeout = int(timeout)
+
+	fmt.Print(fmt.Sprintf("  4. How often check for updates in days (%d) [>= 1]: ", config.UpdatePeriod))
+	fmt.Scanln(&periodVal)
+	period, err := strconv.ParseInt(periodVal, 10, 64)
+
+	if err != nil {
+		err = errors.New("not a number")
+		fmt.Println(err)
+		os.Exit(1)
+	}
+
+	if period < 1 {
+		err = errors.New("out of range [>= 1]")
+		fmt.Println(err)
+		os.Exit(1)
+	}
+
+	config.UpdatePeriod = int(period)
 
 	ctrl.configFacade.SaveConfig(config)
 }
