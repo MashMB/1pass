@@ -94,6 +94,7 @@ func (repo *fileConfigRepo) Save(config *domain.Config) {
 	repo.config["opvault"] = config.Vault
 	repo.config["timeout"] = config.Timeout
 	repo.config["update-notification"] = config.UpdateNotify
+	repo.config["update-period"] = config.UpdatePeriod
 	file, err := yaml.Marshal(repo.config)
 
 	if err != nil {
