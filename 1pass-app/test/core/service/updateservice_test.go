@@ -21,22 +21,40 @@ func setupUpdateService() coreservice.UpdateService {
 	return coreservice.NewDfltUpdateService(updater)
 }
 
-func TestCheckForUpdate(t *testing.T) {
-	service := setupUpdateService()
-	expected := domain.ErrNoUpdate
-	_, err := service.CheckForUpdate()
+func isOnline() bool {
+	_, err := http.Get("http://google.com")
 
-	if err != expected {
-		t.Errorf("CheckForUpdate() = %v; expected = %v", err, expected)
+	if err != nil {
+		return false
+	}
+
+	return true
+}
+
+func TestCheckForUpdate(t *testing.T) {
+	if isOnline() {
+		service := setupUpdateService()
+		expected := domain.ErrNoUpdate
+		_, err := service.CheckForUpdate()
+
+		if err != expected {
+			t.Errorf("CheckForUpdate() = %v; expected = %v", err, expected)
+		}
+	} else {
+		t.Log("CheckForUpdate() no internet connection")
 	}
 }
 
 func TestUpdate(t *testing.T) {
-	service := setupUpdateService()
-	expected := domain.ErrNoUpdate
-	err := service.Update()
+	if isOnline() {
+		service := setupUpdateService()
+		expected := domain.ErrNoUpdate
+		err := service.Update()
 
-	if err != expected {
-		t.Errorf("Update() = %v; expected = %v", err, expected)
+		if err != expected {
+			t.Errorf("Update() = %v; expected = %v", err, expected)
+		}
+	} else {
+		t.Log("Update() no internet connection")
 	}
 }
