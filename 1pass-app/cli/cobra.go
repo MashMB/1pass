@@ -15,6 +15,7 @@ type cobraCli struct {
 	category   string
 	name       string
 	trashed    bool
+	vault      string
 	version    string
 	cliControl in.CliControl
 }
@@ -75,21 +76,18 @@ Whole update process:
 	}
 
 	listCmd := &cobra.Command{
-		Use:   "list [OPVault]",
+		Use:   "list",
 		Short: "Get list of items stored in 1Passowrd OPVault format",
 		Long: `Get list of items stored in 1Passowrd OPVault format. Items will be displayd in form of table. UID value is 
-required to get item overview or details. If default OPVault was configured, [OPVault] argument is not required.`,
+required to get item overview or details. If default OPVault is not configured,  [-v, --vault] flag is needed. Run 
+'1pass list --help' for more info.`,
+		Args: cobra.NoArgs,
 		Run: func(cmd *cobra.Command, args []string) {
-			var vaultPath string
-
-			if len(args) > 0 {
-				vaultPath = args[0]
-			}
-
-			cli.cliControl.GetItems(vaultPath, cli.category, cli.name, cli.trashed)
+			cli.cliControl.GetItems(cli.vault, cli.category, cli.name, cli.trashed)
 		},
 	}
 
+	listCmd.Flags().StringVarP(&cli.vault, "vault", "v", "", "OPVault path")
 	listCmd.Flags().StringVarP(&cli.category, "category", "c", "", "filtering over item category")
 	listCmd.Flags().StringVarP(&cli.name, "name", "n", "", "filtering over item name (title)")
 	listCmd.Flags().BoolVarP(&cli.trashed, "trashed", "t", false, "work on trashed items")
