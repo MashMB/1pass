@@ -5,9 +5,11 @@
 package cobra
 
 import (
+	"errors"
 	"fmt"
 	"os"
 	"sort"
+	"strconv"
 	"strings"
 	"syscall"
 	"time"
@@ -51,6 +53,7 @@ func (ctrl *cobraCliControl) Configure() {
 	ctrl.CheckForUpdate()
 	var vault string
 	var notify string
+	var timeoutVal string
 	config := ctrl.configFacade.GetConfig()
 
 	fmt.Println("Configuring 1pass:")
@@ -69,6 +72,24 @@ func (ctrl *cobraCliControl) Configure() {
 	}
 
 	config.UpdateNotify = notifyVal.GetValue()
+
+	fmt.Print(fmt.Sprintf("  3. Update HTTP timeout in seconds (%d) [2-15]: ", config.Timeout))
+	fmt.Scanln(&timeoutVal)
+	timeout, err := strconv.ParseInt(timeoutVal, 10, 64)
+
+	if err != nil {
+		err = errors.New("not a number")
+		fmt.Println(err)
+		os.Exit(1)
+	}
+
+	if timeout < 2 || timeout > 15 {
+		err = errors.New("out of range [2-15]")
+		fmt.Println(err)
+		os.Exit(1)
+	}
+
+	config.Timeout = int(timeout)
 
 	ctrl.configFacade.SaveConfig(config)
 }
