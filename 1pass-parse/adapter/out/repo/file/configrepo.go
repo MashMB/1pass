@@ -79,6 +79,16 @@ func (repo *fileConfigRepo) GetUpdateNotification() bool {
 	return notification
 }
 
+func (repo *fileConfigRepo) GetUpdatePeriod() int {
+	period := 1
+
+	if repo.config["update-period"] != nil {
+		period = repo.config["update-period"].(int)
+	}
+
+	return period
+}
+
 func (repo *fileConfigRepo) Save(config *domain.Config) {
 	configFile := filepath.Join(repo.configDir, domain.ConfigFile)
 	repo.config["opvault"] = config.Vault

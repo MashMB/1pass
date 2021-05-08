@@ -15,6 +15,8 @@ type ConfigRepo interface {
 
 	GetUpdateNotification() bool
 
+	GetUpdatePeriod() int
+
 	Save(config *domain.Config)
 }
 
