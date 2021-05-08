@@ -5,13 +5,9 @@
 package github
 
 import (
-	"net"
 	"net/http"
 	"os"
 	"testing"
-	"time"
-
-	"github.com/mashmb/1pass/1pass-core/core/domain"
 )
 
 func setupGithubUpdater() *githubUpdater {

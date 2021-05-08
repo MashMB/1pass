@@ -5,6 +5,7 @@
 package service
 
 import (
+	"net/http"
 	"testing"
 
 	"github.com/mashmb/1pass/1pass-core/core/domain"
