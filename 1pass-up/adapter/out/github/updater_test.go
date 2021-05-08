@@ -116,7 +116,7 @@ func TestExtractArchive(t *testing.T) {
 
 func TestValidateChecksum(t *testing.T) {
 	updater := setupGithubUpdater()
-	err := updater.ValidateChecksum("../../../../assets/1pass.yml", "../../../../assets/md5/checksum.md5")
+	err := updater.ValidateChecksum("../../../../assets/gif/1pass-categories.gif", "../../../../assets/md5/checksum.md5")
 
 	if err != nil {
 		t.Error("ValidateChecksum() should pass")
