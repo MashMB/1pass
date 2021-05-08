@@ -5,12 +5,41 @@
 package github
 
 import (
+	"net"
+	"net/http"
 	"os"
 	"testing"
+	"time"
+
+	"github.com/mashmb/1pass/1pass-core/core/domain"
 )
 
 func setupGithubUpdater() *githubUpdater {
 	return NewGithubUpdater()
+}
+
+func testDialTimeout(network, address string) (net.Conn, error) {
+	timeout := time.Duration(domain.Timeout) * time.Second
+
+	return net.DialTimeout(network, address, timeout)
+}
+
+func isOnline() bool {
+	httpTransport := http.Transport{
+		Dial: testDialTimeout,
+	}
+
+	httpClient := http.Client{
+		Transport: &httpTransport,
+	}
+
+	_, err := httpClient.Get("http://google.com")
+
+	if err != nil {
+		return false
+	}
+
+	return true
 }
 
 func TestCheckForUpdate(t *testing.T) {
