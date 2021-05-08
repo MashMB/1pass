@@ -23,32 +23,31 @@ import (
 	"github.com/mashmb/1pass/1pass-core/core/domain"
 )
 
-type githubUpdater struct {
-	httpClient http.Client
-}
+type githubUpdater struct{}
 
 func NewGithubUpdater() *githubUpdater {
+	return &githubUpdater{}
+}
+
+func httpClient(timeout int64) http.Client {
 	httpTransport := http.Transport{
-		Dial: dialTimeout,
+		Dial: func(network, address string) (net.Conn, error) {
+			tout := time.Duration(timeout) * time.Second
+
+			return net.DialTimeout(network, address, tout)
+		},
 	}
 
 	httpClient := http.Client{
 		Transport: &httpTransport,
 	}
 
-	return &githubUpdater{
-		httpClient: httpClient,
-	}
+	return httpClient
 }
 
-func dialTimeout(network, address string) (net.Conn, error) {
-	timeout := time.Duration(domain.Timeout) * time.Second
-
-	return net.DialTimeout(network, address, timeout)
-}
-
-func (up *githubUpdater) CheckForUpdate() (*domain.UpdateInfo, error) {
-	resp, err := up.httpClient.Get(domain.GithubReleases)
+func (up *githubUpdater) CheckForUpdate(timeout int64) (*domain.UpdateInfo, error) {
+	httpClient := httpClient(timeout)
+	resp, err := httpClient.Get(domain.GithubReleases)
 
 	if err != nil {
 		return nil, err
@@ -102,8 +101,9 @@ func (up *githubUpdater) CheckForUpdate() (*domain.UpdateInfo, error) {
 	return domain.NewUpdateInfo(archiveUrl, checksumUrl, version, newer), nil
 }
 
-func (up *githubUpdater) DownloadFile(destination, url string) error {
-	resp, err := up.httpClient.Get(url)
+func (up *githubUpdater) DownloadFile(destination, url string, timeout int64) error {
+	httpClient := httpClient(timeout)
+	resp, err := httpClient.Get(url)
 
 	if err != nil {
 		return err

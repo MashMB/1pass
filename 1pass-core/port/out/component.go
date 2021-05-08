@@ -9,9 +9,9 @@ import (
 )
 
 type Updater interface {
-	CheckForUpdate() (*domain.UpdateInfo, error)
+	CheckForUpdate(timeout int64) (*domain.UpdateInfo, error)
 
-	DownloadFile(destination, url string) error
+	DownloadFile(destination, url string, timeout int64) error
 
 	ExtractArchive(src, dst string) error
 
