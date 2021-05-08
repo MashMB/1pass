@@ -5,6 +5,7 @@
 package facade
 
 import (
+	"net/http"
 	"testing"
 
 	"github.com/mashmb/1pass/1pass-core/core/domain"
@@ -26,22 +27,40 @@ func setupUpdateFacade() corefacade.UpdateFacade {
 	return corefacade.NewDfltUpdateFacade(updateService)
 }
 
-func TestCheckForUpdate(t *testing.T) {
-	facade := setupUpdateFacade()
-	expected := domain.ErrNoUpdate
-	_, err := facade.CheckForUpdate()
+func isOnline() bool {
+	_, err := http.Get("http://google.com")
 
-	if err != expected {
-		t.Errorf("CheckForUpdate() = %v; expected = %v", err, expected)
+	if err != nil {
+		return false
+	}
+
+	return true
+}
+
+func TestCheckForUpdate(t *testing.T) {
+	if isOnline() {
+		facade := setupUpdateFacade()
+		expected := domain.ErrNoUpdate
+		_, err := facade.CheckForUpdate()
+
+		if err != expected {
+			t.Errorf("CheckForUpdate() = %v; expected = %v", err, expected)
+		}
+	} else {
+		t.Log("CheckForUpdate() no internet connection")
 	}
 }
 
 func TestUpdate(t *testing.T) {
-	facade := setupUpdateFacade()
-	expected := domain.ErrNoUpdate
-	err := facade.Update()
+	if isOnline() {
+		facade := setupUpdateFacade()
+		expected := domain.ErrNoUpdate
+		err := facade.Update()
 
-	if err != expected {
-		t.Errorf("Update() = %v; expected = %v", err, expected)
+		if err != expected {
+			t.Errorf("Update() = %v; expected = %v", err, expected)
+		}
+	} else {
+		t.Log("Update() no internet connection")
 	}
 }
