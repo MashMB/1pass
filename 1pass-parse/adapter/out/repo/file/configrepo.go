@@ -59,6 +59,16 @@ func (repo *fileConfigRepo) GetDefaultVault() string {
 	return vault
 }
 
+func (repo *fileConfigRepo) GetTimeout() int {
+	timeout := 2
+
+	if repo.config["timeout"] != nil {
+		timeout = repo.config["timeout"].(int)
+	}
+
+	return timeout
+}
+
 func (repo *fileConfigRepo) GetUpdateNotification() bool {
 	notification := true
 
