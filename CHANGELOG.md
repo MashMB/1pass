@@ -4,6 +4,7 @@ History of **1Pass** releases with changes description.
 
 ## Release 1.2.0
 
+- [CLI] OPVault path as `list`, `overview` and `details` commands flag (`-v [path]`)
 - [CLI] No results message for filtering in `list` command
 - [CLI] `list` command with items filtering over title (`-n` flag)
 - [API] Items filtering over title
