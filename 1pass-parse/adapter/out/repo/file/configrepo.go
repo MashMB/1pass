@@ -81,8 +81,9 @@ func (repo *fileConfigRepo) GetUpdateNotification() bool {
 
 func (repo *fileConfigRepo) Save(config *domain.Config) {
 	configFile := filepath.Join(repo.configDir, domain.ConfigFile)
-	repo.config["update-notification"] = config.UpdateNotify
 	repo.config["opvault"] = config.Vault
+	repo.config["timeout"] = config.Timeout
+	repo.config["update-notification"] = config.UpdateNotify
 	file, err := yaml.Marshal(repo.config)
 
 	if err != nil {
