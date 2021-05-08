@@ -51,9 +51,9 @@ type KeyService interface {
 }
 
 type UpdateService interface {
-	CheckForUpdate() (*domain.UpdateInfo, error)
+	CheckForUpdate(timeout int) (*domain.UpdateInfo, error)
 
-	Update() error
+	Update(timeout int) error
 }
 
 type VaultService interface {

@@ -22,8 +22,8 @@ func NewDfltUpdateService(updater out.Updater) *dfltUpdateService {
 	}
 }
 
-func (s *dfltUpdateService) CheckForUpdate() (*domain.UpdateInfo, error) {
-	info, err := s.updater.CheckForUpdate()
+func (s *dfltUpdateService) CheckForUpdate(timeout int) (*domain.UpdateInfo, error) {
+	info, err := s.updater.CheckForUpdate(int64(timeout))
 
 	if err != nil {
 		return nil, err
@@ -36,8 +36,8 @@ func (s *dfltUpdateService) CheckForUpdate() (*domain.UpdateInfo, error) {
 	return info, nil
 }
 
-func (s *dfltUpdateService) Update() error {
-	info, err := s.updater.CheckForUpdate()
+func (s *dfltUpdateService) Update(timeout int) error {
+	info, err := s.updater.CheckForUpdate(int64(timeout))
 
 	if err != nil {
 		return err
@@ -57,11 +57,11 @@ func (s *dfltUpdateService) Update() error {
 		archive := filepath.Join(domain.CacheDir, domain.Archive)
 		checksum := filepath.Join(domain.CacheDir, domain.Checksum)
 
-		if err := s.updater.DownloadFile(archive, info.ArchiveUrl); err != nil {
+		if err := s.updater.DownloadFile(archive, info.ArchiveUrl, int64(timeout)); err != nil {
 			return err
 		}
 
-		if err := s.updater.DownloadFile(checksum, info.ChecksumUrl); err != nil {
+		if err := s.updater.DownloadFile(checksum, info.ChecksumUrl, int64(timeout)); err != nil {
 			return err
 		}
 
