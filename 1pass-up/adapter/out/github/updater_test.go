@@ -28,7 +28,8 @@ func TestCheckForUpdate(t *testing.T) {
 	if isOnline() {
 		updater := setupGithubUpdater()
 		expected := false
-		info, err := updater.CheckForUpdate()
+		timeout := int64(5)
+		info, err := updater.CheckForUpdate(timeout)
 
 		if err != nil {
 			t.Error("CheckForUpdate() should pass")
@@ -49,7 +50,8 @@ func TestCheckForUpdate(t *testing.T) {
 func TestDownloadFile(t *testing.T) {
 	if isOnline() {
 		updater := setupGithubUpdater()
-		info, err := updater.CheckForUpdate()
+		timeout := int64(5)
+		info, err := updater.CheckForUpdate(timeout)
 
 		if err != nil || info == nil {
 			t.Error("CheckForUpdate() should pass (there is always something to download)")
@@ -61,7 +63,7 @@ func TestDownloadFile(t *testing.T) {
 			t.Error("MkdirAll() should pass")
 		}
 
-		err = updater.DownloadFile("../../../../assets/tmp/1pass.tar.gz", info.ArchiveUrl)
+		err = updater.DownloadFile("../../../../assets/tmp/1pass.tar.gz", info.ArchiveUrl, timeout)
 
 		if err != nil {
 			t.Error("DownloadFile() should end up with success")
@@ -80,7 +82,8 @@ func TestDownloadFile(t *testing.T) {
 func TestExtractArchive(t *testing.T) {
 	if isOnline() {
 		updater := setupGithubUpdater()
-		info, err := updater.CheckForUpdate()
+		timeout := int64(5)
+		info, err := updater.CheckForUpdate(timeout)
 
 		if err != nil || info == nil {
 			t.Error("CheckForUpdate() should pass (there is always something to download)")
@@ -92,7 +95,7 @@ func TestExtractArchive(t *testing.T) {
 			t.Error("MkdirAll() should pass")
 		}
 
-		err = updater.DownloadFile("../../../../assets/tmp/1pass.tar.gz", info.ArchiveUrl)
+		err = updater.DownloadFile("../../../../assets/tmp/1pass.tar.gz", info.ArchiveUrl, timeout)
 
 		if err != nil {
 			t.Error("DownloadFile() should end up with success")
