@@ -30,6 +30,23 @@ func TestGetDefaultVault(t *testing.T) {
 	}
 }
 
+func TestGetTimeout(t *testing.T) {
+	config, empty := setupFileConfigRepo()
+	expected := 2
+	timeout := empty.GetTimeout()
+
+	if timeout != expected {
+		t.Errorf("GetTimeout() = %d; expected = %d", timeout, expected)
+	}
+
+	expected = 10
+	timeout = config.GetTimeout()
+
+	if timeout != expected {
+		t.Errorf("GetTimeout() = %d; expected = %d", timeout, expected)
+	}
+}
+
 func TestGetUpdateNotification(t *testing.T) {
 	config, empty := setupFileConfigRepo()
 	expected := true
@@ -64,7 +81,7 @@ func TestLoadConfigFile(t *testing.T) {
 func TestSave(t *testing.T) {
 	config, _ := setupFileConfigRepo()
 	expected := ""
-	conf := domain.NewConfig(false, "")
+	conf := domain.NewConfig(10, false, "")
 	config.Save(conf)
 	vault := config.GetDefaultVault()
 
