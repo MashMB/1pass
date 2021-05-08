@@ -5,7 +5,7 @@
 package domain
 
 type Config struct {
-	Timeout      int64
+	Timeout      int
 	UpdateNotify bool
 	Vault        string
 }
@@ -70,7 +70,7 @@ type Vault struct {
 	Path string
 }
 
-func NewConfig(timeout int64, updateNotify bool, vault string) *Config {
+func NewConfig(timeout int, updateNotify bool, vault string) *Config {
 	return &Config{
 		Timeout:      timeout,
 		UpdateNotify: updateNotify,
