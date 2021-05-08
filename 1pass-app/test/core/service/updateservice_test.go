@@ -36,7 +36,8 @@ func TestCheckForUpdate(t *testing.T) {
 	if isOnline() {
 		service := setupUpdateService()
 		expected := domain.ErrNoUpdate
-		_, err := service.CheckForUpdate()
+		timeout := 5
+		_, err := service.CheckForUpdate(timeout)
 
 		if err != expected {
 			t.Errorf("CheckForUpdate() = %v; expected = %v", err, expected)
@@ -50,7 +51,8 @@ func TestUpdate(t *testing.T) {
 	if isOnline() {
 		service := setupUpdateService()
 		expected := domain.ErrNoUpdate
-		err := service.Update()
+		timeout := 5
+		err := service.Update(timeout)
 
 		if err != expected {
 			t.Errorf("Update() = %v; expected = %v", err, expected)
