@@ -21,9 +21,10 @@ func NewDfltConfigService(configRepo out.ConfigRepo) *dfltConfigService {
 
 func (s *dfltConfigService) GetConfig() *domain.Config {
 	notification := s.configRepo.GetUpdateNotification()
+	timeout := s.configRepo.GetTimeout()
 	vault := s.configRepo.GetDefaultVault()
 
-	return domain.NewConfig(notification, vault)
+	return domain.NewConfig(timeout, notification, vault)
 }
 
 func (s *dfltConfigService) SaveConfig(config *domain.Config) {
