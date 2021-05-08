@@ -43,80 +43,92 @@ func isOnline() bool {
 }
 
 func TestCheckForUpdate(t *testing.T) {
-	updater := setupGithubUpdater()
-	expected := false
-	info, err := updater.CheckForUpdate()
+	if isOnline() {
+		updater := setupGithubUpdater()
+		expected := false
+		info, err := updater.CheckForUpdate()
 
-	if err != nil {
-		t.Error("CheckForUpdate() should pass")
-	}
+		if err != nil {
+			t.Error("CheckForUpdate() should pass")
+		}
 
-	if info == nil {
-		t.Error("CheckForUpdate() should provide any data")
-	}
+		if info == nil {
+			t.Error("CheckForUpdate() should provide any data")
+		}
 
-	if info.Newer != expected {
-		t.Errorf("CheckForUpdate() = %v; expected = %v", info.Newer, expected)
+		if info.Newer != expected {
+			t.Errorf("CheckForUpdate() = %v; expected = %v", info.Newer, expected)
+		}
+	} else {
+		t.Log("CheckForUpdate() no internet connection")
 	}
 }
 
 func TestDownloadFile(t *testing.T) {
-	updater := setupGithubUpdater()
-	info, err := updater.CheckForUpdate()
+	if isOnline() {
+		updater := setupGithubUpdater()
+		info, err := updater.CheckForUpdate()
 
-	if err != nil || info == nil {
-		t.Error("CheckForUpdate() should pass (there is always something to download)")
-	}
+		if err != nil || info == nil {
+			t.Error("CheckForUpdate() should pass (there is always something to download)")
+		}
 
-	err = os.MkdirAll("../../../../assets/tmp", 0700)
+		err = os.MkdirAll("../../../../assets/tmp", 0700)
 
-	if err != nil {
-		t.Error("MkdirAll() should pass")
-	}
+		if err != nil {
+			t.Error("MkdirAll() should pass")
+		}
 
-	err = updater.DownloadFile("../../../../assets/tmp/1pass.tar.gz", info.ArchiveUrl)
+		err = updater.DownloadFile("../../../../assets/tmp/1pass.tar.gz", info.ArchiveUrl)
 
-	if err != nil {
-		t.Error("DownloadFile() should end up with success")
-	}
+		if err != nil {
+			t.Error("DownloadFile() should end up with success")
+		}
 
-	err = os.RemoveAll("../../../../assets/tmp")
+		err = os.RemoveAll("../../../../assets/tmp")
 
-	if err != nil {
-		t.Error("RemoveAll() should pass")
+		if err != nil {
+			t.Error("RemoveAll() should pass")
+		}
+	} else {
+		t.Log("DownloadFile() no internet connection")
 	}
 }
 
 func TestExtractArchive(t *testing.T) {
-	updater := setupGithubUpdater()
-	info, err := updater.CheckForUpdate()
+	if isOnline() {
+		updater := setupGithubUpdater()
+		info, err := updater.CheckForUpdate()
 
-	if err != nil || info == nil {
-		t.Error("CheckForUpdate() should pass (there is always something to download)")
-	}
+		if err != nil || info == nil {
+			t.Error("CheckForUpdate() should pass (there is always something to download)")
+		}
 
-	err = os.MkdirAll("../../../../assets/tmp", 0700)
+		err = os.MkdirAll("../../../../assets/tmp", 0700)
 
-	if err != nil {
-		t.Error("MkdirAll() should pass")
-	}
+		if err != nil {
+			t.Error("MkdirAll() should pass")
+		}
 
-	err = updater.DownloadFile("../../../../assets/tmp/1pass.tar.gz", info.ArchiveUrl)
+		err = updater.DownloadFile("../../../../assets/tmp/1pass.tar.gz", info.ArchiveUrl)
 
-	if err != nil {
-		t.Error("DownloadFile() should end up with success")
-	}
+		if err != nil {
+			t.Error("DownloadFile() should end up with success")
+		}
 
-	err = updater.ExtractArchive("../../../../assets/tmp/1pass.tar.gz", "../../../../assets/tmp")
+		err = updater.ExtractArchive("../../../../assets/tmp/1pass.tar.gz", "../../../../assets/tmp")
 
-	if err != nil {
-		t.Error("ExtractArchive() should pass")
-	}
+		if err != nil {
+			t.Error("ExtractArchive() should pass")
+		}
 
-	err = os.RemoveAll("../../../../assets/tmp")
+		err = os.RemoveAll("../../../../assets/tmp")
 
-	if err != nil {
-		t.Error("RemoveAll() should pass")
+		if err != nil {
+			t.Error("RemoveAll() should pass")
+		}
+	} else {
+		t.Log("ExtractArchive() no internet connection")
 	}
 }
 
