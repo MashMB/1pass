@@ -25,6 +25,16 @@ func setupConfigFacade() corefacade.ConfigFacade {
 	return corefacade.NewDfltConfigFacade(configService)
 }
 
+func TestIsConfigAvailable(t *testing.T) {
+	facade := setupConfigFacade()
+	expected := true
+	available := facade.IsConfigAvailable()
+
+	if available != expected {
+		t.Errorf("IsConfigAvailable() = %v; expected = %v", available, expected)
+	}
+}
+
 func TestGetConfig(t *testing.T) {
 	facade := setupConfigFacade()
 	expected := "./assets/onepassword_data"

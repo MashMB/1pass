@@ -49,6 +49,10 @@ func loadConfigFile(configDir string) map[string]interface{} {
 	return config
 }
 
+func (repo *fileConfigRepo) IsAvailable() bool {
+	return len(repo.config) > 0
+}
+
 func (repo *fileConfigRepo) GetDefaultVault() string {
 	var vault string
 
@@ -57,6 +61,16 @@ func (repo *fileConfigRepo) GetDefaultVault() string {
 	}
 
 	return vault
+}
+
+func (repo *fileConfigRepo) GetTimeout() int {
+	timeout := 2
+
+	if repo.config["timeout"] != nil {
+		timeout = repo.config["timeout"].(int)
+	}
+
+	return timeout
 }
 
 func (repo *fileConfigRepo) GetUpdateNotification() bool {
@@ -69,10 +83,22 @@ func (repo *fileConfigRepo) GetUpdateNotification() bool {
 	return notification
 }
 
+func (repo *fileConfigRepo) GetUpdatePeriod() int {
+	period := 1
+
+	if repo.config["update-period"] != nil {
+		period = repo.config["update-period"].(int)
+	}
+
+	return period
+}
+
 func (repo *fileConfigRepo) Save(config *domain.Config) {
 	configFile := filepath.Join(repo.configDir, domain.ConfigFile)
-	repo.config["update-notification"] = config.UpdateNotify
 	repo.config["opvault"] = config.Vault
+	repo.config["timeout"] = config.Timeout
+	repo.config["update-notification"] = config.UpdateNotify
+	repo.config["update-period"] = config.UpdatePeriod
 	file, err := yaml.Marshal(repo.config)
 
 	if err != nil {

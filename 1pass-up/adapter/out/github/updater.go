@@ -10,8 +10,10 @@ import (
 	"crypto/md5"
 	"encoding/hex"
 	"encoding/json"
+	"fmt"
 	"io"
 	"io/ioutil"
+	"math"
 	"net"
 	"net/http"
 	"os"
@@ -23,32 +25,31 @@ import (
 	"github.com/mashmb/1pass/1pass-core/core/domain"
 )
 
-type githubUpdater struct {
-	httpClient http.Client
-}
+type githubUpdater struct{}
 
 func NewGithubUpdater() *githubUpdater {
+	return &githubUpdater{}
+}
+
+func httpClient(timeout int64) http.Client {
 	httpTransport := http.Transport{
-		Dial: dialTimeout,
+		Dial: func(network, address string) (net.Conn, error) {
+			tout := time.Duration(timeout) * time.Second
+
+			return net.DialTimeout(network, address, tout)
+		},
 	}
 
 	httpClient := http.Client{
 		Transport: &httpTransport,
 	}
 
-	return &githubUpdater{
-		httpClient: httpClient,
-	}
+	return httpClient
 }
 
-func dialTimeout(network, address string) (net.Conn, error) {
-	timeout := time.Duration(domain.Timeout) * time.Second
-
-	return net.DialTimeout(network, address, timeout)
-}
-
-func (up *githubUpdater) CheckForUpdate() (*domain.UpdateInfo, error) {
-	resp, err := up.httpClient.Get(domain.GithubReleases)
+func (up *githubUpdater) CheckForUpdate(timeout int64) (*domain.UpdateInfo, error) {
+	httpClient := httpClient(timeout)
+	resp, err := httpClient.Get(domain.GithubReleases)
 
 	if err != nil {
 		return nil, err
@@ -72,6 +73,7 @@ func (up *githubUpdater) CheckForUpdate() (*domain.UpdateInfo, error) {
 	}
 
 	latestJson := bodyJson[0].(map[string]interface{})
+	changelog := latestJson["body"].(string)
 	version := latestJson["tag_name"].(string)
 	newer := false
 	var archiveUrl string
@@ -99,11 +101,23 @@ func (up *githubUpdater) CheckForUpdate() (*domain.UpdateInfo, error) {
 		newer = true
 	}
 
-	return domain.NewUpdateInfo(archiveUrl, checksumUrl, version, newer), nil
+	return domain.NewUpdateInfo(archiveUrl, checksumUrl, changelog, version, newer), nil
 }
 
-func (up *githubUpdater) DownloadFile(destination, url string) error {
-	resp, err := up.httpClient.Get(url)
+func (up *githubUpdater) CheckTimestamp(dirPath string) {
+	timestamp := time.Now().Unix()
+	file := filepath.Join(dirPath, domain.LastCheckFile)
+
+	if _, err := os.Stat(dirPath); err != nil {
+		os.MkdirAll(dirPath, 0700)
+	}
+
+	ioutil.WriteFile(file, []byte(fmt.Sprint(timestamp)), 0644)
+}
+
+func (up *githubUpdater) DownloadFile(destination, url string, timeout int64) error {
+	httpClient := httpClient(timeout)
+	resp, err := httpClient.Get(url)
 
 	if err != nil {
 		return err
@@ -184,6 +198,37 @@ func (up *githubUpdater) ReplaceBinary(src string) error {
 	}
 
 	return nil
+}
+
+func (up *githubUpdater) ShouldCheck(period int, dirPath string) bool {
+	should := false
+	lastCheckFile := filepath.Join(dirPath, domain.LastCheckFile)
+
+	if _, err := os.Stat(lastCheckFile); err != nil {
+		should = true
+	}
+
+	file, err := ioutil.ReadFile(lastCheckFile)
+
+	if err != nil {
+		should = true
+	}
+
+	savedVal, err := strconv.ParseInt(strings.TrimSpace(string(file)), 10, 64)
+
+	if err != nil {
+		should = true
+	}
+
+	timestamp := time.Unix(savedVal, 0)
+	now := time.Now()
+	between := math.Abs(now.Sub(timestamp).Hours() / 24)
+
+	if int(between) >= period {
+		should = true
+	}
+
+	return should
 }
 
 func (up *githubUpdater) ValidateChecksum(binary, file string) error {

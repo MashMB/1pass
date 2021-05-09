@@ -9,6 +9,8 @@ import (
 )
 
 type ConfigFacade interface {
+	IsConfigAvailable() bool
+
 	GetConfig() *domain.Config
 
 	SaveConfig(config *domain.Config)
@@ -17,17 +19,19 @@ type ConfigFacade interface {
 type VaultFacade interface {
 	GetItem(uid string, trashed bool) *domain.Item
 
-	GetItems(category *domain.ItemCategory, trashed bool) []*domain.SimpleItem
+	GetItems(category *domain.ItemCategory, title string, trashed bool) []*domain.SimpleItem
 
 	IsUnlocked() bool
 
 	Lock()
 
-	Unlock(path, password string) error
+	Unlock(vault *domain.Vault, password string) error
+
+	Validate(vault *domain.Vault) error
 }
 
 type UpdateFacade interface {
-	CheckForUpdate() (*domain.UpdateInfo, error)
+	CheckForUpdate(force bool) (*domain.UpdateInfo, error)
 
-	Update() error
+	Update(stage func(int)) error
 }

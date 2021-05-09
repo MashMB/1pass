@@ -28,6 +28,8 @@ func main() {
 		log.Fatalln(err)
 	}
 
+	configDir := filepath.Join(homeDir, ".config", "1pass")
+
 	var configRepo out.ConfigRepo
 	var cryptoUtils out.CrytpoUtils
 	var itemRepo out.ItemRepo
@@ -46,7 +48,7 @@ func main() {
 
 	var cliControl in.CliControl
 
-	configRepo = file.NewFileConfigRepo(filepath.Join(homeDir, ".config", "1pass"))
+	configRepo = file.NewFileConfigRepo(configDir)
 	cryptoUtils = crypto.NewPbkdf2CryptoUtils()
 	itemRepo = file.NewFileItemRepo()
 	profileRepo = file.NewFileProfileRepo()
@@ -59,7 +61,7 @@ func main() {
 	vaultService = service.NewDfltVaultService(itemRepo, profileRepo)
 
 	configFacade = facade.NewDfltConfigFacade(configService)
-	updateFacade = facade.NewDfltUpdateFacade(updateService)
+	updateFacade = facade.NewDfltUpdateFacade(configDir, configService, updateService)
 	vaultFacade = facade.NewDfltVaultFacade(configService, itemService, keyService, vaultService)
 
 	cliControl = cobra.NewCobraCliControl(configFacade, updateFacade, vaultFacade)

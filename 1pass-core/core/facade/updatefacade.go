@@ -10,19 +10,27 @@ import (
 )
 
 type dfltUpdateFacade struct {
+	configDir     string
+	configService service.ConfigService
 	updateService service.UpdateService
 }
 
-func NewDfltUpdateFacade(updateService service.UpdateService) *dfltUpdateFacade {
+func NewDfltUpdateFacade(configDir string, configService service.ConfigService, updateService service.UpdateService) *dfltUpdateFacade {
 	return &dfltUpdateFacade{
+		configDir:     configDir,
+		configService: configService,
 		updateService: updateService,
 	}
 }
 
-func (f *dfltUpdateFacade) CheckForUpdate() (*domain.UpdateInfo, error) {
-	return f.updateService.CheckForUpdate()
+func (f *dfltUpdateFacade) CheckForUpdate(force bool) (*domain.UpdateInfo, error) {
+	config := f.configService.GetConfig()
+
+	return f.updateService.CheckForUpdate(config.UpdatePeriod, config.Timeout, force, f.configDir)
 }
 
-func (f *dfltUpdateFacade) Update() error {
-	return f.updateService.Update()
+func (f *dfltUpdateFacade) Update(stage func(int)) error {
+	config := f.configService.GetConfig()
+
+	return f.updateService.Update(config.Timeout, stage)
 }

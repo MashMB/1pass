@@ -77,8 +77,8 @@ func TestDecodeItems(t *testing.T) {
 	masterKey, masterMac, _ := keyService.MasterKeys(derivedKey, derivedMac)
 	keys := domain.NewKeys(derivedKey, derivedMac, masterKey, masterMac, overviewKey, overviewMac)
 	itemService.DecodeItems(vault, keys)
-	items := itemService.GetSimpleItems(nil, false)
-	trashed := itemService.GetSimpleItems(nil, true)
+	items := itemService.GetSimpleItems(nil, "", false)
+	trashed := itemService.GetSimpleItems(nil, "", true)
 
 	if expected != len(items)+len(trashed) {
 		t.Errorf("DecodeItems() = %d; expected = %d", len(items)+len(trashed), expected)
@@ -129,7 +129,7 @@ func TestGetSimpleItems(t *testing.T) {
 	trashed := false
 	first, firstUid := "Bank of America", "EC0A40400ABB4B16926B7417E95C9669"
 	last, lastUid := "Email Account", "FD2EADB43C4F4FC7BEB35A1692DDFDEA"
-	items := itemService.GetSimpleItems(nil, trashed)
+	items := itemService.GetSimpleItems(nil, "", trashed)
 
 	if len(items) != expected {
 		t.Errorf("[NOT-TRASHED] GetSimpleItems() = %d; expected = %d", len(items), expected)
@@ -144,7 +144,7 @@ func TestGetSimpleItems(t *testing.T) {
 	}
 
 	trashed = true
-	items = itemService.GetSimpleItems(nil, trashed)
+	items = itemService.GetSimpleItems(nil, "", trashed)
 	expected = 2
 	first, firstUid = "A note to Trash", "AE272805811C450586BA3EDEAEF8AE19"
 	last, lastUid = "", "0C4F27910A64488BB339AED63565D148"
@@ -159,6 +159,24 @@ func TestGetSimpleItems(t *testing.T) {
 
 	if items[len(items)-1].Title != last || items[len(items)-1].Uid != lastUid {
 		t.Errorf("[LAST-TRASHED] GetSimpleItems() = %v, %v; expected = %v, %v", items[len(items)-1].Title, items[len(items)-1].Uid, last, lastUid)
+	}
+
+	trashed = false
+	items = itemService.GetSimpleItems(nil, "sEc", trashed)
+	expected = 2
+	first, firstUid = "What is a Secure Note?", "D1820AA8CB534AC6A4B5A2C0263FD3B2"
+	last, lastUid = "Social Security", "67979020CCA54120BAFA2742C3F23F2B"
+
+	if len(items) != expected {
+		t.Errorf("[TITLE] GetSimpleItems() = %d; expected = %d", len(items), expected)
+	}
+
+	if items[0].Title != first || items[0].Uid != firstUid {
+		t.Errorf("[FIRST-TITLE] GetSimpleItems() = %v, %v; expected = %v, %v", items[0].Title, items[0].Uid, first, firstUid)
+	}
+
+	if items[len(items)-1].Title != last || items[len(items)-1].Uid != lastUid {
+		t.Errorf("[LAST-TITLE] GetSimpleItems() = %v, %v; expected = %v, %v", items[len(items)-1].Title, items[len(items)-1].Uid, last, lastUid)
 	}
 }
 

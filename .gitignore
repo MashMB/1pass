@@ -28,3 +28,6 @@
 ### Go Patch ###
 /vendor/
 /Godeps/
+
+# File with last update check time stamp (dynamic value because of tests).
+assets/lastcheck

@@ -9,13 +9,15 @@ type CliControl interface {
 
 	Configure()
 
+	FirstRun()
+
 	GetCategories()
 
 	GetItemDetails(vaultPath, uid string, trashed bool)
 
 	GetItemOverview(vaultPath, uid string, trashed bool)
 
-	GetItems(vaultPath, category string, trashed bool)
+	GetItems(vaultPath, category, title string, trashed bool)
 
 	Update()
 }

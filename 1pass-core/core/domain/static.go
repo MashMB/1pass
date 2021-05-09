@@ -12,8 +12,8 @@ const (
 	Checksum        string = "checksum.md5"
 	ConfigFile      string = "1pass.yml"
 	GithubReleases  string = "https://api.github.com/repos/mashmb/1pass/releases"
+	LastCheckFile   string = "lastcheck"
 	ProfileDir      string = "default"
 	ProfileFile     string = "profile.js"
-	Timeout         int64  = 2
-	Version         string = "1.1.0"
+	Version         string = "1.2.0"
 )

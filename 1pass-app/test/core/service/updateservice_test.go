@@ -5,6 +5,7 @@
 package service
 
 import (
+	"net/http"
 	"testing"
 
 	"github.com/mashmb/1pass/1pass-core/core/domain"
@@ -21,22 +22,42 @@ func setupUpdateService() coreservice.UpdateService {
 	return coreservice.NewDfltUpdateService(updater)
 }
 
-func TestCheckForUpdate(t *testing.T) {
-	service := setupUpdateService()
-	expected := domain.ErrNoUpdate
-	_, err := service.CheckForUpdate()
+func isOnline() bool {
+	_, err := http.Get("http://google.com")
 
-	if err != expected {
-		t.Errorf("CheckForUpdate() = %v; expected = %v", err, expected)
+	if err != nil {
+		return false
+	}
+
+	return true
+}
+
+func TestCheckForUpdate(t *testing.T) {
+	if isOnline() {
+		service := setupUpdateService()
+		expected := domain.ErrNoUpdate
+		timeout := 5
+		_, err := service.CheckForUpdate(0, timeout, false, "../../../../assets")
+
+		if err != expected {
+			t.Errorf("CheckForUpdate() = %v; expected = %v", err, expected)
+		}
+	} else {
+		t.Log("CheckForUpdate() no internet connection")
 	}
 }
 
 func TestUpdate(t *testing.T) {
-	service := setupUpdateService()
-	expected := domain.ErrNoUpdate
-	err := service.Update()
+	if isOnline() {
+		service := setupUpdateService()
+		expected := domain.ErrNoUpdate
+		timeout := 5
+		err := service.Update(timeout, nil)
 
-	if err != expected {
-		t.Errorf("Update() = %v; expected = %v", err, expected)
+		if err != expected {
+			t.Errorf("Update() = %v; expected = %v", err, expected)
+		}
+	} else {
+		t.Log("Update() no internet connection")
 	}
 }

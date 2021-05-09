@@ -31,8 +31,8 @@ func (f *dfltVaultFacade) GetItem(uid string, trashed bool) *domain.Item {
 	return f.itemService.GetItem(uid, trashed)
 }
 
-func (f *dfltVaultFacade) GetItems(category *domain.ItemCategory, trashed bool) []*domain.SimpleItem {
-	return f.itemService.GetSimpleItems(category, trashed)
+func (f *dfltVaultFacade) GetItems(category *domain.ItemCategory, title string, trashed bool) []*domain.SimpleItem {
+	return f.itemService.GetSimpleItems(category, title, trashed)
 }
 
 func (f *dfltVaultFacade) IsUnlocked() bool {
@@ -46,25 +46,11 @@ func (f *dfltVaultFacade) IsUnlocked() bool {
 }
 
 func (f *dfltVaultFacade) Lock() {
+	f.itemService.ClearMemory()
 	f.keys = nil
 }
 
-func (f *dfltVaultFacade) Unlock(path, password string) error {
-	var vault *domain.Vault
-
-	if path != "" {
-		vault = domain.NewVault(path)
-	} else {
-		config := f.configService.GetConfig()
-		vault = domain.NewVault(config.Vault)
-	}
-
-	err := f.vaultService.ValidateVault(vault)
-
-	if err != nil {
-		return err
-	}
-
+func (f *dfltVaultFacade) Unlock(vault *domain.Vault, password string) error {
 	derivedKey, derivedMac, err := f.keyService.DerivedKeys(password)
 
 	if err != nil {
@@ -85,6 +71,14 @@ func (f *dfltVaultFacade) Unlock(path, password string) error {
 
 	f.keys = domain.NewKeys(derivedKey, derivedMac, masterKey, masterMac, overviewKey, overviewMac)
 	f.itemService.DecodeItems(vault, f.keys)
+
+	return nil
+}
+
+func (f *dfltVaultFacade) Validate(vault *domain.Vault) error {
+	if err := f.vaultService.ValidateVault(vault); err != nil {
+		return err
+	}
 
 	return nil
 }

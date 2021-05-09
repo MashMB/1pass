@@ -2,6 +2,28 @@
 
 History of **1Pass** releases with changes description.
 
+## Release 1.2.0 [09.05.2021]
+
+- [CLI] Display application update stages
+- [CLI] Commands that use default OPVault path (`list`, `overview` and `details`) will prompt for configuration on first run
+- [CLI] `update` command wants user confirmation when new version is available
+- [CLI] Display changelog of new version on `update` command
+- [CLI] Force update check on `update` command
+- [CLI] OPVault path as `list`, `overview` and `details` commands flag (`-v [path]`)
+- [CLI] No results message for filtering in `list` command
+- [CLI] `list` command with items filtering over title (`-n` flag)
+- [API] Handle application update stages
+- [API] Check if configuration is available (already exists)
+- [API] Force update checking
+- [API] Get new release changelog from GitHub during update check
+- [API] Check for update only once per time period
+- [API] Store time stamp of last successful update check
+- [API] Configurable update check period
+- [API] Configurable HTTP update timeout
+- [API] Items filtering over title
+- (FIX) [API] Vault lock clears decoded items memory
+- (FIX) [API] Validate OPVault path before password prompt
+
 ## Release 1.1.0 [06.05.2021]
 
 - [CLI] Command used to update application

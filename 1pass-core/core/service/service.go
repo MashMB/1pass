@@ -9,12 +9,16 @@ import (
 )
 
 type ConfigService interface {
+	IsConfigAvailable() bool
+
 	GetConfig() *domain.Config
 
 	SaveConfig(config *domain.Config)
 }
 
 type ItemService interface {
+	ClearMemory()
+
 	DecodeDetails(encoded *domain.RawItem, keys *domain.Keys) map[string]interface{}
 
 	DecodeItems(vault *domain.Vault, keys *domain.Keys)
@@ -23,7 +27,7 @@ type ItemService interface {
 
 	GetItem(uid string, trashed bool) *domain.Item
 
-	GetSimpleItems(category *domain.ItemCategory, trashed bool) []*domain.SimpleItem
+	GetSimpleItems(category *domain.ItemCategory, title string, trashed bool) []*domain.SimpleItem
 
 	ParseItemField(fromSection bool, data map[string]interface{}) *domain.ItemField
 
@@ -49,9 +53,9 @@ type KeyService interface {
 }
 
 type UpdateService interface {
-	CheckForUpdate() (*domain.UpdateInfo, error)
+	CheckForUpdate(period, timeout int, force bool, configDir string) (*domain.UpdateInfo, error)
 
-	Update() error
+	Update(timeout int, stage func(int)) error
 }
 
 type VaultService interface {

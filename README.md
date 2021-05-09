@@ -66,6 +66,52 @@ Whole update process:
 **IMPORTANT**: updates are in real life `testing` stage, it works fine in test environment but practice shows that this 
 type of operations needs to be tested on multiple devices
 
+## Configuration
+
+From release 1.1.0, application has implemented interactive configuration tool. From release 1.2.0, application is 
+prompting user for configuration on first run (the most important is default OPVault path to skip writing it ad-hoc). 
+Whole configuration process relies on questions answering. 
+
+This is detailed description of all available settings:
+
+```
+1. Default OPVault path ([previous_value]): [value]
+
+This setting allows to set default OPVault path. Configured path will be used by default if flag -v is not given to 
+command.
+
+Default value: ""
+```
+
+```
+2. Update notifications? ([previous_value]) [y - for yes/n - for no]: [value]
+
+Decide if update notifications should be displayed. Type 'y' if yes or 'n' if no.
+
+Default value: y
+```
+
+```
+3. Update HTTP timeout in secods ([previous_value]) [2-15]: [value]
+
+Set HTTP timeout for updates. This setting defines how long application should try to connect with GitHub for update 
+check. Slower internet connection will need bigger value. Value should be in range from 2 to 15 seconds.
+
+Default value: 2
+```
+
+```
+4. How often check for updates in days ([previous_value]) [>= 0]: [value]
+
+Set how often application should check for updates. Value is specified in days and should be bigger or equal to 0. If 0 
+is set, application will check for update on every run.
+
+Default value: 1
+```
+
+**IMPORTANT:** note that if wrong value is specified (value not in range, etc.), application will abort configuration 
+and whole process will be repeated form beginning
+
 ## Usage
 
 1Pass is a command line tool, so usage is limited to command variations. First of all type:
@@ -76,14 +122,13 @@ type of operations needs to be tested on multiple devices
 
 Command should print overall informations about application.
 
-The most important commands are:
 Application provides commands:
 
 ```
 1pass configure
 1pass categories
-1pass list [-c <category>] [-t] <path>
-1pass overiview [-t] <uid> <path>
+1pass list [-c <category>] [-n <name>] [-t] <path>
+1pass overview [-t] <uid> <path>
 1pass details [-t] <uid> <path>
 1pass update
 1pass version
@@ -102,35 +147,36 @@ Legend:
 - **uid** - unique UID of item (obtained with **list** command)
 - **path** - path to 1Password OPVault
 - **-c** - filter items over category
+- **-n** - filter items over name/title
 - **-t** - work on trashed items (archived)
 
 ## What is new?
 
-- [CLI] Command used to update application
-- [CLI] Notify about new update on every command
-- [CLI] Command used to configure application in interactive way (answer the questions)
-- [CLI] OPVault path is optional for `list`, `overview` and `details` commands (if not defined, use default one from configuration file)
-- [CLI] Pretty print for `overview` and `details` commands
-- [CLI] Output of `list` command as table
-- [CLI] Output of `categories` command as table
-- [CLI] Commands `list`, `overview` and `details` works with trashed items (`-t` flag)
-- [CLI] Command used to display all available item categories
-- [CLI] `list` command with item category filtering (`-c` flag)
-- [API] Configurable updates notification
-- [API] Application self update
-- [API] Download, extract and validate checksum of new update
-- [API] Check for updates on GitHub releases section
-- [API] Configurable default OPVault path
-- [API] Save application configuration (YAML file in `$HOME/.config/1pass/1pass.yml`)
-- [API] Read application configuration (YAML file in `$HOME/.config/1pass/1pass.yml`)
-- [API] Merge item overview and details (one structure, full items decoding at once, sensitive data masked in control layer)
-- [API] Work with items from trash
-- [API] Handle all item categories according to [OPVault design](https://support.1password.com/opvault-design/)
+- [CLI] Display application update stages
+- [CLI] Commands that use default OPVault path (`list`, `overview` and `details`) will prompt for configuration on first run
+- [CLI] `update` command wants user confirmation when new version is available
+- [CLI] Display changelog of new version on `update` command
+- [CLI] Force update check on `update` command
+- [CLI] OPVault path as `list`, `overview` and `details` commands flag (`-v [path]`)
+- [CLI] No results message for filtering in `list` command
+- [CLI] `list` command with items filtering over title (`-n` flag)
+- [API] Handle application update stages
+- [API] Check if configuration is available (already exists)
+- [API] Force update checking
+- [API] Get new release changelog from GitHub during update check
+- [API] Check for update only once per time period
+- [API] Store time stamp of last successful update check
+- [API] Configurable update check period
+- [API] Configurable HTTP update timeout
+- [API] Items filtering over title
+- (FIX) [API] Vault lock clears decoded items memory
+- (FIX) [API] Validate OPVault path before password prompt
 
 ## Releases
 
 Versions of last five releases:
 
+- 1.2.0
 - 1.1.0
 - 1.0.0
 

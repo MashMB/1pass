@@ -19,6 +19,10 @@ func NewDfltConfigFacade(configService service.ConfigService) *dfltConfigFacade 
 	}
 }
 
+func (f *dfltConfigFacade) IsConfigAvailable() bool {
+	return f.configService.IsConfigAvailable()
+}
+
 func (f *dfltConfigFacade) GetConfig() *domain.Config {
 	return f.configService.GetConfig()
 }

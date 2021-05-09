@@ -42,7 +42,9 @@ func setupVaultFacade() corefacade.VaultFacade {
 func TestGetItem(t *testing.T) {
 	facade := setupVaultFacade()
 	pass := "freddy"
-	facade.Unlock("../../../../assets/onepassword_data", pass)
+	vault := domain.NewVault("../../../../assets/onepassword_data")
+	facade.Validate(vault)
+	facade.Unlock(vault, pass)
 	expected := "Personal"
 	uid := "0EDE2B13D7AC4E2C9105842682ACB187"
 	trashed := false
@@ -66,16 +68,19 @@ func TestGetItems(t *testing.T) {
 	facade := setupVaultFacade()
 	pass := "freddy"
 	expected := 10
+	title := ""
 	trashed := false
 	first := "Bank of America"
 	last := "YouTube"
-	err := facade.Unlock("../../../../assets/onepassword_data", pass)
+	vault := domain.NewVault("../../../../assets/onepassword_data")
+	facade.Validate(vault)
+	err := facade.Unlock(vault, pass)
 
 	if err != nil {
 		t.Error("Unlock() should pass because of valid password")
 	}
 
-	items := facade.GetItems(domain.ItemCategoryEnum.Login, trashed)
+	items := facade.GetItems(domain.ItemCategoryEnum.Login, title, trashed)
 
 	if len(items) != expected {
 		t.Errorf("[NOT-TRASHED-LENGTH] GetItems() = %d; expected = %d", len(items), expected)
@@ -90,10 +95,11 @@ func TestGetItems(t *testing.T) {
 	}
 
 	expected = 2
+	title = ""
 	trashed = true
 	first = "A note to Trash"
 	last = ""
-	items = facade.GetItems(nil, trashed)
+	items = facade.GetItems(nil, title, trashed)
 
 	if len(items) != expected {
 		t.Errorf("[TRASHED-LENGTH] GetItems() = %d; expected = %d", len(items), expected)
@@ -106,6 +112,25 @@ func TestGetItems(t *testing.T) {
 	if items[len(items)-1].Title != last {
 		t.Errorf("[TRASHED-LAST] GetItems() = %v; expected = %v", items[len(items)-1], last)
 	}
+
+	expected = 3
+	title = "ap"
+	trashed = false
+	first = "The Unofficial Apple Weblog"
+	last = "Johnny Appleseed Society"
+	items = facade.GetItems(nil, title, trashed)
+
+	if len(items) != expected {
+		t.Errorf("[TITLE-LENGTH] GetItems() = %d; expected = %d", len(items), expected)
+	}
+
+	if items[0].Title != first {
+		t.Errorf("[TITLE-FIRST] GetItems() = %v; expected = %v", items[0].Title, first)
+	}
+
+	if items[len(items)-1].Title != last {
+		t.Errorf("[TITLE-LAST] GetItems() = %v; expected = %v", items[len(items)-1], last)
+	}
 }
 
 func TestIsUnlocked(t *testing.T) {
@@ -117,7 +142,9 @@ func TestIsUnlocked(t *testing.T) {
 		t.Errorf("IsUnlocked() = %v; expected %v", unlocked, false)
 	}
 
-	facade.Unlock("../../../../assets/onepassword_data", pass)
+	vault := domain.NewVault("../../../../assets/onepassword_data")
+	facade.Validate(vault)
+	facade.Unlock(vault, pass)
 	unlocked = facade.IsUnlocked()
 
 	if unlocked == false {
@@ -128,10 +155,18 @@ func TestIsUnlocked(t *testing.T) {
 func TestLock(t *testing.T) {
 	facade := setupVaultFacade()
 	pass := "freddy"
-	facade.Unlock("../../../../assets/onepassword_data", pass)
+	vault := domain.NewVault("../../../../assets/onepassword_data")
+	facade.Validate(vault)
+	facade.Unlock(vault, pass)
 
 	if !facade.IsUnlocked() {
 		t.Error("Unlock() should provide keys")
+	}
+
+	items := facade.GetItems(nil, "", false)
+
+	if len(items) == 0 {
+		t.Error("Unlock() should provide decoded items")
 	}
 
 	facade.Lock()
@@ -139,21 +174,48 @@ func TestLock(t *testing.T) {
 	if facade.IsUnlocked() {
 		t.Error("Lock() should clear keys")
 	}
+
+	items = facade.GetItems(nil, "", false)
+
+	if len(items) > 0 {
+		t.Error("Lock() should clear decoded items memory")
+	}
 }
 
 func TestUnlock(t *testing.T) {
 	facade := setupVaultFacade()
 	goodPass := "freddy"
 	badPass := ""
-	err := facade.Unlock("../../../../assets/onepassword_data", badPass)
+	vault := domain.NewVault("../../../../assets/onepassword_data")
+	facade.Validate(vault)
+	err := facade.Unlock(vault, badPass)
 
 	if err == nil {
 		t.Error("Unlock() should fail because of invalid password")
 	}
 
-	err = facade.Unlock("../../../../assets/onepassword_data", goodPass)
+	err = facade.Unlock(vault, goodPass)
 
 	if err != nil {
 		t.Error("Unlock() should pass because of valid password")
+	}
+}
+
+func TestValidate(t *testing.T) {
+	facade := setupVaultFacade()
+	correctPath := "../../../../assets/onepassword_data"
+	notVaultPath := "../../../../assets/empty"
+	vault := domain.NewVault(correctPath)
+	err := facade.Validate(vault)
+
+	if err != nil {
+		t.Error("Validate() should pass because of correct vault")
+	}
+
+	vault = domain.NewVault(notVaultPath)
+	err = facade.Validate(vault)
+
+	if err == nil {
+		t.Error("Validate() should fail because of invalid vault")
 	}
 }

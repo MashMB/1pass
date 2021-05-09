@@ -9,13 +9,17 @@ import (
 )
 
 type Updater interface {
-	CheckForUpdate() (*domain.UpdateInfo, error)
+	CheckForUpdate(timeout int64) (*domain.UpdateInfo, error)
 
-	DownloadFile(destination, url string) error
+	CheckTimestamp(dirPath string)
+
+	DownloadFile(destination, url string, timeout int64) error
 
 	ExtractArchive(src, dst string) error
 
 	ReplaceBinary(src string) error
+
+	ShouldCheck(period int, dirPath string) bool
 
 	ValidateChecksum(binary, file string) error
 }

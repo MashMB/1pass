@@ -5,7 +5,9 @@
 package domain
 
 type Config struct {
+	Timeout      int
 	UpdateNotify bool
+	UpdatePeriod int
 	Vault        string
 }
 
@@ -60,6 +62,7 @@ type SimpleItem struct {
 
 type UpdateInfo struct {
 	ArchiveUrl  string
+	Changelog   string
 	ChecksumUrl string
 	Newer       bool
 	Version     string
@@ -69,9 +72,11 @@ type Vault struct {
 	Path string
 }
 
-func NewConfig(updateNotify bool, vault string) *Config {
+func NewConfig(timeout, updatePeriod int, updateNotify bool, vault string) *Config {
 	return &Config{
+		Timeout:      timeout,
 		UpdateNotify: updateNotify,
+		UpdatePeriod: updatePeriod,
 		Vault:        vault,
 	}
 }
@@ -138,9 +143,10 @@ func NewSimpleItem(category *ItemCategory, title, uid string) *SimpleItem {
 	}
 }
 
-func NewUpdateInfo(archiveUrl, checksumUrl, version string, newer bool) *UpdateInfo {
+func NewUpdateInfo(archiveUrl, checksumUrl, changelog, version string, newer bool) *UpdateInfo {
 	return &UpdateInfo{
 		ArchiveUrl:  archiveUrl,
+		Changelog:   changelog,
 		ChecksumUrl: checksumUrl,
 		Newer:       newer,
 		Version:     version,

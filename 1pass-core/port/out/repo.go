@@ -9,19 +9,27 @@ import (
 )
 
 type ConfigRepo interface {
+	IsAvailable() bool
+
 	GetDefaultVault() string
 
+	GetTimeout() int
+
 	GetUpdateNotification() bool
+
+	GetUpdatePeriod() int
 
 	Save(config *domain.Config)
 }
 
 type ItemRepo interface {
-	FindByCategoryAndTrashed(category *domain.ItemCategory, trashed bool) []*domain.Item
+	FindByCategoryAndTitleAndTrashed(category *domain.ItemCategory, title string, trashed bool) []*domain.Item
 
 	FindFirstByUidAndTrashed(uid string, trashed bool) *domain.Item
 
 	LoadItems(vault *domain.Vault) []*domain.RawItem
+
+	RemoveItems()
 
 	StoreItems(items []*domain.Item)
 }

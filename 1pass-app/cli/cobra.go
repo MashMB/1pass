@@ -13,7 +13,9 @@ import (
 
 type cobraCli struct {
 	category   string
+	name       string
 	trashed    bool
+	vault      string
 	version    string
 	cliControl in.CliControl
 }
@@ -59,7 +61,10 @@ Whole update process:
 		Short: "Configure 1pass application",
 		Long: `Configure 1pass application. Configuration process is interactive - answer the questions. Available settings: 
 1. Configure default OPVault path.
-2. Configure update notifications.`,
+2. Configure update notifications.
+3. Configure HTTP timeout for update checking (in seconds).
+4. Configure update check interval (in days, 0 means check on every run).
+Detailed configuration manual can be found online: https://github.com/mashmb/1pass#Configuration`,
 		Run: func(cmd *cobra.Command, args []string) {
 			cli.cliControl.Configure()
 		},
@@ -74,60 +79,48 @@ Whole update process:
 	}
 
 	listCmd := &cobra.Command{
-		Use:   "list [OPVault]",
+		Use:   "list",
 		Short: "Get list of items stored in 1Passowrd OPVault format",
 		Long: `Get list of items stored in 1Passowrd OPVault format. Items will be displayd in form of table. UID value is 
-required to get item overview or details. If default OPVault was configured, [OPVault] argument is not required.`,
+required to get item overview or details. If default OPVault is not configured,  [-v, --vault] flag is needed. Run 
+'1pass list --help' for more info.`,
+		Args: cobra.NoArgs,
 		Run: func(cmd *cobra.Command, args []string) {
-			var vaultPath string
-
-			if len(args) > 0 {
-				vaultPath = args[0]
-			}
-
-			cli.cliControl.GetItems(vaultPath, cli.category, cli.trashed)
+			cli.cliControl.GetItems(cli.vault, cli.category, cli.name, cli.trashed)
 		},
 	}
 
+	listCmd.Flags().StringVarP(&cli.vault, "vault", "v", "", "OPVault path")
 	listCmd.Flags().StringVarP(&cli.category, "category", "c", "", "filtering over item category")
+	listCmd.Flags().StringVarP(&cli.name, "name", "n", "", "filtering over item name (title)")
 	listCmd.Flags().BoolVarP(&cli.trashed, "trashed", "t", false, "work on trashed items")
 
 	overviewCmd := &cobra.Command{
-		Use:   "overview [UID] [OPVault]",
+		Use:   "overview [UID]",
 		Short: "Overview single item stored in 1Password OPVault format",
 		Long: `Overview single item stored in 1Password OPVault format. Overview has no sensitive data like 
-passwords. If default OPVault was configured, [OPVault] argument is not required.`,
-		Args: cobra.MinimumNArgs(1),
+passwords. If default OPVault is not configured,  [-v, --vault] flag is needed. Run '1pass overview --help' for more info.`,
+		Args: cobra.ExactArgs(1),
 		Run: func(cmd *cobra.Command, args []string) {
-			var vaultPath string
-
-			if len(args) > 1 {
-				vaultPath = args[1]
-			}
-
-			cli.cliControl.GetItemOverview(vaultPath, args[0], cli.trashed)
+			cli.cliControl.GetItemOverview(cli.vault, args[0], cli.trashed)
 		},
 	}
 
+	overviewCmd.Flags().StringVarP(&cli.vault, "vault", "v", "", "OPVault path")
 	overviewCmd.Flags().BoolVarP(&cli.trashed, "trashed", "t", false, "search in trashed items")
 
 	detailsCmd := &cobra.Command{
-		Use:   "details [UID] [OPVault]",
+		Use:   "details [UID]",
 		Short: "Details of single item stored in 1Password OPVault format",
 		Long: `Details of single item stored in 1Password OPVault format. Details contains sensitive data 
-like passwords. If default OPVault was configured, [OPVault] argument is not required.`,
-		Args: cobra.MinimumNArgs(1),
+like passwords. If default OPVault is not configured,  [-v, --vault] flag is needed. Run '1pass details --help' for more info.`,
+		Args: cobra.ExactArgs(1),
 		Run: func(cmd *cobra.Command, args []string) {
-			var vaultPath string
-
-			if len(args) > 1 {
-				vaultPath = args[1]
-			}
-
-			cli.cliControl.GetItemDetails(vaultPath, args[0], cli.trashed)
+			cli.cliControl.GetItemDetails(cli.vault, args[0], cli.trashed)
 		},
 	}
 
+	detailsCmd.Flags().StringVarP(&cli.vault, "vault", "v", "", "OPVault path")
 	detailsCmd.Flags().BoolVarP(&cli.trashed, "trashed", "t", false, "search in trashed items")
 
 	versionCmd := &cobra.Command{

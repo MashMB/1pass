@@ -14,6 +14,23 @@ func setupFileConfigRepo() (*fileConfigRepo, *fileConfigRepo) {
 	return NewFileConfigRepo("../../../../../assets"), NewFileConfigRepo("")
 }
 
+func TestIsAvailable(t *testing.T) {
+	config, empty := setupFileConfigRepo()
+	expected := false
+	exist := empty.IsAvailable()
+
+	if exist != expected {
+		t.Errorf("FileExist() = %v; expected = %v", exist, expected)
+	}
+
+	expected = true
+	exist = config.IsAvailable()
+
+	if exist != expected {
+		t.Errorf("FileExist() = %v; expected = %v", exist, expected)
+	}
+}
+
 func TestGetDefaultVault(t *testing.T) {
 	config, empty := setupFileConfigRepo()
 	expected := "./assets/onepassword_data"
@@ -27,6 +44,23 @@ func TestGetDefaultVault(t *testing.T) {
 
 	if vault != "" {
 		t.Errorf("GetDefaultVault() = %v; expected = %v", vault, "")
+	}
+}
+
+func TestGetTimeout(t *testing.T) {
+	config, empty := setupFileConfigRepo()
+	expected := 2
+	timeout := empty.GetTimeout()
+
+	if timeout != expected {
+		t.Errorf("GetTimeout() = %d; expected = %d", timeout, expected)
+	}
+
+	expected = 10
+	timeout = config.GetTimeout()
+
+	if timeout != expected {
+		t.Errorf("GetTimeout() = %d; expected = %d", timeout, expected)
 	}
 }
 
@@ -47,6 +81,23 @@ func TestGetUpdateNotification(t *testing.T) {
 	}
 }
 
+func TestGetUpdatePeriod(t *testing.T) {
+	config, empty := setupFileConfigRepo()
+	expected := 1
+	period := empty.GetUpdatePeriod()
+
+	if period != expected {
+		t.Errorf("GetUpdatePeriod() = %d; expected = %d", period, expected)
+	}
+
+	expected = 7
+	period = config.GetUpdatePeriod()
+
+	if period != expected {
+		t.Errorf("GetUpdatePeriod() = %d; expected = %d", period, expected)
+	}
+}
+
 func TestLoadConfigFile(t *testing.T) {
 	config := loadConfigFile("")
 
@@ -64,7 +115,7 @@ func TestLoadConfigFile(t *testing.T) {
 func TestSave(t *testing.T) {
 	config, _ := setupFileConfigRepo()
 	expected := ""
-	conf := domain.NewConfig(false, "")
+	conf := domain.NewConfig(10, 7, false, "")
 	config.Save(conf)
 	vault := config.GetDefaultVault()
 

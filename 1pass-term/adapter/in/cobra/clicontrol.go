@@ -5,9 +5,11 @@
 package cobra
 
 import (
+	"errors"
 	"fmt"
 	"os"
 	"sort"
+	"strconv"
 	"strings"
 	"syscall"
 	"time"
@@ -37,7 +39,7 @@ func (ctrl *cobraCliControl) CheckForUpdate() {
 	config := ctrl.configFacade.GetConfig()
 
 	if config.UpdateNotify {
-		info, err := ctrl.updateFacade.CheckForUpdate()
+		info, err := ctrl.updateFacade.CheckForUpdate(false)
 
 		if err == nil {
 			msg := fmt.Sprintf("New version of 1pass is available (current: %v, available: %v). Run 'sudo 1pass update' to upgrade.\n",
@@ -51,8 +53,11 @@ func (ctrl *cobraCliControl) Configure() {
 	ctrl.CheckForUpdate()
 	var vault string
 	var notify string
+	var timeoutVal string
+	var periodVal string
 	config := ctrl.configFacade.GetConfig()
 
+	fmt.Println("Detailed configuration manual can be found online: https://github.com/mashmb/1pass#Configuration")
 	fmt.Println("Configuring 1pass:")
 	fmt.Print(fmt.Sprintf("  1. Default OPVault path (%v): ", config.Vault))
 	fmt.Scanln(&vault)
@@ -70,7 +75,53 @@ func (ctrl *cobraCliControl) Configure() {
 
 	config.UpdateNotify = notifyVal.GetValue()
 
+	fmt.Print(fmt.Sprintf("  3. Update HTTP timeout in seconds (%d) [2-15]: ", config.Timeout))
+	fmt.Scanln(&timeoutVal)
+	timeout, err := strconv.ParseInt(timeoutVal, 10, 64)
+
+	if err != nil {
+		err = errors.New("not a number")
+		fmt.Println(err)
+		os.Exit(1)
+	}
+
+	if timeout < 2 || timeout > 15 {
+		err = errors.New("out of range [2-15]")
+		fmt.Println(err)
+		os.Exit(1)
+	}
+
+	config.Timeout = int(timeout)
+
+	fmt.Print(fmt.Sprintf("  4. How often check for updates in days (%d) [>= 0]: ", config.UpdatePeriod))
+	fmt.Scanln(&periodVal)
+	period, err := strconv.ParseInt(periodVal, 10, 64)
+
+	if err != nil {
+		err = errors.New("not a number")
+		fmt.Println(err)
+		os.Exit(1)
+	}
+
+	if period < 0 {
+		err = errors.New("out of range [>= 0]")
+		fmt.Println(err)
+		os.Exit(1)
+	}
+
+	config.UpdatePeriod = int(period)
+
 	ctrl.configFacade.SaveConfig(config)
+	fmt.Println("1pass configured")
+}
+
+func (ctrl *cobraCliControl) FirstRun() {
+	if !ctrl.configFacade.IsConfigAvailable() {
+		fmt.Println("Running 1pass for the first time? Let's configure it!")
+		fmt.Println()
+		ctrl.Configure()
+		fmt.Println()
+	}
 }
 
 func (ctrl *cobraCliControl) GetCategories() {
@@ -92,10 +143,27 @@ func (ctrl *cobraCliControl) GetCategories() {
 }
 
 func (ctrl *cobraCliControl) GetItemDetails(vaultPath, uid string, trashed bool) {
+	ctrl.FirstRun()
 	ctrl.CheckForUpdate()
+	var vault *domain.Vault
+
+	if vaultPath != "" {
+		vault = domain.NewVault(vaultPath)
+	} else {
+		config := ctrl.configFacade.GetConfig()
+		vault = domain.NewVault(config.Vault)
+	}
+
+	err := ctrl.vaultFacade.Validate(vault)
+
+	if err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
+
 	fmt.Println("Password:")
 	password, err := term.ReadPassword(int(syscall.Stdin))
-	err = ctrl.vaultFacade.Unlock(vaultPath, string(password))
+	err = ctrl.vaultFacade.Unlock(vault, string(password))
 
 	if err != nil {
 		fmt.Println(err)
@@ -152,10 +220,27 @@ func (ctrl *cobraCliControl) GetItemDetails(vaultPath, uid string, trashed bool)
 }
 
 func (ctrl *cobraCliControl) GetItemOverview(vaultPath, uid string, trashed bool) {
+	ctrl.FirstRun()
 	ctrl.CheckForUpdate()
+	var vault *domain.Vault
+
+	if vaultPath != "" {
+		vault = domain.NewVault(vaultPath)
+	} else {
+		config := ctrl.configFacade.GetConfig()
+		vault = domain.NewVault(config.Vault)
+	}
+
+	err := ctrl.vaultFacade.Validate(vault)
+
+	if err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
+
 	fmt.Println("Password:")
 	password, err := term.ReadPassword(int(syscall.Stdin))
-	err = ctrl.vaultFacade.Unlock(vaultPath, string(password))
+	err = ctrl.vaultFacade.Unlock(vault, string(password))
 
 	if err != nil {
 		fmt.Println(err)
@@ -210,11 +295,28 @@ func (ctrl *cobraCliControl) GetItemOverview(vaultPath, uid string, trashed bool
 	}
 }
 
-func (ctrl *cobraCliControl) GetItems(vaultPath, category string, trashed bool) {
+func (ctrl *cobraCliControl) GetItems(vaultPath, category, title string, trashed bool) {
+	ctrl.FirstRun()
 	ctrl.CheckForUpdate()
+	var vault *domain.Vault
+
+	if vaultPath != "" {
+		vault = domain.NewVault(vaultPath)
+	} else {
+		config := ctrl.configFacade.GetConfig()
+		vault = domain.NewVault(config.Vault)
+	}
+
+	err := ctrl.vaultFacade.Validate(vault)
+
+	if err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
+
 	fmt.Println("Password:")
 	password, err := term.ReadPassword(int(syscall.Stdin))
-	err = ctrl.vaultFacade.Unlock(vaultPath, string(password))
+	err = ctrl.vaultFacade.Unlock(vault, string(password))
 
 	if err != nil {
 		fmt.Println(err)
@@ -237,29 +339,75 @@ func (ctrl *cobraCliControl) GetItems(vaultPath, category string, trashed bool) 
 		}
 	}
 
-	items := ctrl.vaultFacade.GetItems(cat, trashed)
+	title = strings.TrimSpace(title)
+	items := ctrl.vaultFacade.GetItems(cat, title, trashed)
 
-	for i, item := range items {
-		t.AppendRow(table.Row{i + 1, item.Uid, item.Category.GetName(), item.Title})
+	if len(items) > 0 {
+		for i, item := range items {
+			t.AppendRow(table.Row{i + 1, item.Uid, item.Category.GetName(), item.Title})
+		}
+
+		fmt.Println(t.Render())
+	} else {
+		msg := fmt.Sprintf("No results for search (category: %v, name: %v, trashed: %v)", category, title, trashed)
+		fmt.Println(msg)
 	}
-
-	fmt.Println(t.Render())
 }
 
 func (ctrl *cobraCliControl) Update() {
 	fmt.Println("Checking for 1pass application updates...")
 
-	info, err := ctrl.updateFacade.CheckForUpdate()
+	info, err := ctrl.updateFacade.CheckForUpdate(true)
 
 	if err != nil {
 		fmt.Println(err)
 		os.Exit(1)
 	}
 
-	msg := fmt.Sprintf("Updating 1pass application from version %v to %v...", domain.Version, info.Version)
+	msg := fmt.Sprintf("New version of 1pass is available (%v).\n\n%v\n", info.Version, info.Changelog)
+	fmt.Println(msg)
+	var permissionVal string
+	fmt.Println(fmt.Sprintf("Do you want to update now? (%v) [y - for yes/n - for no]: ", domain.LogicValEnum.No.GetName()))
+	fmt.Scanln(&permissionVal)
+	permission, err := domain.LogicValEnum.FromName(permissionVal)
+
+	if err != nil || permission == domain.LogicValEnum.No {
+		fmt.Println("Aborting update...")
+		os.Exit(1)
+	}
+
+	msg = fmt.Sprintf("Updating 1pass application from version %v to %v...", domain.Version, info.Version)
 	fmt.Println(msg)
 
-	if err := ctrl.updateFacade.Update(); err != nil {
+	stageInfo := func(step int) {
+		switch step {
+		case 1:
+			fmt.Println("  Creating update cache...")
+
+		case 2:
+			fmt.Println("  Downloading new version...")
+
+		case 3:
+			fmt.Println("  Downloading checksums...")
+
+		case 4:
+			fmt.Println("  Extracting downloaded files...")
+
+		case 5:
+			fmt.Println("  Validating checksums...")
+
+		case 6:
+			fmt.Println("  Replacing binary...")
+
+		case 7:
+			fmt.Println("  Cleaning update cache...")
+
+		default:
+			fmt.Println("  Unknown update stage")
+		}
+	}
+
+	if err := ctrl.updateFacade.Update(stageInfo); err != nil {
 		fmt.Println(err)
 		os.Exit(1)
 	}
