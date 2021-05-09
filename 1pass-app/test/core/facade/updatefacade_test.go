@@ -46,7 +46,7 @@ func TestCheckForUpdate(t *testing.T) {
 	if isOnline() {
 		facade := setupUpdateFacade()
 		expected := domain.ErrNoUpdate
-		_, err := facade.CheckForUpdate()
+		_, err := facade.CheckForUpdate(false)
 
 		if err != expected {
 			t.Errorf("CheckForUpdate() = %v; expected = %v", err, expected)

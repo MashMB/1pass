@@ -37,7 +37,7 @@ func TestCheckForUpdate(t *testing.T) {
 		service := setupUpdateService()
 		expected := domain.ErrNoUpdate
 		timeout := 5
-		_, err := service.CheckForUpdate(0, timeout, "../../../../assets")
+		_, err := service.CheckForUpdate(0, timeout, false, "../../../../assets")
 
 		if err != expected {
 			t.Errorf("CheckForUpdate() = %v; expected = %v", err, expected)
