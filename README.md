@@ -66,6 +66,52 @@ Whole update process:
 **IMPORTANT**: updates are in real life `testing` stage, it works fine in test environment but practice shows that this 
 type of operations needs to be tested on multiple devices
 
+## Configuration
+
+From release 1.1.0, application has implemented interactive configuration tool. From release 1.2.0, application is 
+prompting user for configuration on first run (the most important is default OPVault path to skip writing it ad-hoc). 
+Whole configuration process relies on questions answering. 
+
+This is detailed description of all available settings:
+
+```
+1. Default OPVault path ([previous_value]): [value]
+
+This setting allows to set default OPVault path. Configured path will be used by default if flag -v is not given to 
+command.
+
+Default value: ""
+```
+
+```
+2. Update notifications? ([previous_value]) [y - for yes/n - for no]: [value]
+
+Decide if update notifications should be displayed. Type 'y' if yes or 'n' if no.
+
+Default value: y
+```
+
+```
+3. Update HTTP timeout in secods ([previous_value]) [2-15]: [value]
+
+Set HTTP timeout for updates. This setting defines how long application should try to connect with GitHub for update 
+check. Slower internet connection will need bigger value. Value should be in range from 2 to 15 seconds.
+
+Default value: 2
+```
+
+```
+4. How often check for updates in days ([previous_value]) [>= 0]: [value]
+
+Set how often application should check for updates. Value is specified in days and should be bigger or equal to 0. If 0 
+is set, application will check for update on every run.
+
+Default value: 1
+```
+
+**IMPORTANT:** note that if wrong value is specified (value not in range, etc.), application will abort configuration 
+and whole process will be repeated form beginning
+
 ## Usage
 
 1Pass is a command line tool, so usage is limited to command variations. First of all type:
