@@ -51,7 +51,7 @@ type KeyService interface {
 }
 
 type UpdateService interface {
-	CheckForUpdate(timeout int) (*domain.UpdateInfo, error)
+	CheckForUpdate(period, timeout int, configDir string) (*domain.UpdateInfo, error)
 
 	Update(timeout int) error
 }

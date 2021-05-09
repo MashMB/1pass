@@ -10,12 +10,14 @@ import (
 )
 
 type dfltUpdateFacade struct {
+	configDir     string
 	configService service.ConfigService
 	updateService service.UpdateService
 }
 
-func NewDfltUpdateFacade(configService service.ConfigService, updateService service.UpdateService) *dfltUpdateFacade {
+func NewDfltUpdateFacade(configDir string, configService service.ConfigService, updateService service.UpdateService) *dfltUpdateFacade {
 	return &dfltUpdateFacade{
+		configDir:     configDir,
 		configService: configService,
 		updateService: updateService,
 	}
@@ -24,7 +26,7 @@ func NewDfltUpdateFacade(configService service.ConfigService, updateService serv
 func (f *dfltUpdateFacade) CheckForUpdate() (*domain.UpdateInfo, error) {
 	config := f.configService.GetConfig()
 
-	return f.updateService.CheckForUpdate(config.Timeout)
+	return f.updateService.CheckForUpdate(config.UpdatePeriod, config.Timeout, f.configDir)
 }
 
 func (f *dfltUpdateFacade) Update() error {
