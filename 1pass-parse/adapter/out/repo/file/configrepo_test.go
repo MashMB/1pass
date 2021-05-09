@@ -64,6 +64,23 @@ func TestGetUpdateNotification(t *testing.T) {
 	}
 }
 
+func TestGetUpdatePeriod(t *testing.T) {
+	config, empty := setupFileConfigRepo()
+	expected := 1
+	period := empty.GetUpdatePeriod()
+
+	if period != expected {
+		t.Errorf("GetUpdatePeriod() = %d; expected = %d", period, expected)
+	}
+
+	expected = 7
+	period = config.GetUpdatePeriod()
+
+	if period != expected {
+		t.Errorf("GetUpdatePeriod() = %d; expected = %d", period, expected)
+	}
+}
+
 func TestLoadConfigFile(t *testing.T) {
 	config := loadConfigFile("")
 
@@ -81,7 +98,7 @@ func TestLoadConfigFile(t *testing.T) {
 func TestSave(t *testing.T) {
 	config, _ := setupFileConfigRepo()
 	expected := ""
-	conf := domain.NewConfig(10, false, "")
+	conf := domain.NewConfig(10, 7, false, "")
 	config.Save(conf)
 	vault := config.GetDefaultVault()
 
