@@ -14,6 +14,23 @@ func setupFileConfigRepo() (*fileConfigRepo, *fileConfigRepo) {
 	return NewFileConfigRepo("../../../../../assets"), NewFileConfigRepo("")
 }
 
+func TestIsAvailable(t *testing.T) {
+	config, empty := setupFileConfigRepo()
+	expected := false
+	exist := empty.IsAvailable()
+
+	if exist != expected {
+		t.Errorf("FileExist() = %v; expected = %v", exist, expected)
+	}
+
+	expected = true
+	exist = config.IsAvailable()
+
+	if exist != expected {
+		t.Errorf("FileExist() = %v; expected = %v", exist, expected)
+	}
+}
+
 func TestGetDefaultVault(t *testing.T) {
 	config, empty := setupFileConfigRepo()
 	expected := "./assets/onepassword_data"
