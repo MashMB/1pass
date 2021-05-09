@@ -39,7 +39,7 @@ func (ctrl *cobraCliControl) CheckForUpdate() {
 	config := ctrl.configFacade.GetConfig()
 
 	if config.UpdateNotify {
-		info, err := ctrl.updateFacade.CheckForUpdate()
+		info, err := ctrl.updateFacade.CheckForUpdate(false)
 
 		if err == nil {
 			msg := fmt.Sprintf("New version of 1pass is available (current: %v, available: %v). Run 'sudo 1pass update' to upgrade.\n",
@@ -350,7 +350,10 @@ func (ctrl *cobraCliControl) Update() {
 		os.Exit(1)
 	}
 
-	msg := fmt.Sprintf("Updating 1pass application from version %v to %v...", domain.Version, info.Version)
+	msg := fmt.Sprintf("New version of 1pass is available (%v).\n\n%v\n", info.Version, info.Changelog)
+	fmt.Println(msg)
+
+	msg = fmt.Sprintf("Updating 1pass application from version %v to %v...", domain.Version, info.Version)
 	fmt.Println(msg)
 
 	if err := ctrl.updateFacade.Update(); err != nil {
