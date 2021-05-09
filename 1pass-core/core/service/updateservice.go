@@ -22,7 +22,13 @@ func NewDfltUpdateService(updater out.Updater) *dfltUpdateService {
 	}
 }
 
-func (s *dfltUpdateService) CheckForUpdate(timeout int) (*domain.UpdateInfo, error) {
+func (s *dfltUpdateService) CheckForUpdate(period, timeout int, configDir string) (*domain.UpdateInfo, error) {
+	shouldCheck := s.updater.ShouldCheck(period, configDir)
+
+	if !shouldCheck {
+		return nil, domain.ErrNoUpdate
+	}
+
 	info, err := s.updater.CheckForUpdate(int64(timeout))
 
 	if err != nil {
@@ -30,8 +36,12 @@ func (s *dfltUpdateService) CheckForUpdate(timeout int) (*domain.UpdateInfo, err
 	}
 
 	if info == nil || !info.Newer {
+		s.updater.CheckTimestamp(configDir)
+
 		return nil, domain.ErrNoUpdate
 	}
+
+	s.updater.CheckTimestamp(configDir)
 
 	return info, nil
 }
