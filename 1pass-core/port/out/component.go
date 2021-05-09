@@ -17,5 +17,7 @@ type Updater interface {
 
 	ReplaceBinary(src string) error
 
+	ShouldCheck(period int, dirPath string) bool
+
 	ValidateChecksum(binary, file string) error
 }

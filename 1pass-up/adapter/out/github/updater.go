@@ -12,6 +12,7 @@ import (
 	"encoding/json"
 	"io"
 	"io/ioutil"
+	"math"
 	"net"
 	"net/http"
 	"os"
@@ -184,6 +185,37 @@ func (up *githubUpdater) ReplaceBinary(src string) error {
 	}
 
 	return nil
+}
+
+func (up *githubUpdater) ShouldCheck(period int, dirPath string) bool {
+	should := false
+	lastCheckFile := filepath.Join(dirPath, domain.LastCheckFile)
+
+	if _, err := os.Stat(lastCheckFile); err != nil {
+		should = true
+	}
+
+	file, err := ioutil.ReadFile(lastCheckFile)
+
+	if err != nil {
+		should = true
+	}
+
+	savedVal, err := strconv.ParseInt(strings.TrimSpace(string(file)), 10, 64)
+
+	if err != nil {
+		should = true
+	}
+
+	timestamp := time.Unix(savedVal, 0)
+	now := time.Now()
+	between := math.Abs(now.Sub(timestamp).Hours() / 24)
+
+	if int(between) >= period {
+		should = true
+	}
+
+	return should
 }
 
 func (up *githubUpdater) ValidateChecksum(binary, file string) error {
