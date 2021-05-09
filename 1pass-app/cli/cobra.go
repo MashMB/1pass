@@ -61,7 +61,10 @@ Whole update process:
 		Short: "Configure 1pass application",
 		Long: `Configure 1pass application. Configuration process is interactive - answer the questions. Available settings: 
 1. Configure default OPVault path.
-2. Configure update notifications.`,
+2. Configure update notifications.
+3. Configure HTTP timeout for update checking (in seconds).
+4. Configure update check interval (in days, 0 means check on every run).
+Detailed configuration manual can be found online: https://github.com/mashmb/1pass#Configuration`,
 		Run: func(cmd *cobra.Command, args []string) {
 			cli.cliControl.Configure()
 		},
