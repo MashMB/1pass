@@ -4,12 +4,14 @@ History of **1Pass** releases with changes description.
 
 ## Release 1.2.0
 
+- [CLI] Commands that use default OPVault path (`list`, `overview` and `details`) will prompt for configuration on first run
 - [CLI] `update` command wants user confirmation when new version is available
 - [CLI] Display changelog of new version on `update` command
 - [CLI] Force update check on `update` command
 - [CLI] OPVault path as `list`, `overview` and `details` commands flag (`-v [path]`)
 - [CLI] No results message for filtering in `list` command
 - [CLI] `list` command with items filtering over title (`-n` flag)
+- [API] Check if configuration is available (already exists)
 - [API] Force update checking
 - [API] Get new release changelog from GitHub during update check
 - [API] Check for update only once per time period
