@@ -76,11 +76,6 @@ func (f *dfltVaultFacade) Unlock(vault *domain.Vault, password string) error {
 }
 
 func (f *dfltVaultFacade) Validate(vault *domain.Vault) error {
-	if vault == nil {
-		config := f.configService.GetConfig()
-		vault = domain.NewVault(config.Vault)
-	}
-
 	if err := f.vaultService.ValidateVault(vault); err != nil {
 		return err
 	}

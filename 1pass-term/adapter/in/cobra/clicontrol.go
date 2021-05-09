@@ -137,6 +137,9 @@ func (ctrl *cobraCliControl) GetItemDetails(vaultPath, uid string, trashed bool)
 
 	if vaultPath != "" {
 		vault = domain.NewVault(vaultPath)
+	} else {
+		config := ctrl.configFacade.GetConfig()
+		vault = domain.NewVault(config.Vault)
 	}
 
 	err := ctrl.vaultFacade.Validate(vault)
@@ -210,6 +213,9 @@ func (ctrl *cobraCliControl) GetItemOverview(vaultPath, uid string, trashed bool
 
 	if vaultPath != "" {
 		vault = domain.NewVault(vaultPath)
+	} else {
+		config := ctrl.configFacade.GetConfig()
+		vault = domain.NewVault(config.Vault)
 	}
 
 	err := ctrl.vaultFacade.Validate(vault)
@@ -282,6 +288,9 @@ func (ctrl *cobraCliControl) GetItems(vaultPath, category, title string, trashed
 
 	if vaultPath != "" {
 		vault = domain.NewVault(vaultPath)
+	} else {
+		config := ctrl.configFacade.GetConfig()
+		vault = domain.NewVault(config.Vault)
 	}
 
 	err := ctrl.vaultFacade.Validate(vault)
