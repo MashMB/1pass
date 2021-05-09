@@ -20,6 +20,16 @@ func setupConfigService() coreservice.ConfigService {
 	return coreservice.NewDfltConfigService(configRepo)
 }
 
+func TestIsConfigAvailable(t *testing.T) {
+	service := setupConfigService()
+	expected := true
+	available := service.IsConfigAvailable()
+
+	if available != expected {
+		t.Errorf("IsConfigAvailable() = %v; expected = %v", available, expected)
+	}
+}
+
 func TestGetConfig(t *testing.T) {
 	service := setupConfigService()
 	config := service.GetConfig()
