@@ -9,6 +9,8 @@ type CliControl interface {
 
 	Configure()
 
+	FirstRun()
+
 	GetCategories()
 
 	GetItemDetails(vaultPath, uid string, trashed bool)

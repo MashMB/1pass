@@ -111,6 +111,16 @@ func (ctrl *cobraCliControl) Configure() {
 	config.UpdatePeriod = int(period)
 
 	ctrl.configFacade.SaveConfig(config)
+	fmt.Println("1pass configured")
+}
+
+func (ctrl *cobraCliControl) FirstRun() {
+	if !ctrl.configFacade.IsConfigAvailable() {
+		fmt.Println("Running 1pass for the first time? Let's configure it!")
+		fmt.Println()
+		ctrl.Configure()
+		fmt.Println()
+	}
 }
 
 func (ctrl *cobraCliControl) GetCategories() {
@@ -132,6 +142,7 @@ func (ctrl *cobraCliControl) GetCategories() {
 }
 
 func (ctrl *cobraCliControl) GetItemDetails(vaultPath, uid string, trashed bool) {
+	ctrl.FirstRun()
 	ctrl.CheckForUpdate()
 	var vault *domain.Vault
 
@@ -208,6 +219,7 @@ func (ctrl *cobraCliControl) GetItemDetails(vaultPath, uid string, trashed bool)
 }
 
 func (ctrl *cobraCliControl) GetItemOverview(vaultPath, uid string, trashed bool) {
+	ctrl.FirstRun()
 	ctrl.CheckForUpdate()
 	var vault *domain.Vault
 
@@ -283,6 +295,7 @@ func (ctrl *cobraCliControl) GetItemOverview(vaultPath, uid string, trashed bool
 }
 
 func (ctrl *cobraCliControl) GetItems(vaultPath, category, title string, trashed bool) {
+	ctrl.FirstRun()
 	ctrl.CheckForUpdate()
 	var vault *domain.Vault
 
