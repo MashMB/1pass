@@ -15,5 +15,5 @@ const (
 	LastCheckFile   string = "lastcheck"
 	ProfileDir      string = "default"
 	ProfileFile     string = "profile.js"
-	Version         string = "1.1.0"
+	Version         string = "1.2.0"
 )
