@@ -29,7 +29,7 @@ func setupUpdateFacade() corefacade.UpdateFacade {
 	configService = service.NewDfltConfigService(configRepo)
 	updateService = service.NewDfltUpdateService(updater)
 
-	return corefacade.NewDfltUpdateFacade(configService, updateService)
+	return corefacade.NewDfltUpdateFacade("../../../../assets", configService, updateService)
 }
 
 func isOnline() bool {
