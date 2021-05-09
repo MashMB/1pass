@@ -2,7 +2,7 @@
 
 History of **1Pass** releases with changes description.
 
-## Release 1.2.0
+## Release 1.2.0 [09.05.2021]
 
 - [CLI] Display application update stages
 - [CLI] Commands that use default OPVault path (`list`, `overview` and `details`) will prompt for configuration on first run
