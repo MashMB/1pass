@@ -60,7 +60,7 @@ func TestUpdate(t *testing.T) {
 	if isOnline() {
 		facade := setupUpdateFacade()
 		expected := domain.ErrNoUpdate
-		err := facade.Update()
+		err := facade.Update(nil)
 
 		if err != expected {
 			t.Errorf("Update() = %v; expected = %v", err, expected)

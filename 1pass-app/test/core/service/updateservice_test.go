@@ -52,7 +52,7 @@ func TestUpdate(t *testing.T) {
 		service := setupUpdateService()
 		expected := domain.ErrNoUpdate
 		timeout := 5
-		err := service.Update(timeout)
+		err := service.Update(timeout, nil)
 
 		if err != expected {
 			t.Errorf("Update() = %v; expected = %v", err, expected)
