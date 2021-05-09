@@ -379,7 +379,35 @@ func (ctrl *cobraCliControl) Update() {
 	msg = fmt.Sprintf("Updating 1pass application from version %v to %v...", domain.Version, info.Version)
 	fmt.Println(msg)
 
-	if err := ctrl.updateFacade.Update(); err != nil {
+	stageInfo := func(step int) {
+		switch step {
+		case 1:
+			fmt.Println("  Creating update cache...")
+
+		case 2:
+			fmt.Println("  Downloading new version...")
+
+		case 3:
+			fmt.Println("  Downloading checksums...")
+
+		case 4:
+			fmt.Println("  Extracting downloaded files...")
+
+		case 5:
+			fmt.Println("  Validating checksums...")
+
+		case 6:
+			fmt.Println("  Replacing binary...")
+
+		case 7:
+			fmt.Println("  Cleaning update cache...")
+
+		default:
+			fmt.Println("  Unknown update stage")
+		}
+	}
+
+	if err := ctrl.updateFacade.Update(stageInfo); err != nil {
 		fmt.Println(err)
 		os.Exit(1)
 	}
