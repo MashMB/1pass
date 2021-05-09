@@ -352,6 +352,15 @@ func (ctrl *cobraCliControl) Update() {
 
 	msg := fmt.Sprintf("New version of 1pass is available (%v).\n\n%v\n", info.Version, info.Changelog)
 	fmt.Println(msg)
+	var permissionVal string
+	fmt.Println(fmt.Sprintf("Do you want to update now? (%v) [y - for yes/n - for no]: ", domain.LogicValEnum.No.GetName()))
+	fmt.Scanln(&permissionVal)
+	permission, err := domain.LogicValEnum.FromName(permissionVal)
+
+	if err != nil || permission == domain.LogicValEnum.No {
+		fmt.Println("Aborting update...")
+		os.Exit(1)
+	}
 
 	msg = fmt.Sprintf("Updating 1pass application from version %v to %v...", domain.Version, info.Version)
 	fmt.Println(msg)
