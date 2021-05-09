@@ -92,7 +92,7 @@ func (ctrl *cobraCliControl) Configure() {
 
 	config.Timeout = int(timeout)
 
-	fmt.Print(fmt.Sprintf("  4. How often check for updates in days (%d) [>= 1]: ", config.UpdatePeriod))
+	fmt.Print(fmt.Sprintf("  4. How often check for updates in days (%d) [>= 0]: ", config.UpdatePeriod))
 	fmt.Scanln(&periodVal)
 	period, err := strconv.ParseInt(periodVal, 10, 64)
 
@@ -102,8 +102,8 @@ func (ctrl *cobraCliControl) Configure() {
 		os.Exit(1)
 	}
 
-	if period < 1 {
-		err = errors.New("out of range [>= 1]")
+	if period < 0 {
+		err = errors.New("out of range [>= 0]")
 		fmt.Println(err)
 		os.Exit(1)
 	}
