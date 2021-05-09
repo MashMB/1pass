@@ -10,6 +10,7 @@ import (
 	"crypto/md5"
 	"encoding/hex"
 	"encoding/json"
+	"fmt"
 	"io"
 	"io/ioutil"
 	"math"
@@ -100,6 +101,17 @@ func (up *githubUpdater) CheckForUpdate(timeout int64) (*domain.UpdateInfo, erro
 	}
 
 	return domain.NewUpdateInfo(archiveUrl, checksumUrl, version, newer), nil
+}
+
+func (up *githubUpdater) CheckTimestamp(dirPath string) {
+	timestamp := time.Now().Unix()
+	file := filepath.Join(dirPath, domain.LastCheckFile)
+
+	if _, err := os.Stat(dirPath); err != nil {
+		os.MkdirAll(dirPath, 0700)
+	}
+
+	ioutil.WriteFile(file, []byte(fmt.Sprint(timestamp)), 0644)
 }
 
 func (up *githubUpdater) DownloadFile(destination, url string, timeout int64) error {

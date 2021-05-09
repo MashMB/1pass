@@ -11,6 +11,8 @@ import (
 type Updater interface {
 	CheckForUpdate(timeout int64) (*domain.UpdateInfo, error)
 
+	CheckTimestamp(dirPath string)
+
 	DownloadFile(destination, url string, timeout int64) error
 
 	ExtractArchive(src, dst string) error
