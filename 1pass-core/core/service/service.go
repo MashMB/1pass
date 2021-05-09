@@ -9,6 +9,8 @@ import (
 )
 
 type ConfigService interface {
+	IsConfigAvailable() bool
+
 	GetConfig() *domain.Config
 
 	SaveConfig(config *domain.Config)

@@ -19,6 +19,10 @@ func NewDfltConfigService(configRepo out.ConfigRepo) *dfltConfigService {
 	}
 }
 
+func (s *dfltConfigService) IsConfigAvailable() bool {
+	return s.configRepo.IsAvailable()
+}
+
 func (s *dfltConfigService) GetConfig() *domain.Config {
 	notification := s.configRepo.GetUpdateNotification()
 	period := s.configRepo.GetUpdatePeriod()
