@@ -73,6 +73,7 @@ func (up *githubUpdater) CheckForUpdate(timeout int64) (*domain.UpdateInfo, erro
 	}
 
 	latestJson := bodyJson[0].(map[string]interface{})
+	changelog := latestJson["body"].(string)
 	version := latestJson["tag_name"].(string)
 	newer := false
 	var archiveUrl string
@@ -100,7 +101,7 @@ func (up *githubUpdater) CheckForUpdate(timeout int64) (*domain.UpdateInfo, erro
 		newer = true
 	}
 
-	return domain.NewUpdateInfo(archiveUrl, checksumUrl, version, newer), nil
+	return domain.NewUpdateInfo(archiveUrl, checksumUrl, changelog, version, newer), nil
 }
 
 func (up *githubUpdater) CheckTimestamp(dirPath string) {

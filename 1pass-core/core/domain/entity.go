@@ -62,6 +62,7 @@ type SimpleItem struct {
 
 type UpdateInfo struct {
 	ArchiveUrl  string
+	Changelog   string
 	ChecksumUrl string
 	Newer       bool
 	Version     string
@@ -142,9 +143,10 @@ func NewSimpleItem(category *ItemCategory, title, uid string) *SimpleItem {
 	}
 }
 
-func NewUpdateInfo(archiveUrl, checksumUrl, version string, newer bool) *UpdateInfo {
+func NewUpdateInfo(archiveUrl, checksumUrl, changelog, version string, newer bool) *UpdateInfo {
 	return &UpdateInfo{
 		ArchiveUrl:  archiveUrl,
+		Changelog:   changelog,
 		ChecksumUrl: checksumUrl,
 		Newer:       newer,
 		Version:     version,
