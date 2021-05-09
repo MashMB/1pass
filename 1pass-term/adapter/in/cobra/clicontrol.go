@@ -57,6 +57,7 @@ func (ctrl *cobraCliControl) Configure() {
 	var periodVal string
 	config := ctrl.configFacade.GetConfig()
 
+	fmt.Println("Detailed configuration manual can be found online: https://github.com/mashmb/1pass#Configuration")
 	fmt.Println("Configuring 1pass:")
 	fmt.Print(fmt.Sprintf("  1. Default OPVault path (%v): ", config.Vault))
 	fmt.Scanln(&vault)
