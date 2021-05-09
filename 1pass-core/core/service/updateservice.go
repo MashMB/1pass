@@ -48,7 +48,7 @@ func (s *dfltUpdateService) CheckForUpdate(period, timeout int, force bool, conf
 	return info, nil
 }
 
-func (s *dfltUpdateService) Update(timeout int) error {
+func (s *dfltUpdateService) Update(timeout int, stage func(int)) error {
 	info, err := s.updater.CheckForUpdate(int64(timeout))
 
 	if err != nil {
@@ -62,20 +62,27 @@ func (s *dfltUpdateService) Update(timeout int) error {
 	if !info.Newer {
 		return domain.ErrNoUpdate
 	} else {
+		stage(1)
+
 		if err := os.MkdirAll(domain.CacheDir, 0700); err != nil {
 			return err
 		}
 
 		archive := filepath.Join(domain.CacheDir, domain.Archive)
 		checksum := filepath.Join(domain.CacheDir, domain.Checksum)
+		stage(2)
 
 		if err := s.updater.DownloadFile(archive, info.ArchiveUrl, int64(timeout)); err != nil {
 			return err
 		}
 
+		stage(3)
+
 		if err := s.updater.DownloadFile(checksum, info.ChecksumUrl, int64(timeout)); err != nil {
 			return err
 		}
+
+		stage(4)
 
 		if err := s.updater.ExtractArchive(archive, domain.CacheDir); err != nil {
 			return err
@@ -83,13 +90,19 @@ func (s *dfltUpdateService) Update(timeout int) error {
 
 		binary := filepath.Join(domain.CacheDir, domain.AppName)
 
+		stage(5)
+
 		if err := s.updater.ValidateChecksum(binary, checksum); err != nil {
 			return err
 		}
 
+		stage(6)
+
 		if err := s.updater.ReplaceBinary(binary); err != nil {
 			return err
 		}
+
+		stage(7)
 
 		if err := os.RemoveAll(domain.CacheDir); err != nil {
 			return err

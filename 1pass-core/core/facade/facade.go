@@ -33,5 +33,5 @@ type VaultFacade interface {
 type UpdateFacade interface {
 	CheckForUpdate(force bool) (*domain.UpdateInfo, error)
 
-	Update() error
+	Update(stage func(int)) error
 }

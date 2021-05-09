@@ -29,8 +29,8 @@ func (f *dfltUpdateFacade) CheckForUpdate(force bool) (*domain.UpdateInfo, error
 	return f.updateService.CheckForUpdate(config.UpdatePeriod, config.Timeout, force, f.configDir)
 }
 
-func (f *dfltUpdateFacade) Update() error {
+func (f *dfltUpdateFacade) Update(stage func(int)) error {
 	config := f.configService.GetConfig()
 
-	return f.updateService.Update(config.Timeout)
+	return f.updateService.Update(config.Timeout, stage)
 }

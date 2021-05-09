@@ -55,7 +55,7 @@ type KeyService interface {
 type UpdateService interface {
 	CheckForUpdate(period, timeout int, force bool, configDir string) (*domain.UpdateInfo, error)
 
-	Update(timeout int) error
+	Update(timeout int, stage func(int)) error
 }
 
 type VaultService interface {
