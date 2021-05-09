@@ -49,6 +49,10 @@ func loadConfigFile(configDir string) map[string]interface{} {
 	return config
 }
 
+func (repo *fileConfigRepo) IsAvailable() bool {
+	return len(repo.config) > 0
+}
+
 func (repo *fileConfigRepo) GetDefaultVault() string {
 	var vault string
 

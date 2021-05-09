@@ -9,6 +9,8 @@ import (
 )
 
 type ConfigRepo interface {
+	IsAvailable() bool
+
 	GetDefaultVault() string
 
 	GetTimeout() int
