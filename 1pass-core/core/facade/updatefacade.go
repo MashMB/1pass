@@ -23,10 +23,10 @@ func NewDfltUpdateFacade(configDir string, configService service.ConfigService, 
 	}
 }
 
-func (f *dfltUpdateFacade) CheckForUpdate() (*domain.UpdateInfo, error) {
+func (f *dfltUpdateFacade) CheckForUpdate(force bool) (*domain.UpdateInfo, error) {
 	config := f.configService.GetConfig()
 
-	return f.updateService.CheckForUpdate(config.UpdatePeriod, config.Timeout, f.configDir)
+	return f.updateService.CheckForUpdate(config.UpdatePeriod, config.Timeout, force, f.configDir)
 }
 
 func (f *dfltUpdateFacade) Update() error {

@@ -343,7 +343,7 @@ func (ctrl *cobraCliControl) GetItems(vaultPath, category, title string, trashed
 func (ctrl *cobraCliControl) Update() {
 	fmt.Println("Checking for 1pass application updates...")
 
-	info, err := ctrl.updateFacade.CheckForUpdate()
+	info, err := ctrl.updateFacade.CheckForUpdate(true)
 
 	if err != nil {
 		fmt.Println(err)
