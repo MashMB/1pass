@@ -1,3 +1,4 @@
 opvault: ./assets/onepassword_data
 timeout: 10
 update-notification: false
+update-period: 7
