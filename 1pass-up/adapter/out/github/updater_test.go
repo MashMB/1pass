@@ -7,7 +7,10 @@ package github
 import (
 	"net/http"
 	"os"
+	"path/filepath"
 	"testing"
+
+	"github.com/mashmb/1pass/1pass-core/core/domain"
 )
 
 func setupGithubUpdater() *githubUpdater {
@@ -44,6 +47,17 @@ func TestCheckForUpdate(t *testing.T) {
 		}
 	} else {
 		t.Log("CheckForUpdate() no internet connection")
+	}
+}
+
+func TestCheckTimestamp(t *testing.T) {
+	updater := setupGithubUpdater()
+	dirPath := "../../../../assets"
+	file := filepath.Join(dirPath, domain.LastCheckFile)
+	updater.CheckTimestamp(dirPath)
+
+	if _, err := os.Stat(file); err != nil {
+		t.Error("CheckTimestamp() should create or update the file")
 	}
 }
 
@@ -114,6 +128,23 @@ func TestExtractArchive(t *testing.T) {
 		}
 	} else {
 		t.Log("ExtractArchive() no internet connection")
+	}
+}
+
+func TestShouldCheck(t *testing.T) {
+	updater := setupGithubUpdater()
+	expected := false
+	should := updater.ShouldCheck(10000, "../../../../assets")
+
+	if should != expected {
+		t.Errorf("ShouldCheck() = %v; expected = %v", should, expected)
+	}
+
+	expected = true
+	should = updater.ShouldCheck(0, "../../../../assets")
+
+	if should != expected {
+		t.Errorf("ShouldCheck() = %v; expected = %v", should, expected)
 	}
 }
 
