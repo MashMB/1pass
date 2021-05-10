@@ -11,7 +11,7 @@ import (
 )
 
 func setupFileItemRepo() *fileItemRepo {
-	vault := domain.NewVault("../../../../../assets/onepassword_data")
+	vault := domain.NewVault("../../../assets/onepassword_data")
 	repo := NewFileItemRepo()
 	items := make([]*domain.Item, 0)
 	rawItems := repo.LoadItems(vault)
@@ -90,7 +90,7 @@ func TestFindFirtByUidAndTrashed(t *testing.T) {
 
 func TestLoadItems(t *testing.T) {
 	repo := NewFileItemRepo()
-	vault := domain.NewVault("../../../../../assets/onepassword_data")
+	vault := domain.NewVault("../../../assets/onepassword_data")
 	expected := 29
 	items := repo.LoadItems(vault)
 
