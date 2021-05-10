@@ -28,8 +28,10 @@ func (gui *GocuiGui) Run() {
 	}
 
 	defer ui.Close()
+	onepass := newOnepassWidget()
+	ui.SetManager(onepass)
 
-	if err := ui.SetKeybinding("", gocui.KeyCtrlQ, gocui.ModNone, gui.quit); err != nil {
+	if err := ui.SetKeybinding("", 'q', gocui.ModNone, gui.quit); err != nil {
 		log.Fatalln(err)
 	}
 
