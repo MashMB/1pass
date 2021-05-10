@@ -10,6 +10,7 @@ import (
 	"path/filepath"
 
 	"github.com/mashmb/1pass/1pass-app/cli"
+	"github.com/mashmb/1pass/1pass-app/gui"
 	"github.com/mashmb/1pass/1pass-core/core/domain"
 	"github.com/mashmb/1pass/1pass-core/core/facade"
 	"github.com/mashmb/1pass/1pass-core/core/service"
@@ -66,6 +67,7 @@ func main() {
 
 	cliControl = cobra.NewCobraCliControl(configFacade, updateFacade, vaultFacade)
 
-	cobraCli := cli.NewCobraCli(domain.Version, cliControl)
+	gui := gui.NewGocuiGui()
+	cobraCli := cli.NewCobraCli(domain.Version, gui, cliControl)
 	cobraCli.Run()
 }
