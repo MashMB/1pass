@@ -11,8 +11,8 @@ import (
 	corefacade "github.com/mashmb/1pass/1pass-core/core/facade"
 	"github.com/mashmb/1pass/1pass-core/core/service"
 	"github.com/mashmb/1pass/1pass-core/port/out"
-	"github.com/mashmb/1pass/1pass-parse/adapter/out/repo/file"
-	"github.com/mashmb/1pass/1pass-parse/adapter/out/util/crypto"
+	"github.com/mashmb/1pass/1pass-parse/repo/file"
+	"github.com/mashmb/1pass/1pass-parse/util/pbkdf2"
 )
 
 func setupVaultFacade() corefacade.VaultFacade {
@@ -27,7 +27,7 @@ func setupVaultFacade() corefacade.VaultFacade {
 	var vaultService service.VaultService
 
 	configRepo = file.NewFileConfigRepo("../../../../assets/1pass.yml")
-	cryptoUtils = crypto.NewPbkdf2CryptoUtils()
+	cryptoUtils = pbkdf2.NewPbkdf2CryptoUtils()
 	itemRepo = file.NewFileItemRepo()
 	profileRepo = file.NewFileProfileRepo()
 

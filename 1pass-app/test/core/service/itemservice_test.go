@@ -10,8 +10,8 @@ import (
 	"github.com/mashmb/1pass/1pass-core/core/domain"
 	coreservice "github.com/mashmb/1pass/1pass-core/core/service"
 	"github.com/mashmb/1pass/1pass-core/port/out"
-	"github.com/mashmb/1pass/1pass-parse/adapter/out/repo/file"
-	"github.com/mashmb/1pass/1pass-parse/adapter/out/util/crypto"
+	"github.com/mashmb/1pass/1pass-parse/repo/file"
+	"github.com/mashmb/1pass/1pass-parse/util/pbkdf2"
 )
 
 func setupItemServiceAndKeys() (coreservice.ItemService, *domain.Keys) {
@@ -24,7 +24,7 @@ func setupItemServiceAndKeys() (coreservice.ItemService, *domain.Keys) {
 
 	var keyService coreservice.KeyService
 
-	crytpoUtils = crypto.NewPbkdf2CryptoUtils()
+	crytpoUtils = pbkdf2.NewPbkdf2CryptoUtils()
 	itemRepo = file.NewFileItemRepo()
 	profileRepo = file.NewFileProfileRepo()
 	profileRepo.LoadProfile(vault)
@@ -64,7 +64,7 @@ func TestDecodeItems(t *testing.T) {
 
 	var keyService coreservice.KeyService
 
-	crytpoUtils = crypto.NewPbkdf2CryptoUtils()
+	crytpoUtils = pbkdf2.NewPbkdf2CryptoUtils()
 	itemRepo = file.NewFileItemRepo()
 	profileRepo = file.NewFileProfileRepo()
 	profileRepo.LoadProfile(vault)

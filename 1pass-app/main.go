@@ -15,10 +15,10 @@ import (
 	"github.com/mashmb/1pass/1pass-core/core/service"
 	"github.com/mashmb/1pass/1pass-core/port/in"
 	"github.com/mashmb/1pass/1pass-core/port/out"
-	"github.com/mashmb/1pass/1pass-parse/adapter/out/repo/file"
-	"github.com/mashmb/1pass/1pass-parse/adapter/out/util/crypto"
-	"github.com/mashmb/1pass/1pass-term/adapter/in/cobra"
-	"github.com/mashmb/1pass/1pass-up/adapter/out/github"
+	"github.com/mashmb/1pass/1pass-parse/repo/file"
+	"github.com/mashmb/1pass/1pass-parse/util/pbkdf2"
+	"github.com/mashmb/1pass/1pass-term/control/cobra"
+	"github.com/mashmb/1pass/1pass-up/component/github"
 )
 
 func main() {
@@ -49,7 +49,7 @@ func main() {
 	var cliControl in.CliControl
 
 	configRepo = file.NewFileConfigRepo(configDir)
-	cryptoUtils = crypto.NewPbkdf2CryptoUtils()
+	cryptoUtils = pbkdf2.NewPbkdf2CryptoUtils()
 	itemRepo = file.NewFileItemRepo()
 	profileRepo = file.NewFileProfileRepo()
 	updater = github.NewGithubUpdater()

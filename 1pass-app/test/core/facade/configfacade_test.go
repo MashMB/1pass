@@ -10,7 +10,7 @@ import (
 	corefacade "github.com/mashmb/1pass/1pass-core/core/facade"
 	"github.com/mashmb/1pass/1pass-core/core/service"
 	"github.com/mashmb/1pass/1pass-core/port/out"
-	"github.com/mashmb/1pass/1pass-parse/adapter/out/repo/file"
+	"github.com/mashmb/1pass/1pass-parse/repo/file"
 )
 
 func setupConfigFacade() corefacade.ConfigFacade {
