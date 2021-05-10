@@ -52,7 +52,7 @@ func TestCheckForUpdate(t *testing.T) {
 
 func TestCheckTimestamp(t *testing.T) {
 	updater := setupGithubUpdater()
-	dirPath := "../../../../assets"
+	dirPath := "../../../assets"
 	file := filepath.Join(dirPath, domain.LastCheckFile)
 	updater.CheckTimestamp(dirPath)
 
@@ -71,19 +71,19 @@ func TestDownloadFile(t *testing.T) {
 			t.Error("CheckForUpdate() should pass (there is always something to download)")
 		}
 
-		err = os.MkdirAll("../../../../assets/tmp", 0700)
+		err = os.MkdirAll("../../../assets/tmp", 0700)
 
 		if err != nil {
 			t.Error("MkdirAll() should pass")
 		}
 
-		err = updater.DownloadFile("../../../../assets/tmp/1pass.tar.gz", info.ArchiveUrl, timeout)
+		err = updater.DownloadFile("../../../assets/tmp/1pass.tar.gz", info.ArchiveUrl, timeout)
 
 		if err != nil {
 			t.Error("DownloadFile() should end up with success")
 		}
 
-		err = os.RemoveAll("../../../../assets/tmp")
+		err = os.RemoveAll("../../../assets/tmp")
 
 		if err != nil {
 			t.Error("RemoveAll() should pass")
@@ -103,25 +103,25 @@ func TestExtractArchive(t *testing.T) {
 			t.Error("CheckForUpdate() should pass (there is always something to download)")
 		}
 
-		err = os.MkdirAll("../../../../assets/tmp", 0700)
+		err = os.MkdirAll("../../../assets/tmp", 0700)
 
 		if err != nil {
 			t.Error("MkdirAll() should pass")
 		}
 
-		err = updater.DownloadFile("../../../../assets/tmp/1pass.tar.gz", info.ArchiveUrl, timeout)
+		err = updater.DownloadFile("../../../assets/tmp/1pass.tar.gz", info.ArchiveUrl, timeout)
 
 		if err != nil {
 			t.Error("DownloadFile() should end up with success")
 		}
 
-		err = updater.ExtractArchive("../../../../assets/tmp/1pass.tar.gz", "../../../../assets/tmp")
+		err = updater.ExtractArchive("../../../assets/tmp/1pass.tar.gz", "../../../assets/tmp")
 
 		if err != nil {
 			t.Error("ExtractArchive() should pass")
 		}
 
-		err = os.RemoveAll("../../../../assets/tmp")
+		err = os.RemoveAll("../../../assets/tmp")
 
 		if err != nil {
 			t.Error("RemoveAll() should pass")
@@ -134,14 +134,14 @@ func TestExtractArchive(t *testing.T) {
 func TestShouldCheck(t *testing.T) {
 	updater := setupGithubUpdater()
 	expected := false
-	should := updater.ShouldCheck(10000, "../../../../assets")
+	should := updater.ShouldCheck(10000, "../../../assets")
 
 	if should != expected {
 		t.Errorf("ShouldCheck() = %v; expected = %v", should, expected)
 	}
 
 	expected = true
-	should = updater.ShouldCheck(0, "../../../../assets")
+	should = updater.ShouldCheck(0, "../../../assets")
 
 	if should != expected {
 		t.Errorf("ShouldCheck() = %v; expected = %v", should, expected)
@@ -150,13 +150,13 @@ func TestShouldCheck(t *testing.T) {
 
 func TestValidateChecksum(t *testing.T) {
 	updater := setupGithubUpdater()
-	err := updater.ValidateChecksum("../../../../assets/gif/1pass-categories.gif", "../../../../assets/md5/checksum.md5")
+	err := updater.ValidateChecksum("../../../assets/gif/1pass-categories.gif", "../../../assets/md5/checksum.md5")
 
 	if err != nil {
 		t.Error("ValidateChecksum() should pass")
 	}
 
-	err = updater.ValidateChecksum("../../../../assets/empty/.gitkeep", "../../../../assets/md5/checksum.md5")
+	err = updater.ValidateChecksum("../../../assets/empty/.gitkeep", "../../../assets/md5/checksum.md5")
 
 	if err == nil {
 		t.Error("ValidateChecksum() should fail")
