@@ -63,9 +63,6 @@ Whole update process:
 5. Replace running binary.
 6. Clean cache (temporary files and directories).
 
-**IMPORTANT**: updates are in real life `testing` stage, it works fine in test environment but practice shows that this 
-type of operations needs to be tested on multiple devices
-
 ## Configuration
 
 From release 1.1.0, application has implemented interactive configuration tool. From release 1.2.0, application is 
