@@ -4,6 +4,10 @@
 
 package in
 
+import (
+	"github.com/mashmb/1pass/1pass-core/core/domain"
+)
+
 type CliControl interface {
 	CheckForUpdate()
 
@@ -20,4 +24,8 @@ type CliControl interface {
 	GetItems(vaultPath, category, title string, trashed bool)
 
 	Update()
+}
+
+type GuiControl interface {
+	ValidateVault(vaultPath string) (*domain.Vault, error)
 }
