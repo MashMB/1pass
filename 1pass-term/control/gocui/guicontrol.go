@@ -25,6 +25,10 @@ func (ctrl *gocuiGuiControl) IsVaultUnlocked() bool {
 	return ctrl.vaultFacade.IsUnlocked()
 }
 
+func (ctrl *gocuiGuiControl) LockVault() {
+	ctrl.vaultFacade.Lock()
+}
+
 func (ctrl *gocuiGuiControl) Unlock(vault *domain.Vault, password string) error {
 	return ctrl.vaultFacade.Unlock(vault, password)
 }

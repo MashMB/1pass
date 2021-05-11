@@ -35,6 +35,17 @@ func newOnepassWidget(vault *domain.Vault, guiControl in.GuiControl) *onepassWid
 	return widget
 }
 
+func (ow *onepassWidget) lock(ui *gocui.Gui, view *gocui.View) error {
+	ow.guiControl.LockVault()
+	view.Clear()
+
+	if err := ow.update(ui); err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func (ow *onepassWidget) promptForPassword(ui *gocui.Gui) error {
 	if err := ow.passPrompt.Layout(ui); err != nil {
 		return err
@@ -62,7 +73,9 @@ func (ow *onepassWidget) unlock(ui *gocui.Gui, view *gocui.View) error {
 			return err
 		}
 
-		ow.update(ui)
+		if err := ow.update(ui); err != nil {
+			return err
+		}
 	}
 
 	return nil
@@ -70,7 +83,12 @@ func (ow *onepassWidget) unlock(ui *gocui.Gui, view *gocui.View) error {
 
 func (ow *onepassWidget) update(ui *gocui.Gui) error {
 	if ow.guiControl.IsVaultUnlocked() {
-		// TODO: load categories view
+		// TODO: categorized menu
+		_, err := ui.View(ow.name)
+
+		if err != nil {
+			return err
+		}
 	} else {
 		if err := ow.promptForPassword(ui); err != nil {
 			return err
@@ -86,6 +104,10 @@ func (ow *onepassWidget) Keybindings(ui *gocui.Gui) error {
 	}
 
 	if err := ow.passPrompt.Keybindings(ui); err != nil {
+		return err
+	}
+
+	if err := ui.SetKeybinding(ow.name, gocui.KeyCtrlL, gocui.ModNone, ow.lock); err != nil {
 		return err
 	}
 
@@ -106,7 +128,9 @@ func (ow *onepassWidget) Layout(ui *gocui.Gui) error {
 			return err
 		}
 
-		ow.update(ui)
+		if err := ow.update(ui); err != nil {
+			return err
+		}
 	}
 
 	return nil
