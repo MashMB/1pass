@@ -16,10 +16,6 @@ func NewGocuiGui() *GocuiGui {
 	return &GocuiGui{}
 }
 
-func (gui *GocuiGui) quit(_ *gocui.Gui, _ *gocui.View) error {
-	return gocui.ErrQuit
-}
-
 func (gui *GocuiGui) Run() {
 	ui, err := gocui.NewGui(gocui.OutputNormal)
 
@@ -31,7 +27,7 @@ func (gui *GocuiGui) Run() {
 	onepass := newOnepassWidget()
 	ui.SetManager(onepass)
 
-	if err := ui.SetKeybinding("", 'q', gocui.ModNone, gui.quit); err != nil {
+	if err := onepass.Keybindings(ui); err != nil {
 		log.Fatalln(err)
 	}
 
