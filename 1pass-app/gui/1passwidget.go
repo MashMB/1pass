@@ -5,6 +5,8 @@
 package gui
 
 import (
+	"strings"
+
 	"github.com/jroimartin/gocui"
 	"github.com/mashmb/1pass/1pass-core/core/domain"
 	"github.com/mashmb/1pass/1pass-core/port/in"
@@ -13,6 +15,7 @@ import (
 type onepassWidget struct {
 	name       string
 	title      string
+	errDialog  *errorDialog
 	passPrompt *passwordPrompt
 	vault      *domain.Vault
 	guiControl in.GuiControl
@@ -22,6 +25,7 @@ func newOnepassWidget(vault *domain.Vault, guiControl in.GuiControl) *onepassWid
 	widget := &onepassWidget{
 		title:      "1Pass",
 		name:       "1pass",
+		errDialog:  newErrorDialog(),
 		vault:      vault,
 		guiControl: guiControl,
 	}
@@ -40,15 +44,26 @@ func (ow *onepassWidget) promptForPassword(ui *gocui.Gui) error {
 }
 
 func (ow *onepassWidget) unlock(ui *gocui.Gui, view *gocui.View) error {
+	password := strings.TrimSpace(view.ViewBuffer())
+
 	if err := ui.DeleteView(ow.passPrompt.name); err != nil {
 		return err
 	}
 
-	if _, err := ui.SetCurrentView(ow.name); err != nil {
-		return err
-	}
+	if err := ow.guiControl.Unlock(ow.vault, password); err != nil {
+		ow.errDialog.err = err
 
-	ow.update(ui)
+		if err := ow.errDialog.Layout(ui); err != nil {
+			return err
+		}
+
+	} else {
+		if _, err := ui.SetCurrentView(ow.name); err != nil {
+			return err
+		}
+
+		ow.update(ui)
+	}
 
 	return nil
 }
@@ -60,8 +75,6 @@ func (ow *onepassWidget) update(ui *gocui.Gui) error {
 		if err := ow.promptForPassword(ui); err != nil {
 			return err
 		}
-
-		// TODO: unlock vault
 	}
 
 	return nil
@@ -72,6 +85,10 @@ func (ow *onepassWidget) quit(_ *gocui.Gui, _ *gocui.View) error {
 }
 
 func (ow *onepassWidget) Keybindings(ui *gocui.Gui) error {
+	if err := ow.errDialog.Keybindings(ui); err != nil {
+		return err
+	}
+
 	if err := ow.passPrompt.Keybindings(ui); err != nil {
 		return err
 	}

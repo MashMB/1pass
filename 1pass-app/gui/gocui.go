@@ -38,7 +38,7 @@ func (gui *GocuiGui) Run(vaultPath string) {
 	}
 
 	defer ui.Close()
-	onepass := newOnepassWidget(vault)
+	onepass := newOnepassWidget(vault, gui.guiControl)
 	ui.SetManager(onepass)
 
 	if err := onepass.Keybindings(ui); err != nil {
