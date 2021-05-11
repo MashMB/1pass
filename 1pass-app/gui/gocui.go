@@ -23,6 +23,10 @@ func NewGocuiGui(guiControl in.GuiControl) *GocuiGui {
 	}
 }
 
+func (gui *GocuiGui) quit(_ *gocui.Gui, _ *gocui.View) error {
+	return gocui.ErrQuit
+}
+
 func (gui *GocuiGui) Run(vaultPath string) {
 	vault, err := gui.guiControl.ValidateVault(vaultPath)
 
@@ -42,6 +46,10 @@ func (gui *GocuiGui) Run(vaultPath string) {
 	ui.SetManager(onepass)
 
 	if err := onepass.Keybindings(ui); err != nil {
+		log.Fatalln(err)
+	}
+
+	if err := ui.SetKeybinding("", gocui.KeyCtrlQ, gocui.ModNone, gui.quit); err != nil {
 		log.Fatalln(err)
 	}
 

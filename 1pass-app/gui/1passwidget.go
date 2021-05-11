@@ -80,20 +80,12 @@ func (ow *onepassWidget) update(ui *gocui.Gui) error {
 	return nil
 }
 
-func (ow *onepassWidget) quit(_ *gocui.Gui, _ *gocui.View) error {
-	return gocui.ErrQuit
-}
-
 func (ow *onepassWidget) Keybindings(ui *gocui.Gui) error {
 	if err := ow.errDialog.Keybindings(ui); err != nil {
 		return err
 	}
 
 	if err := ow.passPrompt.Keybindings(ui); err != nil {
-		return err
-	}
-
-	if err := ui.SetKeybinding(ow.name, gocui.KeyCtrlQ, gocui.ModNone, ow.quit); err != nil {
 		return err
 	}
 

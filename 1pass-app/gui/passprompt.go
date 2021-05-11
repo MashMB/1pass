@@ -20,16 +20,8 @@ func newPasswordPrompt(handler func(ui *gocui.Gui, view *gocui.View) error) *pas
 	}
 }
 
-func (pp *passwordPrompt) abort(_ *gocui.Gui, _ *gocui.View) error {
-	return gocui.ErrQuit
-}
-
 func (pp *passwordPrompt) Keybindings(ui *gocui.Gui) error {
 	if err := ui.SetKeybinding(pp.name, gocui.KeyEnter, gocui.ModNone, pp.handler); err != nil {
-		return err
-	}
-
-	if err := ui.SetKeybinding(pp.name, gocui.KeyCtrlQ, gocui.ModNone, pp.abort); err != nil {
 		return err
 	}
 
