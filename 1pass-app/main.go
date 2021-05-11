@@ -19,6 +19,7 @@ import (
 	"github.com/mashmb/1pass/1pass-parse/repo/file"
 	"github.com/mashmb/1pass/1pass-parse/util/pbkdf2"
 	"github.com/mashmb/1pass/1pass-term/control/cobra"
+	"github.com/mashmb/1pass/1pass-term/control/gocui"
 	"github.com/mashmb/1pass/1pass-up/component/github"
 )
 
@@ -48,6 +49,7 @@ func main() {
 	var vaultFacade facade.VaultFacade
 
 	var cliControl in.CliControl
+	var guiControl in.GuiControl
 
 	configRepo = file.NewFileConfigRepo(configDir)
 	cryptoUtils = pbkdf2.NewPbkdf2CryptoUtils()
@@ -66,8 +68,9 @@ func main() {
 	vaultFacade = facade.NewDfltVaultFacade(configService, itemService, keyService, vaultService)
 
 	cliControl = cobra.NewCobraCliControl(configFacade, updateFacade, vaultFacade)
+	guiControl = gocui.NewGocuiGuiControl(configFacade, vaultFacade)
 
-	gui := gui.NewGocuiGui()
+	gui := gui.NewGocuiGui(guiControl)
 	cobraCli := cli.NewCobraCli(domain.Version, gui, cliControl)
 	cobraCli.Run()
 }

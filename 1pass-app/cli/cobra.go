@@ -38,9 +38,11 @@ func (cli *cobraCli) init() *cobra.Command {
 efficiently in terminal.`,
 		Run: func(cmd *cobra.Command, args []string) {
 			cli.cliControl.FirstRun()
-			cli.gui.Run()
+			cli.gui.Run(cli.vault)
 		},
 	}
+
+	rootCmd.Flags().StringVarP(&cli.vault, "vault", "v", "", "OPVault path")
 
 	updateCmd := &cobra.Command{
 		Use:   "update",

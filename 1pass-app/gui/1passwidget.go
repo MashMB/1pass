@@ -6,18 +6,21 @@ package gui
 
 import (
 	"github.com/jroimartin/gocui"
+	"github.com/mashmb/1pass/1pass-core/core/domain"
 )
 
 type onepassWidget struct {
 	name       string
 	title      string
 	passPrompt *passwordPrompt
+	vault      *domain.Vault
 }
 
-func newOnepassWidget() *onepassWidget {
+func newOnepassWidget(vault *domain.Vault) *onepassWidget {
 	widget := &onepassWidget{
 		title: "1Pass",
 		name:  "1pass",
+		vault: vault,
 	}
 
 	widget.passPrompt = newPasswordPrompt(widget.unlock)

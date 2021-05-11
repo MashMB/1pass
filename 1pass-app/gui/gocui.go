@@ -5,18 +5,32 @@
 package gui
 
 import (
+	"fmt"
 	"log"
+	"os"
 
 	"github.com/jroimartin/gocui"
+	"github.com/mashmb/1pass/1pass-core/port/in"
 )
 
-type GocuiGui struct{}
-
-func NewGocuiGui() *GocuiGui {
-	return &GocuiGui{}
+type GocuiGui struct {
+	guiControl in.GuiControl
 }
 
-func (gui *GocuiGui) Run() {
+func NewGocuiGui(guiControl in.GuiControl) *GocuiGui {
+	return &GocuiGui{
+		guiControl: guiControl,
+	}
+}
+
+func (gui *GocuiGui) Run(vaultPath string) {
+	vault, err := gui.guiControl.ValidateVault(vaultPath)
+
+	if err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
+
 	ui, err := gocui.NewGui(gocui.OutputNormal)
 
 	if err != nil {
@@ -24,7 +38,7 @@ func (gui *GocuiGui) Run() {
 	}
 
 	defer ui.Close()
-	onepass := newOnepassWidget()
+	onepass := newOnepassWidget(vault)
 	ui.SetManager(onepass)
 
 	if err := onepass.Keybindings(ui); err != nil {
