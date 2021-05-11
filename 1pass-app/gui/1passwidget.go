@@ -67,7 +67,6 @@ func (ow *onepassWidget) unlock(ui *gocui.Gui, view *gocui.View) error {
 		if err := ow.errDialog.Layout(ui); err != nil {
 			return err
 		}
-
 	} else {
 		if _, err := ui.SetCurrentView(ow.name); err != nil {
 			return err

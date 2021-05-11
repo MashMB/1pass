@@ -4,7 +4,9 @@
 
 package gui
 
-import "github.com/jroimartin/gocui"
+import (
+	"github.com/jroimartin/gocui"
+)
 
 type passwordPrompt struct {
 	name    string
