@@ -2,6 +2,15 @@
 
 History of **1Pass** releases with changes description.
 
+## Release 1.3.0
+
+- [GUI] Lock vault with shortcut
+- [GUI] Unlock vault with master password
+- [GUI] Dialog used to display errors
+- [GUI] Password prompt (with password mask)
+- [GUI] Validate OPVault path before GUI launch
+- [CLI] Run 1Pass in GUI mode by default (command `1pass`)
+
 ## Release 1.2.0 [09.05.2021]
 
 - [CLI] Display application update stages
