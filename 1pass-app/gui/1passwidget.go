@@ -7,6 +7,7 @@ package gui
 import (
 	"github.com/jroimartin/gocui"
 	"github.com/mashmb/1pass/1pass-core/core/domain"
+	"github.com/mashmb/1pass/1pass-core/port/in"
 )
 
 type onepassWidget struct {
@@ -14,13 +15,15 @@ type onepassWidget struct {
 	title      string
 	passPrompt *passwordPrompt
 	vault      *domain.Vault
+	guiControl in.GuiControl
 }
 
-func newOnepassWidget(vault *domain.Vault) *onepassWidget {
+func newOnepassWidget(vault *domain.Vault, guiControl in.GuiControl) *onepassWidget {
 	widget := &onepassWidget{
-		title: "1Pass",
-		name:  "1pass",
-		vault: vault,
+		title:      "1Pass",
+		name:       "1pass",
+		vault:      vault,
+		guiControl: guiControl,
 	}
 
 	widget.passPrompt = newPasswordPrompt(widget.unlock)
@@ -51,8 +54,14 @@ func (ow *onepassWidget) unlock(ui *gocui.Gui, view *gocui.View) error {
 }
 
 func (ow *onepassWidget) update(ui *gocui.Gui) error {
-	if err := ow.promptForPassword(ui); err != nil {
-		return err
+	if ow.guiControl.IsVaultUnlocked() {
+		// TODO: load categories view
+	} else {
+		if err := ow.promptForPassword(ui); err != nil {
+			return err
+		}
+
+		// TODO: unlock vault
 	}
 
 	return nil

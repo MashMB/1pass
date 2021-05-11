@@ -21,6 +21,10 @@ func NewGocuiGuiControl(configFacade facade.ConfigFacade, vaultFacade facade.Vau
 	}
 }
 
+func (ctrl *gocuiGuiControl) IsVaultUnlocked() bool {
+	return ctrl.vaultFacade.IsUnlocked()
+}
+
 func (ctrl *gocuiGuiControl) ValidateVault(vaultPath string) (*domain.Vault, error) {
 	var vault *domain.Vault
 

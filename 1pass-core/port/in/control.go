@@ -27,5 +27,7 @@ type CliControl interface {
 }
 
 type GuiControl interface {
+	IsVaultUnlocked() bool
+
 	ValidateVault(vaultPath string) (*domain.Vault, error)
 }
