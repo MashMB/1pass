@@ -30,6 +30,30 @@ func setupFileItemRepo() *fileItemRepo {
 	return repo
 }
 
+func TestCountByCategoryAndTrashed(t *testing.T) {
+	repo := setupFileItemRepo()
+	expected := 27
+	all := repo.CountByCategoryAndTrashed(nil, false)
+
+	if all != expected {
+		t.Errorf("CountByCategoryAndTrashed() = %d; expected %d", all, expected)
+	}
+
+	expected = 2
+	trashed := repo.CountByCategoryAndTrashed(nil, true)
+
+	if trashed != expected {
+		t.Errorf("CountByCategoryAndTrashed() = %d; expected %d", trashed, expected)
+	}
+
+	expected = 10
+	logins := repo.CountByCategoryAndTrashed(domain.ItemCategoryEnum.Login, false)
+
+	if logins != expected {
+		t.Errorf("CountByCategoryAndTrashed() = %d; expected %d", logins, expected)
+	}
+}
+
 func TestFindByCategoryAndTitleAndTrashed(t *testing.T) {
 	repo := setupFileItemRepo()
 	expected := 27
