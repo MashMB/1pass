@@ -41,6 +41,30 @@ func setupItemServiceAndKeys() (coreservice.ItemService, *domain.Keys) {
 	return itemService, keys
 }
 
+func TestCountItems(t *testing.T) {
+	itemService, _ := setupItemServiceAndKeys()
+	expected := 27
+	all := itemService.CountItems(nil, false)
+
+	if all != expected {
+		t.Errorf("CountItems() = %d; expected %d", all, expected)
+	}
+
+	expected = 2
+	trashed := itemService.CountItems(nil, true)
+
+	if trashed != expected {
+		t.Errorf("CountItems() = %d; expected %d", trashed, expected)
+	}
+
+	expected = 10
+	logins := itemService.CountItems(domain.ItemCategoryEnum.Login, false)
+
+	if logins != expected {
+		t.Errorf("CountItems() = %d; expected %d", logins, expected)
+	}
+}
+
 func TestDecodeDetails(t *testing.T) {
 	itemService, keys := setupItemServiceAndKeys()
 	encodedDetails := "b3BkYXRhMDGFAwAAAAAAAJIAigy3ZztWl46Kx16K7KgQOG6mQpq9dv0LWtLF7vbFaK4wZU9bq9kv4FFt088kLAjAH2ToJMyF0QiUiQDxix56mahLDjee22iUbvVaza/QSK8SfHFEpyR1Ecg2MRsXvn2DrwUPNsIrJJ2X6kdZLN5duXZGuhqLDITxx7eBOF+J5UWyjIBGDJNs4q9kd/B+W30YBtolRhzaHNonaNAEwEKOYxBjOnEE1oO3TwVRYqq3IT/fqHpj2yVfTMKa8WtLy2g4rGGe+8NzkiXPMND2cYRo+8jwsCBY1Zxvqw0149k/Ly6cUam0nAlq7NuDfpoT9J5rCC1UdFNKjE88Cfoarxcl+Kr3ZbYFQA3POhVsgFusQX1YyKZdxZWlfyPWb/SvkiD1vQmM5DhOs5XLONnXDTKr1xbWL+zlJxruYSWRxM5qD9oexnv1U06FFOUVDGpFg9fzbWmbkS9KBSGsUIyeqmmNFMa+5WgJ2Q4olZXUE81WTsPi2FerncvHnGd95n5m5BW85icZwIH+0pPUUlYFljhruBVXa5+D/GMX1DAzpBHRaEmgDYMJrhsLgaArXJiDw9drHKP0gzqVM4Ma0TX9G1Cr/mMEW2DaVtGNVywiTNSMMoqazb7hxTgITiTttShLv9nBUiw94vDKhcigD05lVXAsbXPqnZUwwGz4yCkIkhB3dH6u/9UBDqtB5hXFz/3taMPu3dr2G61Aqe3EU40ihz5D7Bp147SoBcuCyPeiOGzdfGa5zuGwC/IWg2Ii8nJgfhBAD2Va8hsutTI7Yc4yU4Ufla4cX6d0NH/bU6ajZIb2oFw3ie5fzyk7pInlWUhR41z6CISwPRmC9SseTKQzZ3FsMqKZ5KcBNlYAu0v9IFawC+kjKrMwKl3W6NKUkAR8AgM4HCyskjx6cbs52Jac5J3UIaUwj3zjoV0dH+6fOEuu44Xr3sk9VBJ6zUHiSV8OgNV1XEFlrqal+XfP60Rr5RaeztFWT7y0q+CFoS3ZKzNItudi0y1zY0ZnNsUbll2RCYlHULXE3Idxy/gsQJ29Aj39DTfbxvqGB9u6PUxewfvHnLkNXp7cjl3wE4IsaVHCNsL/ZBNgqwcaVVos9Wx1BtIWWhkOnmt2nrRIFz9vVdry8nEW6G+/IIFe+1e34oQmBSkGD+4OCGxGq1/Yctu3yG4QlumKa7SDIATG7q0iX0IMfFE9ws2RMBa7YawjMkRItFw2gn4Egzz8IPyvh328JssIW9oo2K/O0if5+ITWKvHvDDbi3M3FjJKMxDGPvAr2GA=="
