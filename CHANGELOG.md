@@ -10,6 +10,7 @@ History of **1Pass** releases with changes description.
 - [GUI] Password prompt (with password mask)
 - [GUI] Validate OPVault path before GUI launch
 - [CLI] Run 1Pass in GUI mode by default (command `1pass`)
+- [API] Count OPVault items over category and trashed flag
 
 ## Release 1.2.0 [09.05.2021]
 
