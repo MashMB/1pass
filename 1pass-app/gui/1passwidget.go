@@ -16,6 +16,7 @@ import (
 )
 
 type onepassWidget struct {
+	currIdx    int
 	name       string
 	title      string
 	errDialog  *errorDialog
@@ -27,6 +28,7 @@ type onepassWidget struct {
 
 func newOnepassWidget(vault *domain.Vault, guiControl in.GuiControl) *onepassWidget {
 	widget := &onepassWidget{
+		currIdx:    -1,
 		title:      "1Pass",
 		name:       "1pass",
 		errDialog:  newErrorDialog(),
@@ -40,7 +42,26 @@ func newOnepassWidget(vault *domain.Vault, guiControl in.GuiControl) *onepassWid
 	return widget
 }
 
+func (ow *onepassWidget) cursorDown(ui *gocui.Gui, view *gocui.View) error {
+	if view != nil && ow.currIdx != -1 && ow.currIdx < len(ow.categories)-1 {
+		cx, cy := view.Cursor()
+
+		if err := view.SetCursor(cx, cy+1); err != nil {
+			ox, oy := view.Origin()
+
+			if err := view.SetOrigin(ox, oy+1); err != nil {
+				return err
+			}
+		}
+
+		ow.currIdx++
+	}
+
+	return nil
+}
+
 func (ow *onepassWidget) lock(ui *gocui.Gui, view *gocui.View) error {
+	ow.currIdx = -1
 	ow.categories = make([]*domain.ItemCategory, 0)
 	ow.guiControl.LockVault()
 	view.Clear()
@@ -127,6 +148,10 @@ func (ow *onepassWidget) update(ui *gocui.Gui) error {
 			fmt.Fprint(view, trashedPosition)
 			ow.categories = append(ow.categories, nil)
 		}
+
+		if len(ow.categories) > 0 {
+			ow.currIdx = 0
+		}
 	} else {
 		if err := ow.promptForPassword(ui); err != nil {
 			return err
@@ -149,6 +174,14 @@ func (ow *onepassWidget) Keybindings(ui *gocui.Gui) error {
 		return err
 	}
 
+	if err := ui.SetKeybinding(ow.name, 'j', gocui.ModNone, ow.cursorDown); err != nil {
+		return err
+	}
+
+	if err := ui.SetKeybinding(ow.name, gocui.KeyArrowDown, gocui.ModNone, ow.cursorDown); err != nil {
+		return err
+	}
+
 	return nil
 }
 
@@ -161,6 +194,8 @@ func (ow *onepassWidget) Layout(ui *gocui.Gui) error {
 		}
 
 		view.Title = ow.title
+		view.Highlight = true
+		view.SelBgColor = gocui.ColorBlue
 
 		if _, err := ui.SetCurrentView(ow.name); err != nil {
 			return err
