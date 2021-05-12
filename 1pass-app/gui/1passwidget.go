@@ -60,6 +60,23 @@ func (ow *onepassWidget) cursorDown(ui *gocui.Gui, view *gocui.View) error {
 	return nil
 }
 
+func (ow *onepassWidget) cursorUp(ui *gocui.Gui, view *gocui.View) error {
+	if view != nil && ow.currIdx > 0 {
+		ox, oy := view.Origin()
+		cx, cy := view.Cursor()
+
+		if err := view.SetCursor(cx, cy-1); err != nil && oy > 0 {
+			if err := view.SetOrigin(ox, oy-1); err != nil {
+				return err
+			}
+		}
+
+		ow.currIdx--
+	}
+
+	return nil
+}
+
 func (ow *onepassWidget) lock(ui *gocui.Gui, view *gocui.View) error {
 	ow.currIdx = -1
 	ow.categories = make([]*domain.ItemCategory, 0)
@@ -179,6 +196,14 @@ func (ow *onepassWidget) Keybindings(ui *gocui.Gui) error {
 	}
 
 	if err := ui.SetKeybinding(ow.name, gocui.KeyArrowDown, gocui.ModNone, ow.cursorDown); err != nil {
+		return err
+	}
+
+	if err := ui.SetKeybinding(ow.name, 'k', gocui.ModNone, ow.cursorUp); err != nil {
+		return err
+	}
+
+	if err := ui.SetKeybinding(ow.name, gocui.KeyArrowUp, gocui.ModNone, ow.cursorUp); err != nil {
 		return err
 	}
 
