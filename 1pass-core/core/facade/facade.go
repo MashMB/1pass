@@ -17,6 +17,8 @@ type ConfigFacade interface {
 }
 
 type VaultFacade interface {
+	CountItems(category *domain.ItemCategory, trashed bool) int
+
 	GetItem(uid string, trashed bool) *domain.Item
 
 	GetItems(category *domain.ItemCategory, title string, trashed bool) []*domain.SimpleItem
