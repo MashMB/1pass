@@ -21,6 +21,10 @@ func NewGocuiGuiControl(configFacade facade.ConfigFacade, vaultFacade facade.Vau
 	}
 }
 
+func (ctrl *gocuiGuiControl) CountItems(category *domain.ItemCategory, trashed bool) int {
+	return ctrl.vaultFacade.CountItems(category, trashed)
+}
+
 func (ctrl *gocuiGuiControl) IsVaultUnlocked() bool {
 	return ctrl.vaultFacade.IsUnlocked()
 }

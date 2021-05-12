@@ -27,6 +27,8 @@ type CliControl interface {
 }
 
 type GuiControl interface {
+	CountItems(category *domain.ItemCategory, trashed bool) int
+
 	IsVaultUnlocked() bool
 
 	LockVault()

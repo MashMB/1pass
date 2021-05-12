@@ -5,8 +5,11 @@
 package gui
 
 import (
+	"fmt"
+	"sort"
 	"strings"
 
+	"github.com/jedib0t/go-pretty/v6/text"
 	"github.com/jroimartin/gocui"
 	"github.com/mashmb/1pass/1pass-core/core/domain"
 	"github.com/mashmb/1pass/1pass-core/port/in"
@@ -17,6 +20,7 @@ type onepassWidget struct {
 	title      string
 	errDialog  *errorDialog
 	passPrompt *passwordPrompt
+	categories []*domain.ItemCategory
 	vault      *domain.Vault
 	guiControl in.GuiControl
 }
@@ -26,6 +30,7 @@ func newOnepassWidget(vault *domain.Vault, guiControl in.GuiControl) *onepassWid
 		title:      "1Pass",
 		name:       "1pass",
 		errDialog:  newErrorDialog(),
+		categories: make([]*domain.ItemCategory, 0),
 		vault:      vault,
 		guiControl: guiControl,
 	}
@@ -36,6 +41,7 @@ func newOnepassWidget(vault *domain.Vault, guiControl in.GuiControl) *onepassWid
 }
 
 func (ow *onepassWidget) lock(ui *gocui.Gui, view *gocui.View) error {
+	ow.categories = make([]*domain.ItemCategory, 0)
 	ow.guiControl.LockVault()
 	view.Clear()
 
@@ -82,11 +88,44 @@ func (ow *onepassWidget) unlock(ui *gocui.Gui, view *gocui.View) error {
 
 func (ow *onepassWidget) update(ui *gocui.Gui) error {
 	if ow.guiControl.IsVaultUnlocked() {
-		// TODO: categorized menu
-		_, err := ui.View(ow.name)
+		maxX, _ := ui.Size()
+		view, err := ui.View(ow.name)
 
 		if err != nil {
 			return err
+		}
+
+		allCount := ow.guiControl.CountItems(nil, false)
+
+		if allCount != 0 {
+			allPosition := text.AlignCenter.Apply(fmt.Sprintf("All (%d)", allCount), maxX-1)
+			fmt.Fprint(view, allPosition)
+			fmt.Fprint(view, "\n")
+			ow.categories = append(ow.categories, nil)
+			categories := domain.ItemCategoryEnum.GetValues()
+
+			sort.Slice(categories, func(i, j int) bool {
+				return categories[i].GetCode() < categories[j].GetCode()
+			})
+
+			for _, category := range categories {
+				count := ow.guiControl.CountItems(category, false)
+
+				if count != 0 {
+					position := text.AlignCenter.Apply(fmt.Sprintf("%v (%d)", category.GetName(), count), maxX-1)
+					fmt.Fprint(view, position)
+					fmt.Fprint(view, "\n")
+					ow.categories = append(ow.categories, category)
+				}
+			}
+		}
+
+		trashedCount := ow.guiControl.CountItems(nil, true)
+
+		if trashedCount != 0 {
+			trashedPosition := text.AlignCenter.Apply(fmt.Sprintf("Trashed (%d)", trashedCount), maxX-1)
+			fmt.Fprint(view, trashedPosition)
+			ow.categories = append(ow.categories, nil)
 		}
 	} else {
 		if err := ow.promptForPassword(ui); err != nil {
