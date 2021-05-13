@@ -10,17 +10,43 @@ import (
 )
 
 type itemsWidget struct {
-	name  string
-	title string
-	items []*domain.SimpleItem
+	name   string
+	parent string
+	title  string
+	items  []*domain.SimpleItem
 }
 
-func newItemsWidget() *itemsWidget {
+func newItemsWidget(parent string) *itemsWidget {
 	return &itemsWidget{
-		name:  "itemsWidget",
-		title: "Items",
-		items: make([]*domain.SimpleItem, 0),
+		name:   "itemsWidget",
+		title:  "Items",
+		items:  make([]*domain.SimpleItem, 0),
+		parent: parent,
 	}
+}
+
+func (iw *itemsWidget) goBack(ui *gocui.Gui, view *gocui.View) error {
+	if err := ui.DeleteView(iw.name); err != nil {
+		return err
+	}
+
+	if _, err := ui.SetCurrentView(iw.parent); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (iw *itemsWidget) Keybindings(ui *gocui.Gui) error {
+	if err := ui.SetKeybinding(iw.name, 'h', gocui.ModNone, iw.goBack); err != nil {
+		return err
+	}
+
+	if err := ui.SetKeybinding(iw.name, gocui.KeyBackspace, gocui.ModNone, iw.goBack); err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func (iw *itemsWidget) Layout(ui *gocui.Gui) error {

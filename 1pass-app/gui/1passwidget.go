@@ -29,17 +29,17 @@ type onepassWidget struct {
 
 func newOnepassWidget(vault *domain.Vault, guiControl in.GuiControl) *onepassWidget {
 	widget := &onepassWidget{
-		currIdx:     -1,
-		title:       "1Pass",
-		name:        "1pass",
-		errDialog:   newErrorDialog(),
-		itemsWidget: newItemsWidget(),
-		categories:  make([]*domain.ItemCategory, 0),
-		vault:       vault,
-		guiControl:  guiControl,
+		currIdx:    -1,
+		title:      "1Pass",
+		name:       "1pass",
+		errDialog:  newErrorDialog(),
+		categories: make([]*domain.ItemCategory, 0),
+		vault:      vault,
+		guiControl: guiControl,
 	}
 
 	widget.passPrompt = newPasswordPrompt(widget.unlock)
+	widget.itemsWidget = newItemsWidget(widget.name)
 
 	return widget
 }
@@ -195,6 +195,10 @@ func (ow *onepassWidget) Keybindings(ui *gocui.Gui) error {
 	}
 
 	if err := ow.passPrompt.Keybindings(ui); err != nil {
+		return err
+	}
+
+	if err := ow.itemsWidget.Keybindings(ui); err != nil {
 		return err
 	}
 
