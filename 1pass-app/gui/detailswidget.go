@@ -43,6 +43,40 @@ func (dw *detailsWidget) update(overview bool, ui *gocui.Gui) error {
 		updated := time.Unix(dw.item.Updated, 0).Format("2006-01-02 15:04:05")
 		created := time.Unix(dw.item.Created, 0).Format("2006-01-02 15:04:05")
 		fmt.Fprint(view, fmt.Sprintf("Updated: %v\nCreated: %v\nTrashed: %v\n", updated, created, dw.item.Trashed))
+
+		if dw.item.Url != "" {
+			fmt.Fprint(view, fmt.Sprintf("URL: %v\n", dw.item.Url))
+		}
+
+		if overview {
+			if dw.item.Sections != nil {
+				for _, section := range dw.item.Sections {
+					fmt.Fprint(view, "\n")
+
+					if section.Title != "" {
+						fmt.Fprint(view, fmt.Sprintf("%v\n", section.Title))
+					}
+
+					fmt.Fprint(view, "------------------------------\n")
+
+					if section.Fields != nil {
+						for _, field := range section.Fields {
+							fmt.Fprint(view, fmt.Sprintf("%v: %v\n", field.Name, "**********"))
+						}
+					}
+				}
+
+				fmt.Fprint(view, "\n")
+			}
+
+			if dw.item.Notes != "" {
+				fmt.Fprint(view, "Notes\n")
+				fmt.Fprint(view, "------------------------------\n")
+				fmt.Fprint(view, "**********\n")
+			}
+		} else {
+			// TODO: item details
+		}
 	}
 
 	return nil
