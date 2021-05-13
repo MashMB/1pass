@@ -29,6 +29,38 @@ func newDetailsWidget(parent string, lockHandler func(ui *gocui.Gui, view *gocui
 	}
 }
 
+func (dw *detailsWidget) resetOrigin(view *gocui.View) error {
+	if view != nil {
+		ox, oy := view.Origin()
+
+		if ox > 0 {
+			if err := view.SetOrigin(0, oy); err != nil {
+				return err
+			}
+		}
+
+		if oy > 0 {
+			if err := view.SetOrigin(ox, 0); err != nil {
+				return err
+			}
+		}
+	}
+
+	return nil
+}
+
+func (dw *detailsWidget) scrollDown(ui *gocui.Gui, view *gocui.View) error {
+	if view != nil {
+		ox, oy := view.Origin()
+
+		if err := view.SetOrigin(ox, oy+1); err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
 func (dw *detailsWidget) toggleDetails(ui *gocui.Gui, view *gocui.View) error {
 	if _, err := ui.SetCurrentView(dw.parent); err != nil {
 		return err
@@ -45,6 +77,10 @@ func (dw *detailsWidget) update(overview bool, ui *gocui.Gui) error {
 	}
 
 	view.Clear()
+
+	if err := dw.resetOrigin(view); err != nil {
+		return err
+	}
 
 	if dw.item != nil {
 		fmt.Fprint(view, fmt.Sprintf("%v\n", dw.item.Category.GetName()))
@@ -94,6 +130,14 @@ func (dw *detailsWidget) update(overview bool, ui *gocui.Gui) error {
 
 func (dw *detailsWidget) Keybindings(ui *gocui.Gui) error {
 	if err := ui.SetKeybinding(dw.name, gocui.KeyCtrlL, gocui.ModNone, dw.lockHandler); err != nil {
+		return err
+	}
+
+	if err := ui.SetKeybinding(dw.name, 'j', gocui.ModNone, dw.scrollDown); err != nil {
+		return err
+	}
+
+	if err := ui.SetKeybinding(dw.name, gocui.KeyArrowDown, gocui.ModNone, dw.scrollDown); err != nil {
 		return err
 	}
 
