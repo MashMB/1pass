@@ -16,25 +16,27 @@ import (
 )
 
 type onepassWidget struct {
-	currIdx    int
-	name       string
-	title      string
-	errDialog  *errorDialog
-	passPrompt *passwordPrompt
-	categories []*domain.ItemCategory
-	vault      *domain.Vault
-	guiControl in.GuiControl
+	currIdx     int
+	name        string
+	title       string
+	errDialog   *errorDialog
+	itemsWidget *itemsWidget
+	passPrompt  *passwordPrompt
+	categories  []*domain.ItemCategory
+	vault       *domain.Vault
+	guiControl  in.GuiControl
 }
 
 func newOnepassWidget(vault *domain.Vault, guiControl in.GuiControl) *onepassWidget {
 	widget := &onepassWidget{
-		currIdx:    -1,
-		title:      "1Pass",
-		name:       "1pass",
-		errDialog:  newErrorDialog(),
-		categories: make([]*domain.ItemCategory, 0),
-		vault:      vault,
-		guiControl: guiControl,
+		currIdx:     -1,
+		title:       "1Pass",
+		name:        "1pass",
+		errDialog:   newErrorDialog(),
+		itemsWidget: newItemsWidget(),
+		categories:  make([]*domain.ItemCategory, 0),
+		vault:       vault,
+		guiControl:  guiControl,
 	}
 
 	widget.passPrompt = newPasswordPrompt(widget.unlock)
@@ -124,6 +126,15 @@ func (ow *onepassWidget) unlock(ui *gocui.Gui, view *gocui.View) error {
 	return nil
 }
 
+func (ow *onepassWidget) showItems(ui *gocui.Gui, view *gocui.View) error {
+	// TODO: display vault items
+	if err := ow.itemsWidget.Layout(ui); err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func (ow *onepassWidget) update(ui *gocui.Gui) error {
 	if ow.guiControl.IsVaultUnlocked() {
 		maxX, _ := ui.Size()
@@ -204,6 +215,14 @@ func (ow *onepassWidget) Keybindings(ui *gocui.Gui) error {
 	}
 
 	if err := ui.SetKeybinding(ow.name, gocui.KeyArrowUp, gocui.ModNone, ow.cursorUp); err != nil {
+		return err
+	}
+
+	if err := ui.SetKeybinding(ow.name, 'l', gocui.ModNone, ow.showItems); err != nil {
+		return err
+	}
+
+	if err := ui.SetKeybinding(ow.name, gocui.KeyEnter, gocui.ModNone, ow.showItems); err != nil {
 		return err
 	}
 
