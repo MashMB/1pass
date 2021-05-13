@@ -4,6 +4,11 @@ History of **1Pass** releases with changes description.
 
 ## Release 1.3.0
 
+- [GUI] Scroll item details left
+- [GUI] Scroll item details right
+- [GUI] Scroll item details up
+- [GUI] Scroll item details down
+- [GUI] Display item overview (no sensitive data)
 - [GUI] Scroll items up
 - [GUI] Scroll items down
 - [GUI] Display list of items assigned to category
@@ -16,6 +21,7 @@ History of **1Pass** releases with changes description.
 - [GUI] Password prompt (with password mask)
 - [GUI] Validate OPVault path before GUI launch
 - [CLI] Run 1Pass in GUI mode by default (command `1pass`)
+- [API] Handle trashed flag in simplified item data structure
 - [API] Count OPVault items over category and trashed flag
 
 ## Release 1.2.0 [09.05.2021]
