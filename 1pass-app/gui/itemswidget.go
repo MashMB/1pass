@@ -10,18 +10,20 @@ import (
 )
 
 type itemsWidget struct {
-	name   string
-	parent string
-	title  string
-	items  []*domain.SimpleItem
+	name        string
+	parent      string
+	title       string
+	lockHandler func(ui *gocui.Gui, view *gocui.View) error
+	items       []*domain.SimpleItem
 }
 
-func newItemsWidget(parent string) *itemsWidget {
+func newItemsWidget(parent string, lockHandler func(ui *gocui.Gui, view *gocui.View) error) *itemsWidget {
 	return &itemsWidget{
-		name:   "itemsWidget",
-		title:  "Items",
-		items:  make([]*domain.SimpleItem, 0),
-		parent: parent,
+		name:        "itemsWidget",
+		title:       "Items",
+		lockHandler: lockHandler,
+		items:       make([]*domain.SimpleItem, 0),
+		parent:      parent,
 	}
 }
 
@@ -37,7 +39,29 @@ func (iw *itemsWidget) goBack(ui *gocui.Gui, view *gocui.View) error {
 	return nil
 }
 
+func (iw *itemsWidget) lock(ui *gocui.Gui, view *gocui.View) error {
+	if err := iw.goBack(ui, view); err != nil {
+		return err
+	}
+
+	parentView, err := ui.View(iw.parent)
+
+	if err != nil {
+		return err
+	}
+
+	if err := iw.lockHandler(ui, parentView); err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func (iw *itemsWidget) Keybindings(ui *gocui.Gui) error {
+	if err := ui.SetKeybinding(iw.name, gocui.KeyCtrlL, gocui.ModNone, iw.lock); err != nil {
+		return err
+	}
+
 	if err := ui.SetKeybinding(iw.name, 'h', gocui.ModNone, iw.goBack); err != nil {
 		return err
 	}
