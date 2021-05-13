@@ -61,6 +61,20 @@ func (dw *detailsWidget) scrollDown(ui *gocui.Gui, view *gocui.View) error {
 	return nil
 }
 
+func (dw *detailsWidget) scrollUp(ui *gocui.Gui, view *gocui.View) error {
+	if view != nil {
+		ox, oy := view.Origin()
+
+		if oy > 0 {
+			if err := view.SetOrigin(ox, oy-1); err != nil {
+				return err
+			}
+		}
+	}
+
+	return nil
+}
+
 func (dw *detailsWidget) toggleDetails(ui *gocui.Gui, view *gocui.View) error {
 	if _, err := ui.SetCurrentView(dw.parent); err != nil {
 		return err
@@ -138,6 +152,14 @@ func (dw *detailsWidget) Keybindings(ui *gocui.Gui) error {
 	}
 
 	if err := ui.SetKeybinding(dw.name, gocui.KeyArrowDown, gocui.ModNone, dw.scrollDown); err != nil {
+		return err
+	}
+
+	if err := ui.SetKeybinding(dw.name, 'k', gocui.ModNone, dw.scrollUp); err != nil {
+		return err
+	}
+
+	if err := ui.SetKeybinding(dw.name, gocui.KeyArrowUp, gocui.ModNone, dw.scrollUp); err != nil {
 		return err
 	}
 
