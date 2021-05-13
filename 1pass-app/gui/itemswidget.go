@@ -93,6 +93,10 @@ func (iw *itemsWidget) Keybindings(ui *gocui.Gui) error {
 		return err
 	}
 
+	if err := ui.SetKeybinding(iw.name, gocui.KeyArrowLeft, gocui.ModNone, iw.goBack); err != nil {
+		return err
+	}
+
 	if err := ui.SetKeybinding(iw.name, 'q', gocui.ModNone, iw.goBack); err != nil {
 		return err
 	}

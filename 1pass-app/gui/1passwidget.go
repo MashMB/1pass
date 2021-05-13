@@ -264,6 +264,10 @@ func (ow *onepassWidget) Keybindings(ui *gocui.Gui) error {
 		return err
 	}
 
+	if err := ui.SetKeybinding(ow.name, gocui.KeyArrowRight, gocui.ModNone, ow.showItems); err != nil {
+		return err
+	}
+
 	if err := ui.SetKeybinding(ow.name, gocui.KeyEnter, gocui.ModNone, ow.showItems); err != nil {
 		return err
 	}
