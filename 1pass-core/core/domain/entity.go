@@ -57,6 +57,7 @@ type RawItem struct {
 type SimpleItem struct {
 	Category *ItemCategory
 	Title    string
+	Trashed  bool
 	Uid      string
 }
 
@@ -135,10 +136,11 @@ func NewRawItem(category, details, hmac, keys, overview, uid string, created, up
 	}
 }
 
-func NewSimpleItem(category *ItemCategory, title, uid string) *SimpleItem {
+func NewSimpleItem(category *ItemCategory, title string, trashed bool, uid string) *SimpleItem {
 	return &SimpleItem{
 		Category: category,
 		Title:    title,
+		Trashed:  trashed,
 		Uid:      uid,
 	}
 }

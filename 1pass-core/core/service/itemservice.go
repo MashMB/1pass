@@ -133,7 +133,7 @@ func (s *dfltItemService) GetSimpleItems(category *domain.ItemCategory, title st
 	decodedItems := s.itemRepo.FindByCategoryAndTitleAndTrashed(category, title, trashed)
 
 	for _, decoded := range decodedItems {
-		item := domain.NewSimpleItem(decoded.Category, decoded.Title, decoded.Uid)
+		item := domain.NewSimpleItem(decoded.Category, decoded.Title, decoded.Trashed, decoded.Uid)
 		items = append(items, item)
 	}
 
