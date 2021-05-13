@@ -12,22 +12,24 @@ import (
 )
 
 type itemsWidget struct {
-	currIdx     int
-	name        string
-	parent      string
-	title       string
-	lockHandler func(ui *gocui.Gui, view *gocui.View) error
-	items       []*domain.SimpleItem
+	currIdx       int
+	name          string
+	parent        string
+	title         string
+	lockHandler   func(ui *gocui.Gui, view *gocui.View) error
+	detailsWidget *detailsWidget
+	items         []*domain.SimpleItem
 }
 
 func newItemsWidget(parent string, lockHandler func(ui *gocui.Gui, view *gocui.View) error) *itemsWidget {
 	return &itemsWidget{
-		currIdx:     -1,
-		name:        "itemsWidget",
-		title:       "Items",
-		lockHandler: lockHandler,
-		items:       make([]*domain.SimpleItem, 0),
-		parent:      parent,
+		currIdx:       -1,
+		name:          "itemsWidget",
+		title:         "Items",
+		lockHandler:   lockHandler,
+		detailsWidget: newDetailsWidget(),
+		items:         make([]*domain.SimpleItem, 0),
+		parent:        parent,
 	}
 }
 
@@ -67,6 +69,10 @@ func (iw *itemsWidget) cursorUp(ui *gocui.Gui, view *gocui.View) error {
 }
 
 func (iw *itemsWidget) goBack(ui *gocui.Gui, view *gocui.View) error {
+	if err := ui.DeleteView(iw.detailsWidget.name); err != nil {
+		return err
+	}
+
 	if err := ui.DeleteView(iw.name); err != nil {
 		return err
 	}
@@ -190,6 +196,10 @@ func (iw *itemsWidget) Layout(ui *gocui.Gui) error {
 		view.SelBgColor = gocui.ColorBlue
 
 		iw.update(ui)
+
+		if err := iw.detailsWidget.Layout(ui); err != nil {
+			return err
+		}
 
 		if _, err := ui.SetCurrentView(iw.name); err != nil {
 			return err
