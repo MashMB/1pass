@@ -13,15 +13,17 @@ import (
 )
 
 type detailsWidget struct {
-	name  string
-	title string
-	item  *domain.Item
+	name        string
+	title       string
+	lockHandler func(ui *gocui.Gui, view *gocui.View) error
+	item        *domain.Item
 }
 
-func newDetailsWidget() *detailsWidget {
+func newDetailsWidget(lockHandler func(ui *gocui.Gui, view *gocui.View) error) *detailsWidget {
 	return &detailsWidget{
-		name:  "detailsWidget",
-		title: "Details",
+		name:        "detailsWidget",
+		title:       "Details",
+		lockHandler: lockHandler,
 	}
 }
 
@@ -41,6 +43,14 @@ func (dw *detailsWidget) update(overview bool, ui *gocui.Gui) error {
 		updated := time.Unix(dw.item.Updated, 0).Format("2006-01-02 15:04:05")
 		created := time.Unix(dw.item.Created, 0).Format("2006-01-02 15:04:05")
 		fmt.Fprint(view, fmt.Sprintf("Updated: %v\nCreated: %v\nTrashed: %v\n", updated, created, dw.item.Trashed))
+	}
+
+	return nil
+}
+
+func (dw *detailsWidget) Keybindings(ui *gocui.Gui) error {
+	if err := ui.SetKeybinding(dw.name, gocui.KeyCtrlL, gocui.ModNone, dw.lockHandler); err != nil {
+		return err
 	}
 
 	return nil

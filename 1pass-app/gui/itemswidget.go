@@ -24,16 +24,19 @@ type itemsWidget struct {
 }
 
 func newItemsWidget(parent string, lockHandler func(ui *gocui.Gui, view *gocui.View) error, guiControl in.GuiControl) *itemsWidget {
-	return &itemsWidget{
-		currIdx:       -1,
-		name:          "itemsWidget",
-		title:         "Items",
-		lockHandler:   lockHandler,
-		detailsWidget: newDetailsWidget(),
-		items:         make([]*domain.SimpleItem, 0),
-		parent:        parent,
-		guiControl:    guiControl,
+	widget := &itemsWidget{
+		currIdx:     -1,
+		name:        "itemsWidget",
+		title:       "Items",
+		lockHandler: lockHandler,
+		items:       make([]*domain.SimpleItem, 0),
+		parent:      parent,
+		guiControl:  guiControl,
 	}
+
+	widget.detailsWidget = newDetailsWidget(widget.lock)
+
+	return widget
 }
 
 func (iw *itemsWidget) cursorDown(ui *gocui.Gui, view *gocui.View) error {
@@ -174,6 +177,10 @@ func (iw *itemsWidget) update(ui *gocui.Gui) error {
 }
 
 func (iw *itemsWidget) Keybindings(ui *gocui.Gui) error {
+	if err := iw.detailsWidget.Keybindings(ui); err != nil {
+		return err
+	}
+
 	if err := ui.SetKeybinding(iw.name, gocui.KeyCtrlL, gocui.ModNone, iw.lock); err != nil {
 		return err
 	}
