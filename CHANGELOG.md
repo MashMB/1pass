@@ -4,6 +4,9 @@ History of **1Pass** releases with changes description.
 
 ## Release 1.3.0
 
+- [GUI] Scroll items up
+- [GUI] Scroll items down
+- [GUI] Display list of items assigned to category
 - [GUI] Scroll categories menu up
 - [GUI] Scroll categories menu down
 - [GUI] Display categories that has at least one item assigned (include dynamic all and trashed category)
