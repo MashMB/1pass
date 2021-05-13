@@ -61,6 +61,20 @@ func (dw *detailsWidget) scrollDown(ui *gocui.Gui, view *gocui.View) error {
 	return nil
 }
 
+func (dw *detailsWidget) scrollLeft(ui *gocui.Gui, view *gocui.View) error {
+	if view != nil {
+		ox, oy := view.Origin()
+
+		if ox > 0 {
+			if err := view.SetOrigin(ox-1, oy); err != nil {
+				return err
+			}
+		}
+	}
+
+	return nil
+}
+
 func (dw *detailsWidget) scrollRight(ui *gocui.Gui, view *gocui.View) error {
 	if view != nil {
 		ox, oy := view.Origin()
@@ -180,6 +194,14 @@ func (dw *detailsWidget) Keybindings(ui *gocui.Gui) error {
 	}
 
 	if err := ui.SetKeybinding(dw.name, gocui.KeyArrowRight, gocui.ModNone, dw.scrollRight); err != nil {
+		return err
+	}
+
+	if err := ui.SetKeybinding(dw.name, 'h', gocui.ModNone, dw.scrollLeft); err != nil {
+		return err
+	}
+
+	if err := ui.SetKeybinding(dw.name, gocui.KeyArrowLeft, gocui.ModNone, dw.scrollLeft); err != nil {
 		return err
 	}
 
