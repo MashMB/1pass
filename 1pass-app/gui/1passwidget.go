@@ -144,9 +144,30 @@ func (ow *onepassWidget) unlock(ui *gocui.Gui, view *gocui.View) error {
 }
 
 func (ow *onepassWidget) showItems(ui *gocui.Gui, view *gocui.View) error {
-	// TODO: display vault items
-	if err := ow.itemsWidget.Layout(ui); err != nil {
-		return err
+	if ow.currIdx != -1 {
+		if err := ow.itemsWidget.Layout(ui); err != nil {
+			return err
+		}
+
+		var items []*domain.SimpleItem
+
+		if len(ow.categories) == 1 {
+			items = ow.guiControl.GetItems(nil, true)
+		} else {
+			if ow.currIdx == len(ow.categories)-1 {
+				items = ow.guiControl.GetItems(nil, true)
+			} else if ow.currIdx == 0 {
+				items = ow.guiControl.GetItems(nil, false)
+			} else {
+				items = ow.guiControl.GetItems(ow.categories[ow.currIdx], false)
+			}
+		}
+
+		ow.itemsWidget.items = items
+
+		if err := ow.itemsWidget.update(ui); err != nil {
+			return err
+		}
 	}
 
 	return nil

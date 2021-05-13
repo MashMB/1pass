@@ -25,6 +25,10 @@ func (ctrl *gocuiGuiControl) CountItems(category *domain.ItemCategory, trashed b
 	return ctrl.vaultFacade.CountItems(category, trashed)
 }
 
+func (ctrl *gocuiGuiControl) GetItems(category *domain.ItemCategory, trashed bool) []*domain.SimpleItem {
+	return ctrl.vaultFacade.GetItems(category, "", trashed)
+}
+
 func (ctrl *gocuiGuiControl) IsVaultUnlocked() bool {
 	return ctrl.vaultFacade.IsUnlocked()
 }

@@ -5,6 +5,8 @@
 package gui
 
 import (
+	"fmt"
+
 	"github.com/jroimartin/gocui"
 	"github.com/mashmb/1pass/1pass-core/core/domain"
 )
@@ -57,6 +59,31 @@ func (iw *itemsWidget) lock(ui *gocui.Gui, view *gocui.View) error {
 	return nil
 }
 
+func (iw *itemsWidget) update(ui *gocui.Gui) error {
+	view, err := ui.View(iw.name)
+
+	if err != nil {
+		return err
+	}
+
+	view.Clear()
+
+	if len(iw.items) > 0 {
+		for _, item := range iw.items {
+			title := item.Title
+
+			if title == "" {
+				title = "<NO TITLE>"
+			}
+
+			position := fmt.Sprintf("%v\n", title)
+			fmt.Fprint(view, position)
+		}
+	}
+
+	return nil
+}
+
 func (iw *itemsWidget) Keybindings(ui *gocui.Gui) error {
 	if err := ui.SetKeybinding(iw.name, gocui.KeyCtrlL, gocui.ModNone, iw.lock); err != nil {
 		return err
@@ -84,6 +111,8 @@ func (iw *itemsWidget) Layout(ui *gocui.Gui) error {
 		view.Title = iw.title
 		view.Highlight = true
 		view.SelBgColor = gocui.ColorBlue
+
+		iw.update(ui)
 
 		if _, err := ui.SetCurrentView(iw.name); err != nil {
 			return err
