@@ -34,7 +34,7 @@ func newItemsWidget(parent string, lockHandler func(ui *gocui.Gui, view *gocui.V
 		guiControl:  guiControl,
 	}
 
-	widget.detailsWidget = newDetailsWidget(widget.lock)
+	widget.detailsWidget = newDetailsWidget(widget.name, widget.lock)
 
 	return widget
 }
@@ -143,6 +143,14 @@ func (iw *itemsWidget) showOverview(ui *gocui.Gui) error {
 	return nil
 }
 
+func (iw *itemsWidget) toggleDetails(ui *gocui.Gui, view *gocui.View) error {
+	if _, err := ui.SetCurrentView(iw.detailsWidget.name); err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func (iw *itemsWidget) update(ui *gocui.Gui) error {
 	view, err := ui.View(iw.name)
 
@@ -213,6 +221,10 @@ func (iw *itemsWidget) Keybindings(ui *gocui.Gui) error {
 		return err
 	}
 
+	if err := ui.SetKeybinding(iw.name, gocui.KeyTab, gocui.ModNone, iw.toggleDetails); err != nil {
+		return err
+	}
+
 	return nil
 }
 
@@ -223,6 +235,9 @@ func (iw *itemsWidget) Layout(ui *gocui.Gui) error {
 		if err != gocui.ErrUnknownView {
 			return err
 		}
+
+		ui.Highlight = true
+		ui.SelFgColor = gocui.ColorBlue
 
 		view.Title = iw.title
 		view.Highlight = true

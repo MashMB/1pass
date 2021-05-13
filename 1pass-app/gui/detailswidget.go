@@ -15,16 +15,26 @@ import (
 type detailsWidget struct {
 	name        string
 	title       string
+	parent      string
 	lockHandler func(ui *gocui.Gui, view *gocui.View) error
 	item        *domain.Item
 }
 
-func newDetailsWidget(lockHandler func(ui *gocui.Gui, view *gocui.View) error) *detailsWidget {
+func newDetailsWidget(parent string, lockHandler func(ui *gocui.Gui, view *gocui.View) error) *detailsWidget {
 	return &detailsWidget{
 		name:        "detailsWidget",
 		title:       "Details",
+		parent:      parent,
 		lockHandler: lockHandler,
 	}
+}
+
+func (dw *detailsWidget) toggleDetails(ui *gocui.Gui, view *gocui.View) error {
+	if _, err := ui.SetCurrentView(dw.parent); err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func (dw *detailsWidget) update(overview bool, ui *gocui.Gui) error {
@@ -87,6 +97,10 @@ func (dw *detailsWidget) Keybindings(ui *gocui.Gui) error {
 		return err
 	}
 
+	if err := ui.SetKeybinding(dw.name, gocui.KeyTab, gocui.ModNone, dw.toggleDetails); err != nil {
+		return err
+	}
+
 	return nil
 }
 
@@ -97,6 +111,9 @@ func (dw *detailsWidget) Layout(ui *gocui.Gui) error {
 		if err != gocui.ErrUnknownView {
 			return err
 		}
+
+		ui.Highlight = true
+		ui.SelFgColor = gocui.ColorBlue
 
 		view.Title = dw.title
 	}
