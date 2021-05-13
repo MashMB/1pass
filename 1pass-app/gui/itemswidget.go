@@ -9,6 +9,7 @@ import (
 
 	"github.com/jroimartin/gocui"
 	"github.com/mashmb/1pass/1pass-core/core/domain"
+	"github.com/mashmb/1pass/1pass-core/port/in"
 )
 
 type itemsWidget struct {
@@ -19,9 +20,10 @@ type itemsWidget struct {
 	lockHandler   func(ui *gocui.Gui, view *gocui.View) error
 	detailsWidget *detailsWidget
 	items         []*domain.SimpleItem
+	guiControl    in.GuiControl
 }
 
-func newItemsWidget(parent string, lockHandler func(ui *gocui.Gui, view *gocui.View) error) *itemsWidget {
+func newItemsWidget(parent string, lockHandler func(ui *gocui.Gui, view *gocui.View) error, guiControl in.GuiControl) *itemsWidget {
 	return &itemsWidget{
 		currIdx:       -1,
 		name:          "itemsWidget",
@@ -30,6 +32,7 @@ func newItemsWidget(parent string, lockHandler func(ui *gocui.Gui, view *gocui.V
 		detailsWidget: newDetailsWidget(),
 		items:         make([]*domain.SimpleItem, 0),
 		parent:        parent,
+		guiControl:    guiControl,
 	}
 }
 
@@ -46,6 +49,10 @@ func (iw *itemsWidget) cursorDown(ui *gocui.Gui, view *gocui.View) error {
 		}
 
 		iw.currIdx++
+
+		if err := iw.showOverview(ui); err != nil {
+			return err
+		}
 	}
 
 	return nil
@@ -63,6 +70,10 @@ func (iw *itemsWidget) cursorUp(ui *gocui.Gui, view *gocui.View) error {
 		}
 
 		iw.currIdx--
+
+		if err := iw.showOverview(ui); err != nil {
+			return err
+		}
 	}
 
 	return nil
@@ -118,6 +129,17 @@ func (iw *itemsWidget) resetCursor(view *gocui.View) error {
 
 }
 
+func (iw *itemsWidget) showOverview(ui *gocui.Gui) error {
+	item := iw.guiControl.GetItem(iw.items[iw.currIdx])
+	iw.detailsWidget.item = item
+
+	if err := iw.detailsWidget.update(true, ui); err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func (iw *itemsWidget) update(ui *gocui.Gui) error {
 	view, err := ui.View(iw.name)
 
@@ -142,6 +164,10 @@ func (iw *itemsWidget) update(ui *gocui.Gui) error {
 		}
 
 		iw.currIdx = 0
+
+		if err := iw.showOverview(ui); err != nil {
+			return err
+		}
 	}
 
 	return nil

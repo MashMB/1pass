@@ -25,6 +25,10 @@ func (ctrl *gocuiGuiControl) CountItems(category *domain.ItemCategory, trashed b
 	return ctrl.vaultFacade.CountItems(category, trashed)
 }
 
+func (ctrl *gocuiGuiControl) GetItem(simple *domain.SimpleItem) *domain.Item {
+	return ctrl.vaultFacade.GetItem(simple.Uid, simple.Trashed)
+}
+
 func (ctrl *gocuiGuiControl) GetItems(category *domain.ItemCategory, trashed bool) []*domain.SimpleItem {
 	return ctrl.vaultFacade.GetItems(category, "", trashed)
 }
