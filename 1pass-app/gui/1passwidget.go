@@ -83,7 +83,11 @@ func (ow *onepassWidget) lock(ui *gocui.Gui, view *gocui.View) error {
 	ow.currIdx = -1
 	ow.categories = make([]*domain.ItemCategory, 0)
 	ow.guiControl.LockVault()
-	ow.resetCursor(view)
+
+	if err := ow.resetCursor(view); err != nil {
+		return err
+	}
+
 	view.Clear()
 
 	if err := ow.update(ui); err != nil {

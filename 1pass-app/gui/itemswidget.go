@@ -129,7 +129,6 @@ func (iw *itemsWidget) resetCursor(view *gocui.View) error {
 	}
 
 	return nil
-
 }
 
 func (iw *itemsWidget) showOverview(ui *gocui.Gui) error {
@@ -159,7 +158,11 @@ func (iw *itemsWidget) update(ui *gocui.Gui) error {
 	}
 
 	iw.currIdx = -1
-	iw.resetCursor(view)
+
+	if err := iw.resetCursor(view); err != nil {
+		return err
+	}
+
 	view.Clear()
 
 	if len(iw.items) > 0 {
