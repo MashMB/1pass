@@ -6,6 +6,6 @@ module github.com/mashmb/1pass/1pass-up
 
 go 1.15
 
-require github.com/mashmb/1pass/1pass-core v1.2.0
+require github.com/mashmb/1pass/1pass-core v1.3.0
 
 replace github.com/mashmb/1pass/1pass-core => ../1pass-core
