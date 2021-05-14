@@ -43,9 +43,12 @@ func (ed *errorDialog) Layout(ui *gocui.Gui) error {
 			return err
 		}
 
-		ui.Highlight = false
+		ui.Highlight = true
+		ui.SelFgColor = gocui.ColorRed
 
 		view.Title = ed.title
+		view.Highlight = true
+		view.SelFgColor = gocui.ColorRed
 
 		if _, err := ui.SetCurrentView(ed.name); err != nil {
 			return err
