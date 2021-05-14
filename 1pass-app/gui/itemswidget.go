@@ -255,7 +255,7 @@ func (iw *itemsWidget) Keybindings(ui *gocui.Gui) error {
 func (iw *itemsWidget) Layout(ui *gocui.Gui) error {
 	maxX, maxY := ui.Size()
 
-	if view, err := ui.SetView(iw.name, 1, 1, int(0.5*float32(maxX-2)), maxY-5); err != nil {
+	if view, err := ui.SetView(iw.name, 1, 4, int(0.5*float32(maxX-2)), maxY-5); err != nil {
 		if err != gocui.ErrUnknownView {
 			return err
 		}
