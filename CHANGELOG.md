@@ -2,7 +2,7 @@
 
 History of **1Pass** releases with changes description.
 
-## Release 1.3.0
+## Release 1.3.0 [14.05.2021]
 
 - [GUI] Display notification about update
 - [GUI] Check for update asynchronously
