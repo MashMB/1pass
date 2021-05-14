@@ -15,11 +15,17 @@ import (
 	"github.com/mashmb/1pass/1pass-core/port/in"
 )
 
+const (
+	onepassHelp string = `Navigate up/down: k/j
+Open: ENTER`
+)
+
 type onepassWidget struct {
 	currIdx     int
 	name        string
 	title       string
 	errDialog   *errorDialog
+	helpWidget  *helpWidget
 	itemsWidget *itemsWidget
 	passPrompt  *passwordPrompt
 	categories  []*domain.ItemCategory
@@ -27,12 +33,13 @@ type onepassWidget struct {
 	guiControl  in.GuiControl
 }
 
-func newOnepassWidget(vault *domain.Vault, guiControl in.GuiControl) *onepassWidget {
+func newOnepassWidget(helpWidget *helpWidget, vault *domain.Vault, guiControl in.GuiControl) *onepassWidget {
 	widget := &onepassWidget{
 		currIdx:    -1,
 		title:      "1Pass",
 		name:       "1pass",
 		errDialog:  newErrorDialog(),
+		helpWidget: helpWidget,
 		categories: make([]*domain.ItemCategory, 0),
 		vault:      vault,
 		guiControl: guiControl,
@@ -282,7 +289,7 @@ func (ow *onepassWidget) Keybindings(ui *gocui.Gui) error {
 func (ow *onepassWidget) Layout(ui *gocui.Gui) error {
 	maxX, maxY := ui.Size()
 
-	if view, err := ui.SetView(ow.name, 0, 0, maxX-1, maxY-1); err != nil {
+	if view, err := ui.SetView(ow.name, 0, 0, maxX-1, maxY-4); err != nil {
 		if err != gocui.ErrUnknownView {
 			return err
 		}
@@ -298,6 +305,12 @@ func (ow *onepassWidget) Layout(ui *gocui.Gui) error {
 		}
 
 		if err := ow.update(ui); err != nil {
+			return err
+		}
+
+		ow.helpWidget.help = onepassHelp
+
+		if err := ow.helpWidget.update(ui); err != nil {
 			return err
 		}
 	}
