@@ -143,6 +143,13 @@ func (iw *itemsWidget) showOverview(ui *gocui.Gui) error {
 }
 
 func (iw *itemsWidget) toggleDetails(ui *gocui.Gui, view *gocui.View) error {
+	item := iw.guiControl.GetItem(iw.items[iw.currIdx])
+	iw.detailsWidget.item = item
+
+	if err := iw.detailsWidget.update(false, ui); err != nil {
+		return err
+	}
+
 	if _, err := ui.SetCurrentView(iw.detailsWidget.name); err != nil {
 		return err
 	}
