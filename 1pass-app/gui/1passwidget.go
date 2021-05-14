@@ -46,7 +46,7 @@ func newOnepassWidget(helpWidget *helpWidget, vault *domain.Vault, guiControl in
 	}
 
 	widget.passPrompt = newPasswordPrompt(widget.unlock)
-	widget.itemsWidget = newItemsWidget(widget.name, widget.lock, widget.guiControl)
+	widget.itemsWidget = newItemsWidget(widget.name, helpWidget, widget.lock, widget.guiControl)
 
 	return widget
 }

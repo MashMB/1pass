@@ -12,6 +12,12 @@ import (
 	"github.com/mashmb/1pass/1pass-core/port/in"
 )
 
+const (
+	itemsHelp string = `Navigate up/down: k/j
+Go back: Q
+Reveal item: TAB`
+)
+
 type itemsWidget struct {
 	currIdx       int
 	name          string
@@ -19,16 +25,18 @@ type itemsWidget struct {
 	title         string
 	lockHandler   func(ui *gocui.Gui, view *gocui.View) error
 	detailsWidget *detailsWidget
+	helpWidget    *helpWidget
 	items         []*domain.SimpleItem
 	guiControl    in.GuiControl
 }
 
-func newItemsWidget(parent string, lockHandler func(ui *gocui.Gui, view *gocui.View) error, guiControl in.GuiControl) *itemsWidget {
+func newItemsWidget(parent string, helpWidget *helpWidget, lockHandler func(ui *gocui.Gui, view *gocui.View) error, guiControl in.GuiControl) *itemsWidget {
 	widget := &itemsWidget{
 		currIdx:     -1,
 		name:        "itemsWidget",
 		title:       "Items",
 		lockHandler: lockHandler,
+		helpWidget:  helpWidget,
 		items:       make([]*domain.SimpleItem, 0),
 		parent:      parent,
 		guiControl:  guiControl,
@@ -241,7 +249,7 @@ func (iw *itemsWidget) Keybindings(ui *gocui.Gui) error {
 func (iw *itemsWidget) Layout(ui *gocui.Gui) error {
 	maxX, maxY := ui.Size()
 
-	if view, err := ui.SetView(iw.name, 1, 1, int(0.5*float32(maxX-2)), maxY-2); err != nil {
+	if view, err := ui.SetView(iw.name, 1, 1, int(0.5*float32(maxX-2)), maxY-5); err != nil {
 		if err != gocui.ErrUnknownView {
 			return err
 		}
@@ -261,6 +269,12 @@ func (iw *itemsWidget) Layout(ui *gocui.Gui) error {
 		}
 
 		if _, err := ui.SetCurrentView(iw.name); err != nil {
+			return err
+		}
+
+		iw.helpWidget.help = itemsHelp
+
+		if err := iw.helpWidget.update(ui); err != nil {
 			return err
 		}
 	}
