@@ -4,6 +4,9 @@ History of **1Pass** releases with changes description.
 
 ## Release 1.3.0
 
+- [GUI] Display notification about update
+- [GUI] Check for update asynchronously
+- [GUI] Display actual application version
 - [GUI] Contextual help for item details widget
 - [GUI] Contextual help for items widget
 - [GUI] Contextual help for 1pass widget
