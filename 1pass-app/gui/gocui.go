@@ -14,11 +14,13 @@ import (
 )
 
 type GocuiGui struct {
+	version    string
 	guiControl in.GuiControl
 }
 
-func NewGocuiGui(guiControl in.GuiControl) *GocuiGui {
+func NewGocuiGui(version string, guiControl in.GuiControl) *GocuiGui {
 	return &GocuiGui{
+		version:    version,
 		guiControl: guiControl,
 	}
 }
@@ -42,7 +44,7 @@ func (gui *GocuiGui) Run(vaultPath string) {
 	}
 
 	defer ui.Close()
-	version := newVerWidget()
+	version := newVerWidget(gui.version)
 	help := newHelpWidget()
 	onepass := newOnepassWidget(help, vault, gui.guiControl)
 	ui.SetManager(version, help, onepass)

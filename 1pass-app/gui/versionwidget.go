@@ -5,18 +5,22 @@
 package gui
 
 import (
+	"fmt"
+
 	"github.com/jroimartin/gocui"
 )
 
 type verWidget struct {
-	name  string
-	title string
+	name    string
+	title   string
+	version string
 }
 
-func newVerWidget() *verWidget {
+func newVerWidget(version string) *verWidget {
 	return &verWidget{
-		name:  "verWidget",
-		title: "Version",
+		name:    "verWidget",
+		title:   "Version",
+		version: version,
 	}
 }
 
@@ -29,6 +33,8 @@ func (vw *verWidget) Layout(ui *gocui.Gui) error {
 		}
 
 		view.Title = vw.title
+		version := fmt.Sprintf("1Pass v%v ", vw.version)
+		fmt.Fprint(view, version)
 	}
 
 	return nil

@@ -70,7 +70,7 @@ func main() {
 	cliControl = cobra.NewCobraCliControl(configFacade, updateFacade, vaultFacade)
 	guiControl = gocui.NewGocuiGuiControl(configFacade, vaultFacade)
 
-	gui := gui.NewGocuiGui(guiControl)
+	gui := gui.NewGocuiGui(domain.Version, guiControl)
 	cobraCli := cli.NewCobraCli(domain.Version, gui, cliControl)
 	cobraCli.Run()
 }
