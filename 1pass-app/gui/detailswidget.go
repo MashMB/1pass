@@ -12,20 +12,28 @@ import (
 	"github.com/mashmb/1pass/1pass-core/core/domain"
 )
 
+const (
+	detailsHelp string = `Scroll up/down: k/j
+Scroll left/right: h/l
+Cover item: TAB`
+)
+
 type detailsWidget struct {
 	name        string
 	title       string
 	parent      string
 	lockHandler func(ui *gocui.Gui, view *gocui.View) error
+	helpWidget  *helpWidget
 	item        *domain.Item
 }
 
-func newDetailsWidget(parent string, lockHandler func(ui *gocui.Gui, view *gocui.View) error) *detailsWidget {
+func newDetailsWidget(parent string, helpWidget *helpWidget, lockHandler func(ui *gocui.Gui, view *gocui.View) error) *detailsWidget {
 	return &detailsWidget{
 		name:        "detailsWidget",
 		title:       "Details",
 		parent:      parent,
 		lockHandler: lockHandler,
+		helpWidget:  helpWidget,
 	}
 }
 
@@ -107,6 +115,12 @@ func (dw *detailsWidget) toggleDetails(ui *gocui.Gui, view *gocui.View) error {
 	}
 
 	if _, err := ui.SetCurrentView(dw.parent); err != nil {
+		return err
+	}
+
+	dw.helpWidget.help = itemsHelp
+
+	if err := dw.helpWidget.update(ui); err != nil {
 		return err
 	}
 
@@ -243,7 +257,7 @@ func (dw *detailsWidget) Keybindings(ui *gocui.Gui) error {
 func (dw *detailsWidget) Layout(ui *gocui.Gui) error {
 	maxX, maxY := ui.Size()
 
-	if view, err := ui.SetView(dw.name, int(0.5*float32(maxX-2)+1), 1, maxX-2, maxY-2); err != nil {
+	if view, err := ui.SetView(dw.name, int(0.5*float32(maxX-2)+1), 1, maxX-2, maxY-5); err != nil {
 		if err != gocui.ErrUnknownView {
 			return err
 		}

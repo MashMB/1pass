@@ -42,7 +42,7 @@ func newItemsWidget(parent string, helpWidget *helpWidget, lockHandler func(ui *
 		guiControl:  guiControl,
 	}
 
-	widget.detailsWidget = newDetailsWidget(widget.name, widget.lock)
+	widget.detailsWidget = newDetailsWidget(widget.name, widget.helpWidget, widget.lock)
 
 	return widget
 }
@@ -159,6 +159,12 @@ func (iw *itemsWidget) toggleDetails(ui *gocui.Gui, view *gocui.View) error {
 	}
 
 	if _, err := ui.SetCurrentView(iw.detailsWidget.name); err != nil {
+		return err
+	}
+
+	iw.helpWidget.help = detailsHelp
+
+	if err := iw.helpWidget.update(ui); err != nil {
 		return err
 	}
 
