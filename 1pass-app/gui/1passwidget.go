@@ -101,6 +101,12 @@ func (ow *onepassWidget) lock(ui *gocui.Gui, view *gocui.View) error {
 		return err
 	}
 
+	ow.helpWidget.help = onepassHelp
+
+	if err := ow.helpWidget.update(ui); err != nil {
+		return err
+	}
+
 	return nil
 }
 
