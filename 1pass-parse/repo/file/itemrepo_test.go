@@ -11,7 +11,7 @@ import (
 )
 
 func setupFileItemRepo() *fileItemRepo {
-	vault := domain.NewVault("../../../../../assets/onepassword_data")
+	vault := domain.NewVault("../../../assets/onepassword_data")
 	repo := NewFileItemRepo()
 	items := make([]*domain.Item, 0)
 	rawItems := repo.LoadItems(vault)
@@ -28,6 +28,30 @@ func setupFileItemRepo() *fileItemRepo {
 	repo.StoreItems(items)
 
 	return repo
+}
+
+func TestCountByCategoryAndTrashed(t *testing.T) {
+	repo := setupFileItemRepo()
+	expected := 27
+	all := repo.CountByCategoryAndTrashed(nil, false)
+
+	if all != expected {
+		t.Errorf("CountByCategoryAndTrashed() = %d; expected %d", all, expected)
+	}
+
+	expected = 2
+	trashed := repo.CountByCategoryAndTrashed(nil, true)
+
+	if trashed != expected {
+		t.Errorf("CountByCategoryAndTrashed() = %d; expected %d", trashed, expected)
+	}
+
+	expected = 10
+	logins := repo.CountByCategoryAndTrashed(domain.ItemCategoryEnum.Login, false)
+
+	if logins != expected {
+		t.Errorf("CountByCategoryAndTrashed() = %d; expected %d", logins, expected)
+	}
 }
 
 func TestFindByCategoryAndTitleAndTrashed(t *testing.T) {
@@ -90,7 +114,7 @@ func TestFindFirtByUidAndTrashed(t *testing.T) {
 
 func TestLoadItems(t *testing.T) {
 	repo := NewFileItemRepo()
-	vault := domain.NewVault("../../../../../assets/onepassword_data")
+	vault := domain.NewVault("../../../assets/onepassword_data")
 	expected := 29
 	items := repo.LoadItems(vault)
 

@@ -10,15 +10,17 @@ import (
 	"path/filepath"
 
 	"github.com/mashmb/1pass/1pass-app/cli"
+	"github.com/mashmb/1pass/1pass-app/gui"
 	"github.com/mashmb/1pass/1pass-core/core/domain"
 	"github.com/mashmb/1pass/1pass-core/core/facade"
 	"github.com/mashmb/1pass/1pass-core/core/service"
 	"github.com/mashmb/1pass/1pass-core/port/in"
 	"github.com/mashmb/1pass/1pass-core/port/out"
-	"github.com/mashmb/1pass/1pass-parse/adapter/out/repo/file"
-	"github.com/mashmb/1pass/1pass-parse/adapter/out/util/crypto"
-	"github.com/mashmb/1pass/1pass-term/adapter/in/cobra"
-	"github.com/mashmb/1pass/1pass-up/adapter/out/github"
+	"github.com/mashmb/1pass/1pass-parse/repo/file"
+	"github.com/mashmb/1pass/1pass-parse/util/pbkdf2"
+	"github.com/mashmb/1pass/1pass-term/control/cobra"
+	"github.com/mashmb/1pass/1pass-term/control/gocui"
+	"github.com/mashmb/1pass/1pass-up/component/github"
 )
 
 func main() {
@@ -47,9 +49,10 @@ func main() {
 	var vaultFacade facade.VaultFacade
 
 	var cliControl in.CliControl
+	var guiControl in.GuiControl
 
 	configRepo = file.NewFileConfigRepo(configDir)
-	cryptoUtils = crypto.NewPbkdf2CryptoUtils()
+	cryptoUtils = pbkdf2.NewPbkdf2CryptoUtils()
 	itemRepo = file.NewFileItemRepo()
 	profileRepo = file.NewFileProfileRepo()
 	updater = github.NewGithubUpdater()
@@ -65,7 +68,9 @@ func main() {
 	vaultFacade = facade.NewDfltVaultFacade(configService, itemService, keyService, vaultService)
 
 	cliControl = cobra.NewCobraCliControl(configFacade, updateFacade, vaultFacade)
+	guiControl = gocui.NewGocuiGuiControl(configFacade, updateFacade, vaultFacade)
 
-	cobraCli := cli.NewCobraCli(domain.Version, cliControl)
+	gui := gui.NewGocuiGui(domain.Version, guiControl)
+	cobraCli := cli.NewCobraCli(domain.Version, gui, cliControl)
 	cobraCli.Run()
 }

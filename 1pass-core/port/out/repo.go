@@ -23,6 +23,8 @@ type ConfigRepo interface {
 }
 
 type ItemRepo interface {
+	CountByCategoryAndTrashed(category *domain.ItemCategory, trashed bool) int
+
 	FindByCategoryAndTitleAndTrashed(category *domain.ItemCategory, title string, trashed bool) []*domain.Item
 
 	FindFirstByUidAndTrashed(uid string, trashed bool) *domain.Item

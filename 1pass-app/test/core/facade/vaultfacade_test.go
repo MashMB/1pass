@@ -11,8 +11,8 @@ import (
 	corefacade "github.com/mashmb/1pass/1pass-core/core/facade"
 	"github.com/mashmb/1pass/1pass-core/core/service"
 	"github.com/mashmb/1pass/1pass-core/port/out"
-	"github.com/mashmb/1pass/1pass-parse/adapter/out/repo/file"
-	"github.com/mashmb/1pass/1pass-parse/adapter/out/util/crypto"
+	"github.com/mashmb/1pass/1pass-parse/repo/file"
+	"github.com/mashmb/1pass/1pass-parse/util/pbkdf2"
 )
 
 func setupVaultFacade() corefacade.VaultFacade {
@@ -27,7 +27,7 @@ func setupVaultFacade() corefacade.VaultFacade {
 	var vaultService service.VaultService
 
 	configRepo = file.NewFileConfigRepo("../../../../assets/1pass.yml")
-	cryptoUtils = crypto.NewPbkdf2CryptoUtils()
+	cryptoUtils = pbkdf2.NewPbkdf2CryptoUtils()
 	itemRepo = file.NewFileItemRepo()
 	profileRepo = file.NewFileProfileRepo()
 
@@ -37,6 +37,35 @@ func setupVaultFacade() corefacade.VaultFacade {
 	vaultService = service.NewDfltVaultService(itemRepo, profileRepo)
 
 	return corefacade.NewDfltVaultFacade(configService, itemService, keyService, vaultService)
+}
+
+func TestCountItems(t *testing.T) {
+	facade := setupVaultFacade()
+	pass := "freddy"
+	vault := domain.NewVault("../../../../assets/onepassword_data")
+	facade.Validate(vault)
+	facade.Unlock(vault, pass)
+	expected := 27
+	all := facade.CountItems(nil, false)
+
+	if all != expected {
+		t.Errorf("CountItems() = %d; expected %d", all, expected)
+	}
+
+	expected = 2
+	trashed := facade.CountItems(nil, true)
+
+	if trashed != expected {
+		t.Errorf("CountItems() = %d; expected %d", trashed, expected)
+	}
+
+	expected = 10
+	logins := facade.CountItems(domain.ItemCategoryEnum.Login, false)
+
+	if logins != expected {
+		t.Errorf("CountItems() = %d; expected %d", logins, expected)
+	}
+
 }
 
 func TestGetItem(t *testing.T) {

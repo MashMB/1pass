@@ -10,8 +10,8 @@ import (
 	"github.com/mashmb/1pass/1pass-core/core/domain"
 	coreservice "github.com/mashmb/1pass/1pass-core/core/service"
 	"github.com/mashmb/1pass/1pass-core/port/out"
-	"github.com/mashmb/1pass/1pass-parse/adapter/out/repo/file"
-	"github.com/mashmb/1pass/1pass-parse/adapter/out/util/crypto"
+	"github.com/mashmb/1pass/1pass-parse/repo/file"
+	"github.com/mashmb/1pass/1pass-parse/util/pbkdf2"
 )
 
 func setupItemServiceAndKeys() (coreservice.ItemService, *domain.Keys) {
@@ -24,7 +24,7 @@ func setupItemServiceAndKeys() (coreservice.ItemService, *domain.Keys) {
 
 	var keyService coreservice.KeyService
 
-	crytpoUtils = crypto.NewPbkdf2CryptoUtils()
+	crytpoUtils = pbkdf2.NewPbkdf2CryptoUtils()
 	itemRepo = file.NewFileItemRepo()
 	profileRepo = file.NewFileProfileRepo()
 	profileRepo.LoadProfile(vault)
@@ -39,6 +39,30 @@ func setupItemServiceAndKeys() (coreservice.ItemService, *domain.Keys) {
 	itemService.DecodeItems(vault, keys)
 
 	return itemService, keys
+}
+
+func TestCountItems(t *testing.T) {
+	itemService, _ := setupItemServiceAndKeys()
+	expected := 27
+	all := itemService.CountItems(nil, false)
+
+	if all != expected {
+		t.Errorf("CountItems() = %d; expected %d", all, expected)
+	}
+
+	expected = 2
+	trashed := itemService.CountItems(nil, true)
+
+	if trashed != expected {
+		t.Errorf("CountItems() = %d; expected %d", trashed, expected)
+	}
+
+	expected = 10
+	logins := itemService.CountItems(domain.ItemCategoryEnum.Login, false)
+
+	if logins != expected {
+		t.Errorf("CountItems() = %d; expected %d", logins, expected)
+	}
 }
 
 func TestDecodeDetails(t *testing.T) {
@@ -64,7 +88,7 @@ func TestDecodeItems(t *testing.T) {
 
 	var keyService coreservice.KeyService
 
-	crytpoUtils = crypto.NewPbkdf2CryptoUtils()
+	crytpoUtils = pbkdf2.NewPbkdf2CryptoUtils()
 	itemRepo = file.NewFileItemRepo()
 	profileRepo = file.NewFileProfileRepo()
 	profileRepo.LoadProfile(vault)

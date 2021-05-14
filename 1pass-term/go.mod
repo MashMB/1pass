@@ -8,6 +8,6 @@ go 1.15
 
 require (
 	github.com/jedib0t/go-pretty/v6 v6.2.1
-	github.com/mashmb/1pass/1pass-core v1.2.0
+	github.com/mashmb/1pass/1pass-core v1.3.0
 	golang.org/x/term v0.0.0-20210422114643-f5beecf764ed
 )

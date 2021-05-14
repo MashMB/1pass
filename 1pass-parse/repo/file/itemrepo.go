@@ -22,6 +22,24 @@ func NewFileItemRepo() *fileItemRepo {
 	return &fileItemRepo{}
 }
 
+func (repo *fileItemRepo) CountByCategoryAndTrashed(category *domain.ItemCategory, trashed bool) int {
+	count := 0
+
+	for _, item := range repo.items {
+		if category == nil {
+			if item.Trashed == trashed {
+				count++
+			}
+		} else {
+			if item.Category == category && item.Trashed == trashed {
+				count++
+			}
+		}
+	}
+
+	return count
+}
+
 func (repo *fileItemRepo) FindByCategoryAndTitleAndTrashed(category *domain.ItemCategory, title string, trashed bool) []*domain.Item {
 	title = strings.ToLower(title)
 	resultSet := make([]*domain.Item, 0)

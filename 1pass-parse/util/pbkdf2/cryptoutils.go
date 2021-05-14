@@ -2,7 +2,7 @@
 //
 // @author TSS
 
-package crypto
+package pbkdf2
 
 import (
 	"hash"

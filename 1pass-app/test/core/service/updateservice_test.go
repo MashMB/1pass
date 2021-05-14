@@ -11,7 +11,7 @@ import (
 	"github.com/mashmb/1pass/1pass-core/core/domain"
 	coreservice "github.com/mashmb/1pass/1pass-core/core/service"
 	"github.com/mashmb/1pass/1pass-core/port/out"
-	"github.com/mashmb/1pass/1pass-up/adapter/out/github"
+	"github.com/mashmb/1pass/1pass-up/component/github"
 )
 
 func setupUpdateService() coreservice.UpdateService {

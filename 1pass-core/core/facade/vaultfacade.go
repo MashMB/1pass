@@ -27,6 +27,10 @@ func NewDfltVaultFacade(configService service.ConfigService, itemService service
 	}
 }
 
+func (f *dfltVaultFacade) CountItems(category *domain.ItemCategory, trashed bool) int {
+	return f.itemService.CountItems(category, trashed)
+}
+
 func (f *dfltVaultFacade) GetItem(uid string, trashed bool) *domain.Item {
 	return f.itemService.GetItem(uid, trashed)
 }

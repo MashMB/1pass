@@ -14,7 +14,7 @@ term = 1pass-term
 test-all = test-core test-parse test-update test-term test-app
 test-all-simple = test-core.s test-parse.s test-update.s test-term.s test-app.s
 update = 1pass-up
-version = 1.2.0
+version = 1.3.0
 
 all: build
 

@@ -31,6 +31,10 @@ func (s *dfltItemService) ClearMemory() {
 	s.itemRepo.RemoveItems()
 }
 
+func (s *dfltItemService) CountItems(category *domain.ItemCategory, trashed bool) int {
+	return s.itemRepo.CountByCategoryAndTrashed(category, trashed)
+}
+
 func (s *dfltItemService) DecodeDetails(encoded *domain.RawItem, keys *domain.Keys) map[string]interface{} {
 	var detailsJson map[string]interface{}
 	detailsData, _ := base64.StdEncoding.DecodeString(encoded.Details)
@@ -129,7 +133,7 @@ func (s *dfltItemService) GetSimpleItems(category *domain.ItemCategory, title st
 	decodedItems := s.itemRepo.FindByCategoryAndTitleAndTrashed(category, title, trashed)
 
 	for _, decoded := range decodedItems {
-		item := domain.NewSimpleItem(decoded.Category, decoded.Title, decoded.Uid)
+		item := domain.NewSimpleItem(decoded.Category, decoded.Title, decoded.Trashed, decoded.Uid)
 		items = append(items, item)
 	}
 

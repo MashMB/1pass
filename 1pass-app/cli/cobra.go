@@ -7,6 +7,7 @@ package cli
 import (
 	"fmt"
 
+	"github.com/mashmb/1pass/1pass-app/gui"
 	"github.com/mashmb/1pass/1pass-core/port/in"
 	"github.com/spf13/cobra"
 )
@@ -17,12 +18,14 @@ type cobraCli struct {
 	trashed    bool
 	vault      string
 	version    string
+	gui        *gui.GocuiGui
 	cliControl in.CliControl
 }
 
-func NewCobraCli(version string, cliControl in.CliControl) *cobraCli {
+func NewCobraCli(version string, gui *gui.GocuiGui, cliControl in.CliControl) *cobraCli {
 	return &cobraCli{
 		version:    version,
+		gui:        gui,
 		cliControl: cliControl,
 	}
 }
@@ -32,12 +35,14 @@ func (cli *cobraCli) init() *cobra.Command {
 		Use:   "1pass",
 		Short: "1Password Linux CLI explorer",
 		Long: `Fast and Linux user friendly application used to explore 1Password OPVault format. Check your credentials 
-efficiently in terminal. Run '1pass --help' for more informations.`,
+efficiently in terminal.`,
 		Run: func(cmd *cobra.Command, args []string) {
-			cli.cliControl.CheckForUpdate()
-			fmt.Println(fmt.Sprintf("%v\n%v", cmd.Short, cmd.Long))
+			cli.cliControl.FirstRun()
+			cli.gui.Run(cli.vault)
 		},
 	}
+
+	rootCmd.Flags().StringVarP(&cli.vault, "vault", "v", "", "OPVault path")
 
 	updateCmd := &cobra.Command{
 		Use:   "update",

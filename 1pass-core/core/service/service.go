@@ -19,6 +19,8 @@ type ConfigService interface {
 type ItemService interface {
 	ClearMemory()
 
+	CountItems(category *domain.ItemCategory, trashed bool) int
+
 	DecodeDetails(encoded *domain.RawItem, keys *domain.Keys) map[string]interface{}
 
 	DecodeItems(vault *domain.Vault, keys *domain.Keys)
