@@ -68,7 +68,7 @@ func main() {
 	vaultFacade = facade.NewDfltVaultFacade(configService, itemService, keyService, vaultService)
 
 	cliControl = cobra.NewCobraCliControl(configFacade, updateFacade, vaultFacade)
-	guiControl = gocui.NewGocuiGuiControl(configFacade, vaultFacade)
+	guiControl = gocui.NewGocuiGuiControl(configFacade, updateFacade, vaultFacade)
 
 	gui := gui.NewGocuiGui(domain.Version, guiControl)
 	cobraCli := cli.NewCobraCli(domain.Version, gui, cliControl)

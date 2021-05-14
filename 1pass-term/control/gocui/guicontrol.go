@@ -11,14 +11,21 @@ import (
 
 type gocuiGuiControl struct {
 	configFacade facade.ConfigFacade
+	updateFacade facade.UpdateFacade
 	vaultFacade  facade.VaultFacade
 }
 
-func NewGocuiGuiControl(configFacade facade.ConfigFacade, vaultFacade facade.VaultFacade) *gocuiGuiControl {
+func NewGocuiGuiControl(configFacade facade.ConfigFacade, updateFacade facade.UpdateFacade,
+	vaultFacade facade.VaultFacade) *gocuiGuiControl {
 	return &gocuiGuiControl{
 		configFacade: configFacade,
+		updateFacade: updateFacade,
 		vaultFacade:  vaultFacade,
 	}
+}
+
+func (ctrl *gocuiGuiControl) CheckForUpdate() (*domain.UpdateInfo, error) {
+	return ctrl.updateFacade.CheckForUpdate(true)
 }
 
 func (ctrl *gocuiGuiControl) CountItems(category *domain.ItemCategory, trashed bool) int {

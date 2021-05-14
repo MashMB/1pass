@@ -44,7 +44,7 @@ func (gui *GocuiGui) Run(vaultPath string) {
 	}
 
 	defer ui.Close()
-	version := newVerWidget(gui.version)
+	version := newVerWidget(gui.version, gui.guiControl)
 	help := newHelpWidget()
 	onepass := newOnepassWidget(help, vault, gui.guiControl)
 	ui.SetManager(version, help, onepass)

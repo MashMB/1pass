@@ -27,6 +27,8 @@ type CliControl interface {
 }
 
 type GuiControl interface {
+	CheckForUpdate() (*domain.UpdateInfo, error)
+
 	CountItems(category *domain.ItemCategory, trashed bool) int
 
 	GetItem(simple *domain.SimpleItem) *domain.Item
