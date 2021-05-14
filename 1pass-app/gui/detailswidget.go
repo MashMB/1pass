@@ -102,6 +102,10 @@ func (dw *detailsWidget) scrollUp(ui *gocui.Gui, view *gocui.View) error {
 }
 
 func (dw *detailsWidget) toggleDetails(ui *gocui.Gui, view *gocui.View) error {
+	if err := dw.update(true, ui); err != nil {
+		return err
+	}
+
 	if _, err := ui.SetCurrentView(dw.parent); err != nil {
 		return err
 	}
@@ -161,7 +165,31 @@ func (dw *detailsWidget) update(overview bool, ui *gocui.Gui) error {
 				fmt.Fprint(view, "**********\n")
 			}
 		} else {
-			// TODO: item details
+			if dw.item.Sections != nil {
+				for _, section := range dw.item.Sections {
+					fmt.Fprint(view, "\n")
+
+					if section.Title != "" {
+						fmt.Fprint(view, fmt.Sprintf("%v\n", section.Title))
+					}
+
+					fmt.Fprint(view, "------------------------------\n")
+
+					if section.Fields != nil {
+						for _, field := range section.Fields {
+							fmt.Fprint(view, fmt.Sprintf("%v: %v\n", field.Name, field.Value))
+						}
+					}
+				}
+
+				fmt.Fprint(view, "\n")
+			}
+
+			if dw.item.Notes != "" {
+				fmt.Fprint(view, "Notes\n")
+				fmt.Fprint(view, "------------------------------\n")
+				fmt.Fprint(view, fmt.Sprintf("%v\n", dw.item.Notes))
+			}
 		}
 	}
 
