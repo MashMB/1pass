@@ -4,6 +4,7 @@ History of **1Pass** releases with changes description.
 
 ## Release 1.3.0
 
+- [GUI] Display decoded item details
 - [GUI] Scroll item details left
 - [GUI] Scroll item details right
 - [GUI] Scroll item details up
