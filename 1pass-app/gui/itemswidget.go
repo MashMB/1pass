@@ -244,6 +244,7 @@ func (iw *itemsWidget) Layout(ui *gocui.Gui) error {
 
 		view.Title = iw.title
 		view.Highlight = true
+		view.SelFgColor = gocui.ColorDefault
 		view.SelBgColor = gocui.ColorBlue
 
 		iw.update(ui)

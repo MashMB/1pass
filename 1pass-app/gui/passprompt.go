@@ -38,6 +38,8 @@ func (pp *passwordPrompt) Layout(ui *gocui.Gui) error {
 			return err
 		}
 
+		ui.Highlight = false
+
 		view.Title = pp.title
 		view.Editable = true
 		view.Mask = '*'

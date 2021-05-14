@@ -43,6 +43,8 @@ func (ed *errorDialog) Layout(ui *gocui.Gui) error {
 			return err
 		}
 
+		ui.Highlight = false
+
 		view.Title = ed.title
 
 		if _, err := ui.SetCurrentView(ed.name); err != nil {

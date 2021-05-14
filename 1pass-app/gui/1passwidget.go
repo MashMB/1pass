@@ -287,6 +287,8 @@ func (ow *onepassWidget) Layout(ui *gocui.Gui) error {
 			return err
 		}
 
+		ui.Highlight = false
+
 		view.Title = ow.title
 		view.Highlight = true
 		view.SelBgColor = gocui.ColorBlue
