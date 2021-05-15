@@ -4,8 +4,10 @@ History of **1Pass** releases with changes description.
 
 ## Release 1.3.1
 
+- (FIX) [CLI] Accept more reasonable update timeout during configuration (in range from 1 to 30 seconds)
 - (FIX) [CLI] Update check can be shifted for one year maximum
 - (FIX) [CLI] No configuration abort on invalid values (continue with actual state)
+- (FIX) [API] Default update timeout set to 1 second
 - (FIX) [API] Clear cache (temporary directory) before update
 - (FIX) [API] Do not parse fields with value but without name
 
