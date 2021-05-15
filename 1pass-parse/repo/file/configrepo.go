@@ -64,7 +64,7 @@ func (repo *fileConfigRepo) GetDefaultVault() string {
 }
 
 func (repo *fileConfigRepo) GetTimeout() int {
-	timeout := 2
+	timeout := 1
 
 	if repo.config["timeout"] != nil {
 		timeout = repo.config["timeout"].(int)
