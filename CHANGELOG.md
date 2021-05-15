@@ -7,6 +7,7 @@ History of **1Pass** releases with changes description.
 - (FIX) [GUI] Notes padding for item details
 - (FIX) [GUI] Notes padding for item overview
 - (FIX) [GUI] Invalid password loop (application will not exit after displaying invalid password error)
+- (FIX) [CLI] Inline update confirmation
 - (FIX) [CLI] Notes padding for item details
 - (FIX) [CLI] Notes padding for item overview
 - (FIX) [CLI] Accept more reasonable update timeout during configuration (in range from 1 to 30 seconds)
