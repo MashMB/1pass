@@ -94,12 +94,12 @@ Default value: y
 ```
 
 ```
-3. Update HTTP timeout in secods ([previous_value]) [2-15]: [value]
+3. Update HTTP timeout in secods ([previous_value]) [1-30]: [value]
 
 Set HTTP timeout for updates. This setting defines how long application should try to connect with GitHub for update 
-check. Slower internet connection will need bigger value. Value should be in range from 2 to 15 seconds.
+check. Slower internet connection will need bigger value. Value should be in range from 1 to 30 seconds.
 
-Default value: 2
+Default value: 1
 ```
 
 ```
