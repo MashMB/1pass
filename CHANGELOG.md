@@ -4,6 +4,7 @@ History of **1Pass** releases with changes description.
 
 ## Release 1.3.1
 
+- (FIX) [API] Clear cache (temporary directory) before update
 - (FIX) [API] Do not parse fields with value but without name
 
 ## Release 1.3.0 [14.05.2021]
