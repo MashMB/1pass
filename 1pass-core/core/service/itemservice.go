@@ -153,13 +153,13 @@ func (s *dfltItemService) ParseItemField(fromSection bool, data map[string]inter
 	var value string
 
 	if !fromSection {
-		if data["value"] != nil {
+		if data["value"] != nil && data["name"] != nil {
 			value = data["value"].(string)
-		}
-
-		if value != "" {
 			name := data["name"].(string)
-			field = domain.NewItemField(strings.Title(name), value)
+
+			if value != "" && name != "" {
+				field = domain.NewItemField(strings.Title(name), value)
+			}
 		}
 	} else {
 		if data["v"] != nil {
