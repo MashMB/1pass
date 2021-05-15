@@ -5,7 +5,6 @@
 package cobra
 
 import (
-	"errors"
 	"fmt"
 	"os"
 	"sort"
@@ -58,7 +57,7 @@ func (ctrl *cobraCliControl) Configure() {
 	var confirmVal string
 	config := ctrl.configFacade.GetConfig()
 
-	fmt.Println("Detailed configuration manual can be found online: https://github.com/mashmb/1pass#Configuration")
+	fmt.Println("Detailed configuration manual can be found online: https://github.com/mashmb/1pass#configuration")
 	fmt.Println("Configuring 1pass:")
 	fmt.Print(fmt.Sprintf("  1. Do you want to set default OPVault path? (%v) [y - for yes/n - for no]: ",
 		domain.LogicValEnum.No.GetName()))
@@ -66,7 +65,7 @@ func (ctrl *cobraCliControl) Configure() {
 	confirm, err := domain.LogicValEnum.FromName(confirmVal)
 
 	if err == nil && confirm == domain.LogicValEnum.Yes {
-		fmt.Print(fmt.Sprintf("    Default OPVault path (%v): ", config.Vault))
+		fmt.Print(fmt.Sprintf("     Default OPVault path (%v): ", config.Vault))
 		fmt.Scanln(&vaultVal)
 		config.Vault = strings.TrimSpace(vaultVal)
 	}
@@ -76,48 +75,25 @@ func (ctrl *cobraCliControl) Configure() {
 	fmt.Scanln(&notifyVal)
 	notify, err := domain.LogicValEnum.FromName(notifyVal)
 
-	if err != nil {
-		fmt.Println(err)
-		os.Exit(1)
+	if err == nil {
+		config.UpdateNotify = notify.GetValue()
 	}
-
-	config.UpdateNotify = notify.GetValue()
 
 	fmt.Print(fmt.Sprintf("  3. Update HTTP timeout in seconds (%d) [2-15]: ", config.Timeout))
 	fmt.Scanln(&timeoutVal)
 	timeout, err := strconv.ParseInt(timeoutVal, 10, 64)
 
-	if err != nil {
-		err = errors.New("not a number")
-		fmt.Println(err)
-		os.Exit(1)
+	if err == nil && timeout >= 2 && timeout <= 15 {
+		config.Timeout = int(timeout)
 	}
 
-	if timeout < 2 || timeout > 15 {
-		err = errors.New("out of range [2-15]")
-		fmt.Println(err)
-		os.Exit(1)
-	}
-
-	config.Timeout = int(timeout)
-
-	fmt.Print(fmt.Sprintf("  4. How often check for updates in days (%d) [>= 0]: ", config.UpdatePeriod))
+	fmt.Print(fmt.Sprintf("  4. How often check for updates in days (%d) [0-365]: ", config.UpdatePeriod))
 	fmt.Scanln(&periodVal)
 	period, err := strconv.ParseInt(periodVal, 10, 64)
 
-	if err != nil {
-		err = errors.New("not a number")
-		fmt.Println(err)
-		os.Exit(1)
+	if err == nil && period >= 0 && period <= 365 {
+		config.UpdatePeriod = int(period)
 	}
-
-	if period < 0 {
-		err = errors.New("out of range [>= 0]")
-		fmt.Println(err)
-		os.Exit(1)
-	}
-
-	config.UpdatePeriod = int(period)
 
 	ctrl.configFacade.SaveConfig(config)
 	fmt.Println("1pass configured")
