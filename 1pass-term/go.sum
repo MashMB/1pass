@@ -2,8 +2,8 @@ github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSs
 github.com/fzipp/gocyclo v0.3.1/go.mod h1:DJHO6AUmbdqj2ET4Z9iArSuwWgYDRryYt2wASxc7x3E=
 github.com/jedib0t/go-pretty/v6 v6.2.1 h1:O/3XdNfyWSyVLLIt1EeDhfP8AhNMjtBSh0MuZ4frg6U=
 github.com/jedib0t/go-pretty/v6 v6.2.1/go.mod h1:+nE9fyyHGil+PuISTCrp7avEdo6bqoMwqZnuiK2r2a0=
-github.com/mashmb/1pass/1pass-core v1.3.0 h1:evMDi7RzQIJHvKLWpTOU+pdkRkp7VM0HWm6Jq4Xg+xs=
-github.com/mashmb/1pass/1pass-core v1.3.0/go.mod h1:m1h4gDqEEufIYEIehOEP+qJYCsZ5UcdgfxOphWqfT4U=
+github.com/mashmb/1pass/1pass-core v1.3.1 h1:jzuVUvWg9UuUzeCFjOWvjWQEyotISvpJOi88O9QQtoo=
+github.com/mashmb/1pass/1pass-core v1.3.1/go.mod h1:m1h4gDqEEufIYEIehOEP+qJYCsZ5UcdgfxOphWqfT4U=
 github.com/mattn/go-runewidth v0.0.9 h1:Lm995f3rfxdpd6TSmuVCHVb/QhupuXlYr8sCI/QdE+0=
 github.com/mattn/go-runewidth v0.0.9/go.mod h1:H031xJmbD/WCDINGzjvQ9THkh0rPKHF+m2gUSrubnMI=
 github.com/pkg/profile v1.2.1/go.mod h1:hJw3o1OdXxsrSjjVksARp5W95eeEaEfptyVZyv6JUPA=
