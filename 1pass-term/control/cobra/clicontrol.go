@@ -51,29 +51,37 @@ func (ctrl *cobraCliControl) CheckForUpdate() {
 
 func (ctrl *cobraCliControl) Configure() {
 	ctrl.CheckForUpdate()
-	var vault string
-	var notify string
+	var vaultVal string
+	var notifyVal string
 	var timeoutVal string
 	var periodVal string
+	var confirmVal string
 	config := ctrl.configFacade.GetConfig()
 
 	fmt.Println("Detailed configuration manual can be found online: https://github.com/mashmb/1pass#Configuration")
 	fmt.Println("Configuring 1pass:")
-	fmt.Print(fmt.Sprintf("  1. Default OPVault path (%v): ", config.Vault))
-	fmt.Scanln(&vault)
-	config.Vault = strings.TrimSpace(vault)
+	fmt.Print(fmt.Sprintf("  1. Do you want to set default OPVault path? (%v) [y - for yes/n - for no]: ",
+		domain.LogicValEnum.No.GetName()))
+	fmt.Scanln(&confirmVal)
+	confirm, err := domain.LogicValEnum.FromName(confirmVal)
+
+	if err == nil && confirm == domain.LogicValEnum.Yes {
+		fmt.Print(fmt.Sprintf("    Default OPVault path (%v): ", config.Vault))
+		fmt.Scanln(&vaultVal)
+		config.Vault = strings.TrimSpace(vaultVal)
+	}
 
 	fmt.Print(fmt.Sprintf("  2. Update notifications? (%v) [y - for yes/n - for no]: ",
 		domain.LogicValEnum.FromValue(config.UpdateNotify).GetName()))
-	fmt.Scanln(&notify)
-	notifyVal, err := domain.LogicValEnum.FromName(notify)
+	fmt.Scanln(&notifyVal)
+	notify, err := domain.LogicValEnum.FromName(notifyVal)
 
 	if err != nil {
 		fmt.Println(err)
 		os.Exit(1)
 	}
 
-	config.UpdateNotify = notifyVal.GetValue()
+	config.UpdateNotify = notify.GetValue()
 
 	fmt.Print(fmt.Sprintf("  3. Update HTTP timeout in seconds (%d) [2-15]: ", config.Timeout))
 	fmt.Scanln(&timeoutVal)
