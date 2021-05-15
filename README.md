@@ -150,37 +150,24 @@ Legend:
 
 ## What is new?
 
-- [GUI] Display notification about update
-- [GUI] Check for update asynchronously
-- [GUI] Display actual application version
-- [GUI] Contextual help for item details widget
-- [GUI] Contextual help for items widget
-- [GUI] Contextual help for 1pass widget
-- [GUI] Display decoded item details
-- [GUI] Scroll item details left
-- [GUI] Scroll item details right
-- [GUI] Scroll item details up
-- [GUI] Scroll item details down
-- [GUI] Display item overview (no sensitive data)
-- [GUI] Scroll items up
-- [GUI] Scroll items down
-- [GUI] Display list of items assigned to category
-- [GUI] Scroll categories menu up
-- [GUI] Scroll categories menu down
-- [GUI] Display categories that has at least one item assigned (include dynamic all and trashed category)
-- [GUI] Lock vault with shortcut
-- [GUI] Unlock vault with master password
-- [GUI] Dialog used to display errors
-- [GUI] Password prompt (with password mask)
-- [GUI] Validate OPVault path before GUI launch
-- [CLI] Run 1Pass in GUI mode by default (command `1pass`)
-- [API] Handle trashed flag in simplified item data structure
-- [API] Count OPVault items over category and trashed flag
+- (FIX) [GUI] Notes padding for item details
+- (FIX) [GUI] Notes padding for item overview
+- (FIX) [GUI] Invalid password loop (application will not exit after displaying invalid password error)
+- (FIX) [CLI] Inline update confirmation
+- (FIX) [CLI] Notes padding for item details
+- (FIX) [CLI] Notes padding for item overview
+- (FIX) [CLI] Accept more reasonable update timeout during configuration (in range from 1 to 30 seconds)
+- (FIX) [CLI] Update check can be shifted for one year maximum
+- (FIX) [CLI] No configuration abort on invalid values (continue with actual state)
+- (FIX) [API] Default update timeout set to 1 second
+- (FIX) [API] Clear cache (temporary directory) before update
+- (FIX) [API] Do not parse fields with value but without name
 
 ## Releases
 
 Versions of last five releases:
 
+- 1.3.1
 - 1.3.0
 - 1.2.0
 - 1.1.0

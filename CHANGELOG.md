@@ -2,7 +2,7 @@
 
 History of **1Pass** releases with changes description.
 
-## Release 1.3.1
+## Release 1.3.1 [15.05.2021]
 
 - (FIX) [GUI] Notes padding for item details
 - (FIX) [GUI] Notes padding for item overview
