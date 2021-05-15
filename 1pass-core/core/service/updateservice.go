@@ -64,6 +64,10 @@ func (s *dfltUpdateService) Update(timeout int, stage func(int)) error {
 	} else {
 		stage(1)
 
+		if err := os.RemoveAll(domain.CacheDir); err != nil {
+			return err
+		}
+
 		if err := os.MkdirAll(domain.CacheDir, 0700); err != nil {
 			return err
 		}

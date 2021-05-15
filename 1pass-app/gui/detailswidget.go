@@ -174,6 +174,10 @@ func (dw *detailsWidget) update(overview bool, ui *gocui.Gui) error {
 			}
 
 			if dw.item.Notes != "" {
+				if dw.item.Sections == nil {
+					fmt.Fprint(view, "\n")
+				}
+
 				fmt.Fprint(view, "Notes\n")
 				fmt.Fprint(view, "------------------------------\n")
 				fmt.Fprint(view, "**********\n")
@@ -200,6 +204,10 @@ func (dw *detailsWidget) update(overview bool, ui *gocui.Gui) error {
 			}
 
 			if dw.item.Notes != "" {
+				if dw.item.Sections == nil {
+					fmt.Fprint(view, "\n")
+				}
+
 				fmt.Fprint(view, "Notes\n")
 				fmt.Fprint(view, "------------------------------\n")
 				fmt.Fprint(view, fmt.Sprintf("%v\n", dw.item.Notes))

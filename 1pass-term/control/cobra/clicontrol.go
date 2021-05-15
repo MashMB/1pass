@@ -5,7 +5,6 @@
 package cobra
 
 import (
-	"errors"
 	"fmt"
 	"os"
 	"sort"
@@ -51,65 +50,50 @@ func (ctrl *cobraCliControl) CheckForUpdate() {
 
 func (ctrl *cobraCliControl) Configure() {
 	ctrl.CheckForUpdate()
-	var vault string
-	var notify string
+	var vaultVal string
+	var notifyVal string
 	var timeoutVal string
 	var periodVal string
+	var confirmVal string
 	config := ctrl.configFacade.GetConfig()
 
-	fmt.Println("Detailed configuration manual can be found online: https://github.com/mashmb/1pass#Configuration")
+	fmt.Println("Detailed configuration manual can be found online: https://github.com/mashmb/1pass#configuration")
 	fmt.Println("Configuring 1pass:")
-	fmt.Print(fmt.Sprintf("  1. Default OPVault path (%v): ", config.Vault))
-	fmt.Scanln(&vault)
-	config.Vault = strings.TrimSpace(vault)
+	fmt.Print(fmt.Sprintf("  1. Do you want to set default OPVault path? (%v) [y - for yes/n - for no]: ",
+		domain.LogicValEnum.No.GetName()))
+	fmt.Scanln(&confirmVal)
+	confirm, err := domain.LogicValEnum.FromName(confirmVal)
+
+	if err == nil && confirm == domain.LogicValEnum.Yes {
+		fmt.Print(fmt.Sprintf("     Default OPVault path (%v): ", config.Vault))
+		fmt.Scanln(&vaultVal)
+		config.Vault = strings.TrimSpace(vaultVal)
+	}
 
 	fmt.Print(fmt.Sprintf("  2. Update notifications? (%v) [y - for yes/n - for no]: ",
 		domain.LogicValEnum.FromValue(config.UpdateNotify).GetName()))
-	fmt.Scanln(&notify)
-	notifyVal, err := domain.LogicValEnum.FromName(notify)
+	fmt.Scanln(&notifyVal)
+	notify, err := domain.LogicValEnum.FromName(notifyVal)
 
-	if err != nil {
-		fmt.Println(err)
-		os.Exit(1)
+	if err == nil {
+		config.UpdateNotify = notify.GetValue()
 	}
 
-	config.UpdateNotify = notifyVal.GetValue()
-
-	fmt.Print(fmt.Sprintf("  3. Update HTTP timeout in seconds (%d) [2-15]: ", config.Timeout))
+	fmt.Print(fmt.Sprintf("  3. Update HTTP timeout in seconds (%d) [1-30]: ", config.Timeout))
 	fmt.Scanln(&timeoutVal)
 	timeout, err := strconv.ParseInt(timeoutVal, 10, 64)
 
-	if err != nil {
-		err = errors.New("not a number")
-		fmt.Println(err)
-		os.Exit(1)
+	if err == nil && timeout >= 1 && timeout <= 30 {
+		config.Timeout = int(timeout)
 	}
 
-	if timeout < 2 || timeout > 15 {
-		err = errors.New("out of range [2-15]")
-		fmt.Println(err)
-		os.Exit(1)
-	}
-
-	config.Timeout = int(timeout)
-
-	fmt.Print(fmt.Sprintf("  4. How often check for updates in days (%d) [>= 0]: ", config.UpdatePeriod))
+	fmt.Print(fmt.Sprintf("  4. How often check for updates in days (%d) [0-365]: ", config.UpdatePeriod))
 	fmt.Scanln(&periodVal)
 	period, err := strconv.ParseInt(periodVal, 10, 64)
 
-	if err != nil {
-		err = errors.New("not a number")
-		fmt.Println(err)
-		os.Exit(1)
+	if err == nil && period >= 0 && period <= 365 {
+		config.UpdatePeriod = int(period)
 	}
-
-	if period < 0 {
-		err = errors.New("out of range [>= 0]")
-		fmt.Println(err)
-		os.Exit(1)
-	}
-
-	config.UpdatePeriod = int(period)
 
 	ctrl.configFacade.SaveConfig(config)
 	fmt.Println("1pass configured")
@@ -207,6 +191,10 @@ func (ctrl *cobraCliControl) GetItemDetails(vaultPath, uid string, trashed bool)
 		}
 
 		if item.Notes != "" {
+			if item.Sections == nil {
+				fmt.Println()
+			}
+
 			fmt.Println("Notes")
 			fmt.Println("------------------------------")
 			fmt.Println(item.Notes)
@@ -284,6 +272,10 @@ func (ctrl *cobraCliControl) GetItemOverview(vaultPath, uid string, trashed bool
 		}
 
 		if item.Notes != "" {
+			if item.Sections == nil {
+				fmt.Println()
+			}
+
 			fmt.Println("Notes")
 			fmt.Println("------------------------------")
 			fmt.Println("**********")
@@ -367,7 +359,7 @@ func (ctrl *cobraCliControl) Update() {
 	msg := fmt.Sprintf("New version of 1pass is available (%v).\n\n%v\n", info.Version, info.Changelog)
 	fmt.Println(msg)
 	var permissionVal string
-	fmt.Println(fmt.Sprintf("Do you want to update now? (%v) [y - for yes/n - for no]: ", domain.LogicValEnum.No.GetName()))
+	fmt.Print(fmt.Sprintf("Do you want to update now? (%v) [y - for yes/n - for no]: ", domain.LogicValEnum.No.GetName()))
 	fmt.Scanln(&permissionVal)
 	permission, err := domain.LogicValEnum.FromName(permissionVal)
 

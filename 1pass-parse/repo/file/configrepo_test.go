@@ -49,7 +49,7 @@ func TestGetDefaultVault(t *testing.T) {
 
 func TestGetTimeout(t *testing.T) {
 	config, empty := setupFileConfigRepo()
-	expected := 2
+	expected := 1
 	timeout := empty.GetTimeout()
 
 	if timeout != expected {

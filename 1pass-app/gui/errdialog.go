@@ -11,24 +11,22 @@ import (
 )
 
 type errorDialog struct {
-	name  string
-	title string
-	err   error
+	name         string
+	title        string
+	closeHandler func(ui *gocui.Gui, view *gocui.View) error
+	err          error
 }
 
-func newErrorDialog() *errorDialog {
+func newErrorDialog(closeHandler func(ui *gocui.Gui, view *gocui.View) error) *errorDialog {
 	return &errorDialog{
-		name:  "errDialog",
-		title: "Error",
+		name:         "errDialog",
+		title:        "Error",
+		closeHandler: closeHandler,
 	}
 }
 
-func (ed *errorDialog) panicQuit(_ *gocui.Gui, _ *gocui.View) error {
-	return gocui.ErrQuit
-}
-
 func (ed *errorDialog) Keybindings(ui *gocui.Gui) error {
-	if err := ui.SetKeybinding(ed.name, gocui.KeyEnter, gocui.ModNone, ed.panicQuit); err != nil {
+	if err := ui.SetKeybinding(ed.name, gocui.KeyEnter, gocui.ModNone, ed.closeHandler); err != nil {
 		return err
 	}
 

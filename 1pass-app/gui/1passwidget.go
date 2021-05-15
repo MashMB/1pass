@@ -38,17 +38,29 @@ func newOnepassWidget(helpWidget *helpWidget, vault *domain.Vault, guiControl in
 		currIdx:    -1,
 		title:      "1Pass",
 		name:       "1pass",
-		errDialog:  newErrorDialog(),
 		helpWidget: helpWidget,
 		categories: make([]*domain.ItemCategory, 0),
 		vault:      vault,
 		guiControl: guiControl,
 	}
 
+	widget.errDialog = newErrorDialog(widget.closeError)
 	widget.passPrompt = newPasswordPrompt(widget.unlock)
 	widget.itemsWidget = newItemsWidget(widget.name, helpWidget, widget.lock, widget.guiControl)
 
 	return widget
+}
+
+func (ow *onepassWidget) closeError(ui *gocui.Gui, view *gocui.View) error {
+	if err := ui.DeleteView(ow.errDialog.name); err != nil {
+		return err
+	}
+
+	if err := ow.update(ui); err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func (ow *onepassWidget) cursorDown(ui *gocui.Gui, view *gocui.View) error {
