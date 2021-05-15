@@ -79,11 +79,11 @@ func (ctrl *cobraCliControl) Configure() {
 		config.UpdateNotify = notify.GetValue()
 	}
 
-	fmt.Print(fmt.Sprintf("  3. Update HTTP timeout in seconds (%d) [2-15]: ", config.Timeout))
+	fmt.Print(fmt.Sprintf("  3. Update HTTP timeout in seconds (%d) [1-30]: ", config.Timeout))
 	fmt.Scanln(&timeoutVal)
 	timeout, err := strconv.ParseInt(timeoutVal, 10, 64)
 
-	if err == nil && timeout >= 2 && timeout <= 15 {
+	if err == nil && timeout >= 1 && timeout <= 30 {
 		config.Timeout = int(timeout)
 	}
 
