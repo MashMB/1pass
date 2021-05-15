@@ -191,6 +191,10 @@ func (ctrl *cobraCliControl) GetItemDetails(vaultPath, uid string, trashed bool)
 		}
 
 		if item.Notes != "" {
+			if item.Sections == nil {
+				fmt.Println()
+			}
+
 			fmt.Println("Notes")
 			fmt.Println("------------------------------")
 			fmt.Println(item.Notes)
