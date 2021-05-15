@@ -76,7 +76,8 @@ Whole configuration process relies on questions answering.
 This is detailed description of all available settings:
 
 ```
-1. Default OPVault path ([previous_value]): [value]
+1. Do you want to set default OPVault path? ([default_answer]) [y - for yes/n - for no]: 
+   Default OPVault path ([previous_value]): 
 
 This setting allows to set default OPVault path. Configured path will be used by default if flag -v is not given to 
 command.
@@ -102,16 +103,13 @@ Default value: 2
 ```
 
 ```
-4. How often check for updates in days ([previous_value]) [>= 0]: [value]
+4. How often check for updates in days ([previous_value]) [0-365]: [value]
 
-Set how often application should check for updates. Value is specified in days and should be bigger or equal to 0. If 0 
-is set, application will check for update on every run.
+Set how often application should check for updates. Value is specified in days and should be in range form 0 to 365. 
+If 0 is set, application will check for update on every run.
 
 Default value: 1
 ```
-
-**IMPORTANT:** note that if wrong value is specified (value not in range, etc.), application will abort configuration 
-and whole process will be repeated form beginning
 
 ## Usage
 
